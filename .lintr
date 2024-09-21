@@ -1,0 +1,10 @@
+linters: linters_with_defaults(
+  defaults = somaverse::soma_linters(),
+  indentation_linter = NULL,
+  object_name_linter = NULL
+  )
+exclusions: list(
+  "R/create_kfold.R" = list(cyclocomp_linter = Inf),
+  "tests/testthat/helper.R",
+  "tests/testthat.R"
+  )

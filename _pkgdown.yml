@@ -1,0 +1,61 @@
+url: https://confluence.sladmin.com/display/BITOOLS/somaverse
+
+home:
+  strip_header: true
+  links:
+  - text: Bitbucket
+    href: http://bitbucket.sladmin.com/projects/SV/repos/somafeatureselect/browse
+  - text: Report a bug
+    href: bitools@somalogic.com
+  - text: Learn more about us
+    href: http://www.somalogic.com
+
+template:
+  params:
+    docsearch:
+      api_key: fbd8d79ed49f21fc9ca7b2cf601a3f5b
+      index_name: pkgdown
+    ganalytics: UA-115082821-1
+
+authors:
+  "Stu Field":
+    href: https://github.com/stufield
+
+development:
+  mode: auto
+  version_label: default   # grey
+
+articles:
+  - title: Getting Started
+    navbar: ~
+    contents:
+    - featureselectr
+
+reference:
+  - title: Feature Selection
+    desc:  Perform feature selection.
+    contents:
+    - featureSelection
+    - Search
+
+  - title: Search Types
+    desc:  The various search types.
+    contents:
+    - searchType
+
+  - title: Model Types
+    desc: The various model types.
+    contents:
+    - starts_with("modelType_")
+
+  - title: Helper functions
+    desc: >
+      Miscellaneous functions typically not called directly by the user.
+    contents:
+    - cost
+    - fitmodel
+    - getFSmarkers
+    - setupCrossVal
+
+news:
+  - one_page: true

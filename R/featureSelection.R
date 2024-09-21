@@ -1,0 +1,289 @@
+#' Feature Selection Object Declaration
+#'
+#' Declares and generates a `feature_selection` class object within the
+#' Feature Selection framework. This object acts as the holder of data
+#' (bootstrapped or cross-validation folds), model type, search type,
+#' cost function, and an underlying data structure for use by other functions.
+#'
+#' @param data A `soma_adat` or `data.frame` class object containing
+#'   features and clinical data to be used for modeling.
+#' @param candidate.markers Character. List of candidate markers, i.e. columns
+#'   names, from the data object.
+#' @param model.type An instantiated `modelType` object, generated via a call
+#'   to one of the [modelType()] functions.
+#' @param search.type An instantiated `searchType` object, generated via a
+#'   call to one of the [searchType()] functions.
+#' @param cost Character. A string to be used in defining the cost
+#'   function. Currently one of:
+#' \describe{
+#'   \item{`AUC`}{Area Under the Curve}
+#'   \item{`MSE`}{Mean-Squared Error}
+#'   \item{`CCC`}{Concordance Correlation Coefficient}
+#'   \item{`R2`}{R-squared - regression models}
+#'   \item{`sens` or `spec`}{Sensitivity + Specificity}
+#' }
+#' @param runs Integer. How many runs to perform.
+#' @param folds Integer. How many fold cross-validation to perform.
+#' @param keep.models Logical. Should model objects be retained in the
+#'   cross validation sub-list? This eats up memory (`default = FALSE`).
+#' @param bootstrap Logical. Should data be bootstrapped rather
+#'   than set up in cross-validation folds? The result is multiple runs (defined
+#'   by runs) with 1 Fold each. The full dataset will be sampled with replacement
+#'   to generate a training set of equivalent size. The samples not chosen during
+#'   sampling make up the test set.
+#' @param stratified Logical. Should cross-validation or bootstrap
+#'   folds be stratified based upon the stratification column specified in
+#'   `strat.column`?
+#' @param strat.column Character. Which column to use for stratification of
+#'   cross-validation or bootstrap folds. If `NULL` (default), column name
+#'   `"Response"` will be used and thus must be present.
+#' @param random.seed Integer. Used to control the random number generator for
+#'   reproducibility.
+#' @param x An object of class `feature_select` (list) from a call
+#'   call to [featureSelection()].
+#' @return A `"feature_select"` class object and list containing:
+#' \item{data}{The original feature data to use.}
+#' \item{candidate.markers}{The list of candidate features.}
+#' \item{model.type}{A list containing model type variables of the
+#'   appropriate class for the desired model type.}
+#' \item{search.type}{A list containing search type variables of the
+#'   appropriate class for the desired search type.}
+#' \item{cost}{A string of the type of cost function.}
+#' \item{cost.fxn}{A list containing cost variables of the
+#'   appropriate class for the desired object cost function.}
+#' \item{runs}{The number of runs.}
+#' \item{folds}{The number of folds.}
+#' \item{keep.models}{If intermediate cross-validation models are kept?}
+#' \item{bootstrap}{Is bootstrapping performed?}
+#' \item{stratified}{Is cross-validation stratification performed?}
+#' \item{strat.column}{Which field string is used in stratification.}
+#' \item{random.seed}{The random seed used}
+#' \item{cross.val}{A list containing the training and test indices of the
+#'   various cross validation folds.}
+#' \item{search.complete}{Logical if the object has completed a search}
+#' \item{call}{The original matched call.}
+#'
+#' @author Kirk DeLisle, Stu Field
+#' @seealso [Search()]
+#' @references Hastie, Tibshirani, and Friedman. Elements of Statistical Learning:
+#'   Data Mining, Inference , and Prediction. 2nd Edition. Springer. 2009.
+#' @examples
+#' # Simulated Test Data
+#' data <- splyr::sim_test_data
+#'
+#' # Setup response variable
+#' data$class_response <- factor(data$class_response)
+#'
+#' mt <- modelType_glm(response = "class_response")
+#' cf <- "sens"
+#' sm <- searchType_forwardModel(15, display.name = "FeatureSelection Plot")
+#' ft <- SomaDataIO::getAnalytes(data)        # select candidate features
+#' fs <- featureSelection(data, candidate.markers = ft,
+#'                        model.type = mt, search.type = sm, cost = cf,
+#'                        strat.column = "class_response", runs = 5, folds = 5)
+#' # S3 Print method
+#' fs
+#'
+#' # Using the S3 Update method to modify existing FS object:
+#' # change model type, cost function, and random seed
+#' fs2 <- update(fs, model.type = modelType_nb(),
+#'               cost = "AUC", random.seed = 99)
+#' fs2
+#'
+#' # change number of runs & folds
+#' # requires re-calculation of cross-validation parameters
+#' fs3 <- update(fs, runs = 20, folds = 10)
+#' fs3
+#'
+#' @importFrom SomaDataIO addClass getAnalytes getMeta
+#' @export
+featureSelection <- function(data, candidate.markers, model.type,
+                             search.type, runs = 1, folds = 1,
+                             cost = c("AUC", "R2", "CCC", "MSE", "sens", "spec"),
+                             keep.models = FALSE, bootstrap = FALSE,
+                             stratified = FALSE, strat.column = NULL,
+                             random.seed = sample(1000, 1)) {
+
+   # logic to ensure compatibility among model.type, search.type, and cost selections
+   # should go here;
+   # this could get messy - need to think about how best to accomplish it.
+
+  if ( !inherits(data, "data.frame") ) {
+    stop(
+      "Wrong data type for `data =` argument.\n",
+      "Must inherit from a `data.frame` class object",
+      call. = FALSE
+    )
+  }
+
+  if ( inherits(data, "tbl_df") ) {  # if data is a tbl_df, recast as df
+    data <- data.frame(data)
+  }
+
+  cost.str <- match.arg(cost)
+  cost_fxn <- switch(cost.str,
+                     sens = CostFxn_SensSpec(),
+                     spec = CostFxn_SensSpec(),
+                     AUC  = CostFxn_AUC(),
+                     CCC  = CostFxn_CCC(),
+                     R2   = CostFxn_R2(),
+                     MSE  = CostFxn_MSE())
+
+  # start the list
+  fsret <- list(data = data,
+                candidate.markers = candidate.markers,
+                model.type = model.type,
+                search.type = search.type,
+                cost = cost.str,
+                cost.fxn = cost_fxn,
+                runs = runs,
+                folds = folds,
+                keep.models = keep.models,
+                random.seed = random.seed,
+                cross.val = list())
+
+  if ( is.null(strat.column) ) {
+    fsret$strat.column <- model.type$response
+  } else {
+    fsret$strat.column <- strat.column
+  }
+
+  fsret$search.type$max.steps <- min(length(candidate.markers),
+                                     search.type$max.steps)
+
+  class_hierarchy <- setdiff(unique(c("feature_select",
+                                      class(model.type),
+                                      class(search.type),
+                                      class(cost_fxn))),
+                             "list")
+  fsret <- addClass(fsret, class_hierarchy)
+
+  # build the cross-validation folds/bootstrap sets here so
+  # that they are always consistent
+  # there should be n-repeats or runs of k-fold cross validation
+  # runs and fold.cross.val parameters
+  fsret$cross.val$runs       <- runs
+  fsret$cross.val$folds      <- folds
+  fsret$cross.val$stratified <- stratified
+
+  if ( stratified ) {
+    fsret <- setupCrossValStrat(fsret)
+  } else {
+    fsret <- setupCrossVal(fsret)
+  }
+
+  fsret$cross.val$current.run  <- 0
+  fsret$cross.val$current.fold <- 0
+  fsret$search.complete        <- FALSE
+  fsret$search.method          <- "Model"
+  fsret$call <- match.call(expand.dots = TRUE)
+  fsret
+}
+
+
+#' S3 print method for class `feature_select`
+#'
+#' The S3 print method for objects of class `feature_select`.
+#'
+#' @rdname featureSelection
+#' @importFrom SomaDataIO addClass
+#' @export
+print.feature_select <- function(x, ...) {
+
+  writeLines(
+    signal_rule("Feature Selection Object", lty = "double", line_col = "magenta")
+  )
+  writeLines(
+    signal_rule("Dataset Info", line_col = "blue")
+  )
+  key <- c(
+    "Rows",
+    "Columns",
+    "FeatureData"
+  ) |> pad(25)
+  value <- c(
+    length(row.names(x$data)),
+    length(names(x$data)),
+    length(setdiff(x$candidate.markers, x$response))
+  )
+  liter(key, value, function(.x, .y) {
+    writeLines(paste(add_color(symbl$bullet, "red"), .x, value(.y)))
+  })
+  writeLines(
+    signal_rule("Search Optimization Info", line_col = "red")
+  )
+  key2 <- c(
+    "No. Candidates",
+    "Response Field",
+    "Cross Validation Runs",
+    "Cross Validation Folds",
+    "Stratified Folds",
+    "Model Type",
+    "Search Type",
+    "Search Method",
+    "Cost Function",
+    "Random Seed",
+    "Keep Models",
+    "Display Name",
+    "Search Complete"
+  ) |> pad(25)
+  value2 <- c(
+    length(x$candidate.markers),
+    x$model.type$response,
+    x$runs,
+    x$folds,
+    x$cross.val$stratified,
+    class(x$model.type)[1L],
+    class(x$search.type)[1L],
+    x$search.method,
+    x$cost,
+    x$random.seed,
+    x$keep.models,
+    x$search.type$display.name,
+    x$search.complete
+  )
+  liter(key2, value2, function(.x, .y) {
+    writeLines(paste(add_color(symbl$bullet, "red"), .x, value(.y)))
+  })
+  writeLines(signal_rule(lty = "double", line_col = "green"))
+  invisible(x)
+}
+
+
+#' S3 update method for class `feature_select`
+#'
+#' The S3 update method allows for modification of existing
+#' `feature_select` objects on-the-fly.
+#'
+#' @rdname featureSelection
+#' @param object An object of class `feature_select`.
+#' @param ... Arguments declared for update in `argument = value` format.
+#'   Arguments from the original call are preserved. Alternatively, a pass through
+#'   for the deprecation of FSMCP -> featureSelection (will eventually be removed).
+#' @export
+update.feature_select <- function(object, ...) {
+
+  if ( object$search.complete ) {
+    over_write <- readline(
+      "This feature selection object has already been completed, do you wish to over-write? [y/n]: "
+    )
+    if ( over_write %in% c("n", "N", "c", "C") ) {
+      stop(
+        "\nUpdate feature selection object stopped at user's request.\n",
+        call. = FALSE
+      )
+    }
+  }
+
+  call.update <- match.call(expand.dots = TRUE)[-1L]
+  .call       <- object$call
+
+  # if not setting new seed, use old one
+  if ( !"random.seed" %in% names(call.update) ) {
+    .call$random.seed <- object$random.seed
+  }
+  for ( arg in grep("^object$", names(call.update), invert = TRUE, value = TRUE) ) {
+    .call[[arg]] <- call.update[[arg]]
+  }
+  eval.parent(.call)
+}

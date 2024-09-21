@@ -1,0 +1,189 @@
+---
+title: "Introduction to featureselectr"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Introduction to featureselectr}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+library(featureselectr)
+library(ggplot2)
+knitr::opts_chunk$set(
+  collapse = TRUE, comment = "#>"
+)
+sim_test_data <- splyr::sim_test_data
+```
+
+
+The `featureselectr` package contains functionality designed for feature 
+selection, model building, and/or classifier development.
+
+
+--------------
+
+
+## Useful functions in `featureselectr`
+
+* `featureSelection()`
+  + Set up the feature selection object containing all search information.
+* `Search()`
+  + Perform the actual search.
+
+
+----------------------
+
+
+### Search type helper functions
+There are _two_ main search types to choose from. See `?searchType`.
+
+```{r searchType}
+searchType_forwardModel()     # Forward stepwise
+
+searchType_backwardModel()    # Backward stepwise
+```
+
+### Model Type helper functions
+
+There are _three_ main model types to choose from. See `?modelType`.
+
+```{r modelType}
+modelType_glm()      # Logistic regression
+
+modelType_lm()       # Linear regression
+
+modelType_nb()       # Naive Bayes
+```
+
+### Cost functions
+
+There are _five_ available cost functions, that the used typically does not
+need to call directly. Simply pass one of the following as a _string_ to 
+the `cost =` argument to `featureselection()`.
+See `?featureSelection` and perhaps `?cost`.
+
+* **AUC**: Area under the curve (classification)
+* **CCC**: Concordance Correlation Coefficient (regression)
+* **MSE**: Mean-squared Error (regression)
+* **R2**: R-squared (regression)
+* **sens or spec**: Sensitivity `+` Specificity (sum; classification)
+
+
+
+-----------------
+
+
+## Feature Selection for Naive Bayes
+
+The analysis below is performed with the simulated data set from
+`splyr::sim_test_data`. We will fit a naive Bayes model during the
+feature selection. The setup below specifies **5** independent runs 
+of **4** fold cross-validation.
+Higher folds might generate slightly different results, but a **20-25%**
+hold-out is fairly common. Of course, more runs (repeats) will take longer.
+There are `r length(attributes(data)$sig_feats$class)` features that should 
+be significant in a binary classification context. They are identified in 
+the attributes of the object itself. We will restrict the search to the 
+top **15** steps (there are `r SomaDataIO::getAnalytes(sim_test_data, n = TRUE)`
+total features; thus approx. 35 false positives).
+
+### Setup `FS` object
+
+```{r naive_bayes_setup}
+# True positive features
+attributes(sim_test_data)$sig_feats$class
+
+# log-transform, center, and scale
+cs    <- function(x) { out <- x - mean(x); out / sd(out) }
+data  <- log10(sim_test_data)
+feats <- SomaDataIO::getAnalytes(data)      # all possible SeqId features
+data[, feats] <- apply(data[, feats], 2, cs)
+
+# set model type and column name of response variable
+mt <- modelType_nb(response = "class_response")
+
+# set search method function to 'forward' and 'model'
+# restrict to the top 10 steps in the search; then stop
+sm <- searchType_forwardModel(max.steps = 15)
+
+# setup feature selection object
+fs_setup <- featureSelection(data, candidate.markers = feats, model.type = mt,
+                             search.type = sm, runs = 5, folds = 4,
+                             cost = "AUC", random.seed = 1)
+
+class(fs_setup)
+# print setup object
+fs_setup
+```
+
+### Perform the search
+
+The S3 method `Search()` performs the actual feature selection,
+and method dispatch occurs depending on the class of `fs_nb`.
+
+```{r search_nb, eval = FALSE, message = FALSE}
+fs_nb <- Search(fs_setup)
+```
+
+```{r load_fs, echo = FALSE}
+fs_nb <- readRDS("fs_nb_obj.rds")   # load this secretly
+```
+
+### Plot the feature selections
+
+A S3 `plot()` method easily visualizes the steps of the selection, and highlights
+the peak (AUC) and the models at 1$\sigma$ and 2$\sigma$ from the peak. The 
+2 panels show a distribution-free representation of the data 
+(left; median; Wilcoxon signed-ranks) and a distribution dependent
+representation (right; means; standard errors).
+
+```{r plot_nb, warning = FALSE, message = FALSE, out.width = "100%", fig.width = 10, fig.height = 5}
+plot(fs_nb)
+```
+
+
+---------------
+
+
+## Feature Selection with Logistic Regression
+
+We can use the `update()` function to modify the existing `feature_select`
+object.
+
+```{r update}
+# True positive features
+attributes(sim_test_data)$sig_feats$class
+
+fs_update <- update(fs_setup,
+                    model.type = modelType_glm(response = "class_response"),
+                    stratified = TRUE)
+                    
+class(fs_update)
+
+# print method
+fs_update
+```
+
+### Perform the search
+
+```{r search_lr, eval = FALSE, message = FALSE}
+fs_lr <- Search(fs_update)
+```
+
+```{r load_fs2, echo = FALSE}
+fs_lr <- readRDS("fs_lr_obj.rds")   # load this secretly
+```
+
+### Plot the feature selections
+
+```{r plot_lr, warning = FALSE, message = FALSE, out.width = "100%", fig.width = 10, fig.height = 5}
+plot(fs_lr)
+```
+
+
+---------------
+
+
+Created by [Rmarkdown](https://github.com/rstudio/rmarkdown)
+(v`r utils::packageVersion("rmarkdown")`) and `r R.version$version.string`.

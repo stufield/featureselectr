@@ -1,0 +1,44 @@
+Type: Package
+Package: featureselectr
+Title: Perform Feature Selection/Optimization
+Version: 0.0.1
+Authors@R: c(
+    person(given = "Stu",
+           family = "Field",
+           role = c("aut", "cre", "cph"),
+           email = "stu.g.field@gmail.com",
+           comment = c(ORCID = "0000-0002-1024-5859")),
+    person(given = "Kirk",
+           family = "DeLisle",
+           role = "aut",
+           email = "kdelisle@somalogic.com")
+    )
+Description: The feature selection package contains
+    functionality designed for feature selection, model building,
+    and/or classifier development.
+License: GPL-3 | file LICENSE
+Depends:
+    R (>= 4.0.0),
+    globalr
+Imports:
+    ggplot2,
+    SomaDataIO,
+    parallel
+Suggests:
+    caTools,
+    dplyr,
+    gridExtra,
+    knitr,
+    rmarkdown,
+    SomaPlotr,
+    spelling,
+    splyr,
+    tibble,
+    testthat
+VignetteBuilder: 
+    knitr
+Encoding: UTF-8
+Language: en-US
+LazyLoad: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.1

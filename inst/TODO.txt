@@ -1,0 +1,26 @@
+Feature Selection TODO List
+------------------------------
+
+High priority:
+  Compatibility table
+  Cross-validation and Bootstrap S3 class
+    Allow creation of an object to control datasets splitting:
+      Multiple column stratification
+      Bootstrap
+      Unbalanced dataset balancing
+   
+Medium priority:
+  Cox Model
+  Parametric survival model
+  NRI cost fxn
+  Hazard Ratio cost fxn (continuous, discrete)
+  ANOVA test cost fxn/model comparison
+
+Low priority:
+  Other search methods
+    Forward step-wise with multiple paths
+  Secondary analyses (comparison of different results, etc.)
+
+Package Build:
+  Cross-validation: setupXV and setupXVstrat
+

@@ -1,0 +1,10 @@
+^.*\.Rproj$
+^\.Rproj\.user$
+data-raw
+^docs$
+^README\.Rmd$
+^Jenkinsfile-.*$
+^_pkgdown\.yml$
+^codecov\.yml$
+^\.lintr$
+^Makefile$
