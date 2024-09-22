@@ -124,10 +124,10 @@ Search.feature_select <- function(x, num.cores = 1L) {
     )
   }
 
-  sprintf("Starting the Feature Selection algorithm %s Search",
+  signal_rule(line_col = "green", lty = "double") |> writeLines()
+  sprintf("---Starting the Feature Selection algorithm %s Search",
           x$search.method) |>
     add_style$red() |>
-    signal_rule(line_col = "blue") |>
     writeLines()
 
   num.cores <- parallelSetup(num.cores)

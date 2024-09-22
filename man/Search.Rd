@@ -4,18 +4,18 @@
 \alias{Search}
 \title{Feature Selection Search Algorithms}
 \usage{
-Search(x, num.cores = 1)
+Search(x, num.cores)
 }
 \arguments{
-\item{x}{An object of class \code{feature_select} (list) from a call
+\item{x}{A \code{feature_select} class object from a call
 call to \code{\link[=featureSelection]{featureSelection()}}.}
 
-\item{num.cores}{Integer. How many cores to use during the search. Defaults to
-\code{num.cores = 1}, which does not use parallel processing. Values >= 1
+\item{num.cores}{Integer. How many cores to use during the search.
+Defaults to \code{1}, which does not use parallel processing. Values \verb{> 1}
 only available in Linux systems.}
 }
 \value{
-A completed "feature_select" class object and list consisting:
+A completed \code{feature_select} class object and list consisting:
 \item{data}{The original feature data to use.}
 \item{candidate.markers}{The list of candidate features.}
 \item{model.type}{A list containing model type variables of the
@@ -97,7 +97,7 @@ plot(FSresult)
 # Using parallel processing
 # this should be ~4x faster than above
 \dontrun{
-  FSresult <- Search(mcp, num.cores = 4)
+  FSresult <- Search(mcp, num.cores = 4L)
   FSresult
 }
 }
