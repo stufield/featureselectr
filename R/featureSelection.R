@@ -77,7 +77,7 @@
 #' mt <- modelType_glm(response = "class_response")
 #' cf <- "sens"
 #' sm <- searchType_forwardModel(15, display.name = "FeatureSelection Plot")
-#' ft <- SomaDataIO::getAnalytes(data)        # select candidate features
+#' ft <- featureselectr:::getAnalytes(data) # select candidate features
 #' fs <- featureSelection(data, candidate.markers = ft,
 #'                        model.type = mt, search.type = sm, cost = cf,
 #'                        strat.column = "class_response", runs = 5, folds = 5)
@@ -95,7 +95,6 @@
 #' fs3 <- update(fs, runs = 20, folds = 10)
 #' fs3
 #'
-#' @importFrom SomaDataIO addClass getAnalytes getMeta
 #' @export
 featureSelection <- function(data, candidate.markers, model.type,
                              search.type, runs = 1, folds = 1,
@@ -156,7 +155,7 @@ featureSelection <- function(data, candidate.markers, model.type,
                                       class(search.type),
                                       class(cost_fxn))),
                              "list")
-  fsret <- addClass(fsret, class_hierarchy)
+  fsret <- add_class(fsret, class_hierarchy)
 
   # build the cross-validation folds/bootstrap sets here so
   # that they are always consistent
@@ -186,7 +185,6 @@ featureSelection <- function(data, candidate.markers, model.type,
 #' The S3 print method for objects of class `feature_select`.
 #'
 #' @rdname featureSelection
-#' @importFrom SomaDataIO addClass
 #' @export
 print.feature_select <- function(x, ...) {
 

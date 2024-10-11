@@ -30,11 +30,12 @@ setupCrossValStrat <- function(x) UseMethod("setupCrossValStrat")
 #' Create cross-validation folds for each run: non-stratified.
 #'
 #' @noRd
+#' @importFrom withr local_seed
 #' @export
 setupCrossVal.feature_select <- function(x) {
 
   # allow control of random generator
-  withr::local_seed(x$random.seed)
+  local_seed(x$random.seed)
 
   for ( r in 1:x$cross.val$runs ) {
     run              <- sprintf("Run%i", r)
@@ -74,6 +75,7 @@ setupCrossVal.feature_select <- function(x) {
 #' Cross-validation Setup
 #' Create cross-validation folds for each run: stratified.
 #' @noRd
+#' @importFrom withr local_seed
 #' @export
 setupCrossValStrat.feature_select <- function(x) {
 
@@ -92,7 +94,7 @@ setupCrossValStrat.feature_select <- function(x) {
   }
 
   # allow control of random generator
-  withr::local_seed(x$random.seed)
+  local_seed(x$random.seed)
 
   # setup Run/Fold data structures
   for ( r in 1:x$cross.val$runs ) {

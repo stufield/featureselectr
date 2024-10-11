@@ -19,9 +19,9 @@
 #'   method, which performs the appropriate search algorithm depending on the
 #'   object class. This is typically performed internally via the `frmla =`
 #'   argument which is used to create a formula prior to being passed to one of:
-#'   [glm()], `robustNaiveBayes()`, [lm()].
+#'   [glm()], `fit_nb()`, [lm()].
 #' @author Kirk DeLisle & Stu Field
-#' @seealso [featureSelection()], [glm()], [lm()], `robustNaiveBayes()`,
+#' @seealso [featureSelection()], [glm()], [lm()], [fit_nb()],
 #' @seealso [modelType_glm()], [modelType_lm()], [modelType_nb()]
 #' @export
 fitmodel <- function(x, ...) UseMethod("fitmodel")
@@ -30,6 +30,7 @@ fitmodel <- function(x, ...) UseMethod("fitmodel")
 #' Fit Model Type: Logistic Regression
 #'
 #' @noRd
+#' @importFrom libml stripLMC
 #' @importFrom stats glm predict
 fitmodel.fs_glm <- function(x, ...) {
 
@@ -60,6 +61,7 @@ fitmodel.fs_glm <- function(x, ...) {
 
 #' Fit Model Type: Naive Bayes
 #'
+#' @importFrom libml fit_nb
 #' @noRd
 fitmodel.fs_nb <- function(x, ...) {
 
@@ -75,7 +77,7 @@ fitmodel.fs_nb <- function(x, ...) {
   trn.rows <- x$cross.val[[run]][[fold]]$training.rows
   tst.rows <- x$cross.val[[run]][[fold]]$test.rows
 
-  fit   <- robustNaiveBayes(args$frmla, data = x$data[trn.rows, ])
+  fit   <- fit_nb(args$frmla, data = x$data[trn.rows, ])
   tst_p <- predict(fit, x$data[ tst.rows, x$candidate.markers ], type = "raw")
 
   # pack all the results for return
@@ -88,6 +90,7 @@ fitmodel.fs_nb <- function(x, ...) {
 #' Fit Model Type: Linear Regression
 #'
 #' @importFrom stats lm predict
+#' @importFrom libml stripLMC
 #' @noRd
 fitmodel.fs_lm <- function(x, ...) {
 

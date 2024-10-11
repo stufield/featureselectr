@@ -125,7 +125,7 @@ data$class_response <- factor(data$class_response)
 mt <- modelType_glm(response = "class_response")
 cf <- "sens"
 sm <- searchType_forwardModel(15, display.name = "FeatureSelection Plot")
-ft <- SomaDataIO::getAnalytes(data)        # select candidate features
+ft <- featureselectr:::getAnalytes(data) # select candidate features
 fs <- featureSelection(data, candidate.markers = ft,
                        model.type = mt, search.type = sm, cost = cf,
                        strat.column = "class_response", runs = 5, folds = 5)

@@ -22,14 +22,16 @@ Depends:
     globalr
 Imports:
     ggplot2,
-    SomaDataIO,
-    parallel
+    libml,
+    parallel,
+    withr
 Suggests:
     caTools,
     dplyr,
     gridExtra,
     knitr,
     rmarkdown,
+    SomaDataIO,
     SomaPlotr,
     spelling,
     splyr,

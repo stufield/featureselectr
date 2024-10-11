@@ -27,11 +27,10 @@ NULL
 
 #' @describeIn searchType
 #'   Forwards model selection search
-#' @importFrom SomaDataIO addClass
 #' @export
 searchType_forwardModel <- function(max.steps = 20,
                                     display.name = "Forward Stepwise Model Search") {
-  as.list(environment()) |> addClass("fs_forward_model")
+  as.list(environment()) |> add_class("fs_forward_model")
 }
 
 
@@ -154,7 +153,6 @@ Search.fs_forward_model <- function(x, ...) {
 #' @noRd
 #' @importFrom ggplot2 ggplot aes theme element_text labs geom_pointrange
 #' @importFrom ggplot2 element_blank scale_color_manual scale_x_continuous
-#' @importFrom SomaDataIO getSeqId is.apt
 #' @export
 plot.fs_forward_model <- function(x, ...) {
 

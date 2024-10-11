@@ -43,11 +43,10 @@ cost <- function(x) UseMethod("cost")
 #' \item{maximize }{Whether the object (and its cost function) should be maximized or
 #'   minimized.}
 #' @author Kirk DeLisle, Stu Field
-#' @importFrom SomaDataIO addClass
 #' @noRd
 CostFxn_AUC <- function() {
   list(display.name = "AUC", maximize = TRUE ) |>
-    addClass("fs_auc")
+    add_class("fs_auc")
 }
 
 
@@ -70,11 +69,10 @@ cost.fs_auc <- function(x) {
 #' This is the cost funciton for the Concordance Correlation Coefficient.
 #' @note These are a series of internal functions
 #'   called according to the "cost" argument of [featureSelection()].
-#' @importFrom SomaDataIO addClass
 #' @noRd
 CostFxn_CCC <- function() {
   list(display.name = "CCC", maximize = TRUE) |>
-    addClass("fs_ccc")
+    add_class("fs_ccc")
 }
 
 
@@ -99,11 +97,10 @@ cost.fs_ccc <- function(x) {
 #'
 #' @note These are a series of internal functions called
 #'   according to the "cost" argument of [featureSelection()].
-#' @importFrom SomaDataIO addClass
 #' @noRd
 CostFxn_MSE <- function() {
   list(display.name = "MSE", maximize = FALSE) |>
-    addClass("fs_mse")
+    add_class("fs_mse")
 }
 
 
@@ -127,11 +124,10 @@ cost.fs_mse <- function(x) {
 #'
 #' @note These are a series of internal functions called
 #'   according to the "cost" argument of [featureSelection()].
-#' @importFrom SomaDataIO addClass
 #' @noRd
 CostFxn_R2 <- function() {
   list(display.name = "R-squared", maximize = TRUE) |>
-    addClass("fs_r2")
+    add_class("fs_r2")
 }
 
 
@@ -157,17 +153,17 @@ cost.fs_r2 <- function(x) {
 #'
 #' @note These are a series of internal functions called
 #'   according to the "cost" argument of [featureSelection()].
-#' @importFrom SomaDataIO addClass
 #' @noRd
 CostFxn_SensSpec <- function() {
   list(display.name = "Sensitivity + Specificity", maximize = TRUE) |>
-    addClass("fs_sens_spec")
+    add_class("fs_sens_spec")
 }
 
 
 #' Sensitivity + Specificity (S+S)
 #'
 #' @noRd
+#' @importFrom libml calc_confusion getStat
 #' @export
 cost.fs_sens_spec <- function(x) {
   run      <- getRun(x)

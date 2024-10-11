@@ -81,7 +81,7 @@ data$class_response <- as.factor(data$class_response)
 mt  <- modelType_glm(response = "class_response")
 cst <- "AUC"
 sm  <- searchType_forwardModel(max.steps = 10, display.name = "FeatureSelection Plot")
-ft  <- head(SomaDataIO::getAnalytes(data))  # select candidate features
+ft  <- head(featureselectr:::getAnalytes(data))  # select candidate features
 mcp <- featureSelection(data,
                         candidate.markers = ft,
                         model.type = mt,

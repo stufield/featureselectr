@@ -13,11 +13,7 @@ NULL
 
   # this is to register the internal S3 methods
   # this avoids having to export the methods in the NAMESPACE file
-  register_s3_method("featureselectr", "stripLMC", "default")
-  register_s3_method("featureselectr", "stripLMC", "lm")
-  register_s3_method("featureselectr", "stripLMC", "glm")
-  register_s3_method("featureselectr", "robustNaiveBayes", "default")
-  register_s3_method("featureselectr", "robustNaiveBayes", "formula")
+  #register_s3_method("featureselectr", "stripLMC", "default")
   }
 
 

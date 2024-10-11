@@ -22,10 +22,9 @@
 #' # Logistic Regression
 #' modelType_glm()
 #'
-#' @importFrom SomaDataIO addClass
 #' @export
 modelType_glm <- function(response = "Response") {
-  as.list(environment()) |> addClass("fs_glm")
+  as.list(environment()) |> add_class("fs_glm")
 }
 
 #' Model Type Naive Bayes
@@ -37,10 +36,9 @@ modelType_glm <- function(response = "Response") {
 #' # Robust Parameter Naive Bayes (default)
 #' modelType_nb()
 #'
-#' @importFrom SomaDataIO addClass
 #' @export
 modelType_nb <- function(response = "Response") {
-  as.list(environment()) |> addClass("fs_nb")
+  as.list(environment()) |> add_class("fs_nb")
 }
 
 #' Model Type Linear Regression
@@ -52,8 +50,7 @@ modelType_nb <- function(response = "Response") {
 #' # Linear Regression
 #' modelType_lm()
 #'
-#' @importFrom SomaDataIO addClass
 #' @export
 modelType_lm <- function(response = "Response") {
-  as.list(environment()) |> addClass("fs_lm")
+  as.list(environment()) |> add_class("fs_lm")
 }

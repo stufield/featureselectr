@@ -15,6 +15,7 @@ if ( getRversion() >= "2.15.1" ) {
       "elim.markers",
       "id",
       "metric",
+      "AptName",
       "step"
     )
   )

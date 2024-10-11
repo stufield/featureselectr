@@ -14,7 +14,7 @@ call to \code{\link[=featureSelection]{featureSelection()}}.}
 method, which performs the appropriate search algorithm depending on the
 object class. This is typically performed internally via the \verb{frmla =}
 argument which is used to create a formula prior to being passed to one of:
-\code{\link[=glm]{glm()}}, \code{robustNaiveBayes()}, \code{\link[=lm]{lm()}}.}
+\code{\link[=glm]{glm()}}, \code{fit_nb()}, \code{\link[=lm]{lm()}}.}
 }
 \description{
 Provides linear regression, Naive Bayes, and logistic regression
@@ -32,7 +32,7 @@ with the desired formula. Without this and in the correct form, the method
 will fail. Usually it is fine to leave the defaults in place.
 }
 \seealso{
-\code{\link[=featureSelection]{featureSelection()}}, \code{\link[=glm]{glm()}}, \code{\link[=lm]{lm()}}, \code{robustNaiveBayes()},
+\code{\link[=featureSelection]{featureSelection()}}, \code{\link[=glm]{glm()}}, \code{\link[=lm]{lm()}}, \code{\link[=fit_nb]{fit_nb()}},
 
 \code{\link[=modelType_glm]{modelType_glm()}}, \code{\link[=modelType_lm]{modelType_lm()}}, \code{\link[=modelType_nb]{modelType_nb()}}
 }

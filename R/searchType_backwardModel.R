@@ -1,10 +1,9 @@
 
 #' @describeIn searchType
 #' Backwards model selection search
-#' @importFrom SomaDataIO addClass
 #' @export
 searchType_backwardModel <- function(display.name = "Backward Stepwise Model Search") {
-  as.list(environment()) |> addClass("fs_backward_model")
+  as.list(environment()) |> add_class("fs_backward_model")
 }
 
 
@@ -139,7 +138,6 @@ Search.fs_backward_model <- function(x, ...) {
 #' @noRd
 #' @importFrom ggplot2 ggplot aes theme element_text labs geom_pointrange
 #' @importFrom ggplot2 element_blank scale_color_manual scale_x_continuous
-#' @importFrom SomaDataIO getSeqId is.apt
 #' @export
 plot.fs_backward_model <- function(x, box.col = 8, ...) {
 

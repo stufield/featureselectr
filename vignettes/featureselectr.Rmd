@@ -85,7 +85,7 @@ hold-out is fairly common. Of course, more runs (repeats) will take longer.
 There are `r length(attributes(data)$sig_feats$class)` features that should 
 be significant in a binary classification context. They are identified in 
 the attributes of the object itself. We will restrict the search to the 
-top **15** steps (there are `r SomaDataIO::getAnalytes(sim_test_data, n = TRUE)`
+top **15** steps (there are `r featureselectr:::getAnalytes(sim_test_data, n = TRUE)`
 total features; thus approx. 35 false positives).
 
 ### Setup `FS` object
@@ -97,7 +97,7 @@ attributes(sim_test_data)$sig_feats$class
 # log-transform, center, and scale
 cs    <- function(x) { out <- x - mean(x); out / sd(out) }
 data  <- log10(sim_test_data)
-feats <- SomaDataIO::getAnalytes(data)      # all possible SeqId features
+feats <- featureselectr:::getAnalytes(data)
 data[, feats] <- apply(data[, feats], 2, cs)
 
 # set model type and column name of response variable
