@@ -31,7 +31,6 @@ Suggests:
     gridExtra,
     knitr,
     rmarkdown,
-    SomaDataIO,
     SomaPlotr,
     spelling,
     splyr,
