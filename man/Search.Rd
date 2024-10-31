@@ -74,7 +74,7 @@ based upon the performances across all runs and folds.}
 }
 }
 \examples{
-data <- splyr::sim_test_data
+data <- splyr::sim_adat
 
 # Setup response variable
 data$class_response <- as.factor(data$class_response)

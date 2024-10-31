@@ -163,7 +163,7 @@ CostFxn_SensSpec <- function() {
 #' Sensitivity + Specificity (S+S)
 #'
 #' @noRd
-#' @importFrom libml calc_confusion getStat
+#' @importFrom libml calc_confusion pull_stat
 #' @export
 cost.fs_sens_spec <- function(x) {
   run      <- getRun(x)
@@ -177,5 +177,5 @@ cost.fs_sens_spec <- function(x) {
                        cutoff    = 0.5,
                        pos.class = levels(df$class)[2L]) |>
     summary()
-  getStat(cm, "Sens") + getStat(cm, "Spec")
+  pull_stat(cm, "Sens") + pull_stat(cm, "Spec")
 }

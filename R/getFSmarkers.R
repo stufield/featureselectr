@@ -15,9 +15,9 @@
 #'       cost function.}
 #' @author Stu Field
 #' @examples
-#' data <- splyr::sim_test_data
-#' apts <- attributes(data)$sig_feats$class
-#' fs <- featureSelection(data, candidate.markers = apts,
+#' data  <- splyr::sim_adat
+#' feats <- attributes(data)$sig_feats$class
+#' fs <- featureSelection(data, candidate.markers = feats,
 #'                        search.type = searchType_forwardModel(),
 #'                        model.type = modelType_glm("class_response"),
 #'                        stratified = TRUE,

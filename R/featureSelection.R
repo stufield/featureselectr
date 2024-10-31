@@ -69,7 +69,7 @@
 #'   Data Mining, Inference , and Prediction. 2nd Edition. Springer. 2009.
 #' @examples
 #' # Simulated Test Data
-#' data <- splyr::sim_test_data
+#' data <- splyr::sim_adat
 #'
 #' # Setup response variable
 #' data$class_response <- factor(data$class_response)

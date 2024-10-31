@@ -13,7 +13,7 @@ library(ggplot2)
 knitr::opts_chunk$set(
   collapse = TRUE, comment = "#>"
 )
-sim_test_data <- splyr::sim_test_data
+sim_adat <- splyr::sim_adat
 ```
 
 
@@ -77,7 +77,7 @@ See `?featureSelection` and perhaps `?cost`.
 ## Feature Selection for Naive Bayes
 
 The analysis below is performed with the simulated data set from
-`splyr::sim_test_data`. We will fit a naive Bayes model during the
+`splyr::sim_adat`. We will fit a naive Bayes model during the
 feature selection. The setup below specifies **5** independent runs 
 of **4** fold cross-validation.
 Higher folds might generate slightly different results, but a **20-25%**
@@ -85,18 +85,23 @@ hold-out is fairly common. Of course, more runs (repeats) will take longer.
 There are `r length(attributes(data)$sig_feats$class)` features that should 
 be significant in a binary classification context. They are identified in 
 the attributes of the object itself. We will restrict the search to the 
-top **15** steps (there are `r featureselectr:::getAnalytes(sim_test_data, n = TRUE)`
+top **15** steps (there are
+`r length(featureselectr:::getAnalytes(sim_adat))`
 total features; thus approx. 35 false positives).
 
 ### Setup `FS` object
 
 ```{r naive_bayes_setup}
 # True positive features
-attributes(sim_test_data)$sig_feats$class
+data <- sim_adat
+attributes(data)$sig_feats$class
 
 # log-transform, center, and scale
-cs    <- function(x) { out <- x - mean(x); out / sd(out) }
-data  <- log10(sim_test_data)
+cs <- function(x) {
+  out <- log10(x)
+  out <- out - mean(out)
+  out / sd(out)
+}
 feats <- featureselectr:::getAnalytes(data)
 data[, feats] <- apply(data[, feats], 2, cs)
 
@@ -153,7 +158,7 @@ object.
 
 ```{r update}
 # True positive features
-attributes(sim_test_data)$sig_feats$class
+attributes(sim_adat)$sig_feats$class
 
 fs_update <- update(fs_setup,
                     model.type = modelType_glm(response = "class_response"),

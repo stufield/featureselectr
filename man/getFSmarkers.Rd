@@ -25,9 +25,9 @@ Function to return the maximum, se1, and se2 markers from either
 forward or backward selection from a \code{feature_select} class object.
 }
 \examples{
-data <- splyr::sim_test_data
-apts <- attributes(data)$sig_feats$class
-fs <- featureSelection(data, candidate.markers = apts,
+data  <- splyr::sim_adat
+feats <- attributes(data)$sig_feats$class
+fs <- featureSelection(data, candidate.markers = feats,
                        search.type = searchType_forwardModel(),
                        model.type = modelType_glm("class_response"),
                        stratified = TRUE,

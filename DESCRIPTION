@@ -19,7 +19,7 @@ Description: The feature selection package contains
 License: GPL-3 | file LICENSE
 Depends:
     R (>= 4.0.0),
-    globalr
+    helpr
 Imports:
     ggplot2,
     libml,
@@ -32,6 +32,7 @@ Suggests:
     knitr,
     rmarkdown,
     SomaPlotr,
+    SomaDataIO,
     spelling,
     splyr,
     tibble,

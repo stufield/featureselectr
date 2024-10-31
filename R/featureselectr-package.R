@@ -2,7 +2,7 @@
 #' @keywords internal
 "_PACKAGE"
 
-#' @import globalr
+#' @import helpr
 NULL
 
 # on load, make all the package objects
