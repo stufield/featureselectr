@@ -9,8 +9,8 @@
 #'   data suitable for modeling.
 #' @param candidate_markers `character(n)`. List of candidate markers,
 #'   i.e. columns names, from the data object.
-#' @param model_type An instantiated `modelType` object, generated via a call
-#'   to one of the [modelType()] functions.
+#' @param model_type An instantiated `model_type` object, generated via a call
+#'   to one of the [model_type()] functions.
 #' @param search_type An instantiated `searchType` object, generated via a
 #'   call to one of the [searchType()] functions.
 #' @param cost Character. A string to be used in defining the cost
@@ -74,7 +74,7 @@
 #' # Setup response variable
 #' data$class_response <- factor(data$class_response)
 #'
-#' mt <- modelType_glm(response = "class_response")
+#' mt <- model_type_glm(response = "class_response")
 #' cf <- "sens"
 #' sm <- searchType_forwardModel(15, display_name = "FeatureSelection Plot")
 #' ft <- featureselectr:::get_analytes(data) # select candidate features
@@ -86,7 +86,7 @@
 #'
 #' # Using the S3 Update method to modify existing FS object:
 #' # change model type, cost function, and random seed
-#' fs2 <- update(fs, model_type = modelType_nb(),
+#' fs2 <- update(fs, model_type = model_type_nb(),
 #'               cost = "AUC", random_seed = 99)
 #' fs2
 #'

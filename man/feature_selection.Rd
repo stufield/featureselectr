@@ -32,8 +32,8 @@ data suitable for modeling.}
 \item{candidate_markers}{\code{character(n)}. List of candidate markers,
 i.e. columns names, from the data object.}
 
-\item{model_type}{An instantiated \code{modelType} object, generated via a call
-to one of the \code{\link[=modelType]{modelType()}} functions.}
+\item{model_type}{An instantiated \code{model_type} object, generated via a call
+to one of the \code{\link[=model_type]{model_type()}} functions.}
 
 \item{search_type}{An instantiated \code{searchType} object, generated via a
 call to one of the \code{\link[=searchType]{searchType()}} functions.}
@@ -122,7 +122,7 @@ data <- splyr::sim_adat
 # Setup response variable
 data$class_response <- factor(data$class_response)
 
-mt <- modelType_glm(response = "class_response")
+mt <- model_type_glm(response = "class_response")
 cf <- "sens"
 sm <- searchType_forwardModel(15, display_name = "FeatureSelection Plot")
 ft <- featureselectr:::get_analytes(data) # select candidate features
@@ -134,7 +134,7 @@ fs
 
 # Using the S3 Update method to modify existing FS object:
 # change model type, cost function, and random seed
-fs2 <- update(fs, model_type = modelType_nb(),
+fs2 <- update(fs, model_type = model_type_nb(),
               cost = "AUC", random_seed = 99)
 fs2
 

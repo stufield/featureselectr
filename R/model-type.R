@@ -10,7 +10,7 @@
 #' Typically these functions can be called with their defaults, especially if
 #' called upon a data set of class `tr_data` (See Classify).
 #'
-#' @name modelType
+#' @name model_type
 #' @param response Character. The string of the column name to use as the
 #' response variable. Assumed to be two-class, factor type.
 #' @return An object of the appropriate class according to the 
@@ -20,10 +20,10 @@
 #' @author Kirk DeLisle, Stu Field
 #' @examples
 #' # Logistic Regression
-#' modelType_glm()
+#' model_type_glm()
 #'
 #' @export
-modelType_glm <- function(response = "Response") {
+model_type_glm <- function(response = "Response") {
   as.list(environment()) |> add_class("fs_glm")
 }
 
@@ -31,13 +31,13 @@ modelType_glm <- function(response = "Response") {
 #'
 #' Naive Bayes Models
 #'
-#' @rdname modelType
+#' @rdname model_type
 #' @examples
 #' # Robust Parameter Naive Bayes (default)
-#' modelType_nb()
+#' model_type_nb()
 #'
 #' @export
-modelType_nb <- function(response = "Response") {
+model_type_nb <- function(response = "Response") {
   as.list(environment()) |> add_class("fs_nb")
 }
 
@@ -45,12 +45,12 @@ modelType_nb <- function(response = "Response") {
 #'
 #' Linear Regression Models
 #'
-#' @rdname modelType
+#' @rdname model_type
 #' @examples
 #' # Linear Regression
-#' modelType_lm()
+#' model_type_lm()
 #'
 #' @export
-modelType_lm <- function(response = "Response") {
+model_type_lm <- function(response = "Response") {
   as.list(environment()) |> add_class("fs_lm")
 }

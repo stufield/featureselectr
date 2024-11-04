@@ -34,7 +34,7 @@ will fail. Usually it is fine to leave the defaults in place.
 \seealso{
 \code{\link[=feature_selection]{feature_selection()}}, \code{\link[=glm]{glm()}}, \code{\link[=lm]{lm()}}, \code{\link[=fit_nb]{fit_nb()}},
 
-\code{\link[=modelType_glm]{modelType_glm()}}, \code{\link[=modelType_lm]{modelType_lm()}}, \code{\link[=modelType_nb]{modelType_nb()}}
+\code{\link[=model_type_glm]{model_type_glm()}}, \code{\link[=model_type_lm]{model_type_lm()}}, \code{\link[=model_type_nb]{model_type_nb()}}
 }
 \author{
 Kirk DeLisle & Stu Field

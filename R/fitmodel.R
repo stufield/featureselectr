@@ -22,7 +22,7 @@
 #'   [glm()], `fit_nb()`, [lm()].
 #' @author Kirk DeLisle & Stu Field
 #' @seealso [feature_selection()], [glm()], [lm()], [fit_nb()],
-#' @seealso [modelType_glm()], [modelType_lm()], [modelType_nb()]
+#' @seealso [model_type_glm()], [model_type_lm()], [model_type_nb()]
 #' @export
 fitmodel <- function(x, ...) UseMethod("fitmodel")
 
