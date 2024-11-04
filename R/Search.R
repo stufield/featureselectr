@@ -34,34 +34,34 @@
 #'     based upon the performances across all runs and folds.}
 #' }
 #' @param x A `feature_select` class object from a call
-#'   call to [featureSelection()].
+#'   call to [feature_selection()].
 #' @param num.cores Integer. How many cores to use during the search.
 #'   Defaults to `1`, which does not use parallel processing. Values `> 1`
 #'   only available in Linux systems.
 #' @return A completed `feature_select` class object and list consisting:
 #' \item{data}{The original feature data to use.}
-#' \item{candidate.markers}{The list of candidate features.}
-#' \item{model.type}{A list containing model type variables of the
+#' \item{candidate_markers}{The list of candidate features.}
+#' \item{model_type}{A list containing model type variables of the
 #'   appropriate class for the desired model type.}
-#' \item{search.type}{A list containing search type variables of the
+#' \item{search_type}{A list containing search type variables of the
 #'   appropriate class for the desired search type.}
 #' \item{cost}{A string of the type of cost function.}
-#' \item{cost.fxn}{A list containing cost variables of the
+#' \item{cost_fxn}{A list containing cost variables of the
 #'   appropriate class for the desired object cost function.}
 #' \item{runs}{The number of runs.}
 #' \item{folds}{The number of folds.}
-#' \item{do.log}{Was log-transform performed? Should be `FALSE`.}
-#' \item{keep.models}{If intermediate cross-validation models are kept?}
+#' \item{do_log}{Was log-transform performed? Should be `FALSE`.}
+#' \item{keep_models}{If intermediate cross-validation models are kept?}
 #' \item{bootstrap}{Is bootstrapping performed?}
 #' \item{stratified}{Is cross-validation stratification performed?}
-#' \item{strat.column}{Which field string is used in stratification.}
-#' \item{random.seed}{The random seed used}
-#' \item{cross.val}{A list containing the training and test indices of the
+#' \item{strat_column}{Which field string is used in stratification.}
+#' \item{random_seed}{The random seed used}
+#' \item{cross_val}{A list containing the training and test indices of the
 #'   various cross validation folds.}
 #' \item{search.complete}{Logical if the object has completed a search}
 #' \item{call}{The original matched call.}
 #' @author Kirk DeLisle, Stu Field
-#' @seealso [featureSelection()]
+#' @seealso [feature_selection()]
 #' @examples
 #' data <- splyr::sim_adat
 #'
@@ -69,15 +69,15 @@
 #' data$class_response <- as.factor(data$class_response)
 #' mt  <- modelType_glm(response = "class_response")
 #' cst <- "AUC"
-#' sm  <- searchType_forwardModel(max.steps = 10, display.name = "FeatureSelection Plot")
-#' ft  <- head(featureselectr:::getAnalytes(data))  # select candidate features
-#' mcp <- featureSelection(data,
-#'                         candidate.markers = ft,
-#'                         model.type = mt,
-#'                         search.type = sm,
-#'                         cost = cst,
-#'                         strat.column = "class_response",
-#'                         runs = 4, folds = 3, random.seed = 99)
+#' sm  <- searchType_forwardModel(max_steps = 10, display_name = "FeatureSelection Plot")
+#' ft  <- head(featureselectr:::get_analytes(data))  # select candidate features
+#' mcp <- feature_selection(data,
+#'                          candidate_markers = ft,
+#'                          model_type = mt,
+#'                          search_type = sm,
+#'                          cost = cst,
+#'                          strat_column = "class_response",
+#'                          runs = 4, folds = 3, random_seed = 99)
 #'
 #' FSresult <- Search(mcp)
 #' FSresult
@@ -86,18 +86,18 @@
 #' # Using parallel processing
 #' # this should be ~4x faster than above
 #' \dontrun{
-#'   FSresult <- Search(mcp, num.cores = 4L)
+#'   FSresult <- Search(mcp, num_cores = 4L)
 #'   FSresult
 #' }
 #' @export
-Search <- function(x, num.cores) UseMethod("Search")
+Search <- function(x, num_cores) UseMethod("Search")
 
 #' S3 Search default method
 #'
 #' @noRd
 #' @note Setting default fall back
 #' @export
-Search.default <- function(x, num.cores) {
+Search.default <- function(x, num_cores) {
   stop(
     "Could not find a S3 method for object of this class: ",
     value(class(x)), call. = FALSE
@@ -111,11 +111,11 @@ Search.default <- function(x, num.cores) {
 #'
 #' @noRd
 #' @export
-Search.feature_select <- function(x, num.cores = 1L) {
+Search.feature_select <- function(x, num_cores = 1L) {
 
-  checkFeatureSelect(x)
+  check_feature_select(x)
 
-  if ( x$search.complete ) {
+  if ( x$search_complete ) {
     stop(
       "This object has already performed a search with ",
       "these data, candidates, and search parameters.",
@@ -125,13 +125,13 @@ Search.feature_select <- function(x, num.cores = 1L) {
 
   signal_rule(line_col = "green", lty = "double") |> writeLines()
   sprintf("---Starting the Feature Selection algorithm %s Search",
-          x$search.method) |>
+          x$search_method) |>
     add_style$red() |>
     writeLines()
 
-  num.cores <- parallelSetup(num.cores)
+  num_cores <- parallel_setup(num_cores)
 
-  if ( num.cores > x$runs ) {
+  if ( num_cores > x$runs ) {
     signal_oops(
       "You have set more cores than runs ... this is likely unintended."
     )
@@ -139,7 +139,7 @@ Search.feature_select <- function(x, num.cores = 1L) {
 
    # Run the search
    # NextMethod() finds next class Search method
-   x_res <- NextMethod("Search", num.cores = num.cores)
-   x_res$search.complete <- TRUE
+   x_res <- NextMethod("Search", num_cores = num_cores)
+   x_res$search_complete <- TRUE
    x_res
 }

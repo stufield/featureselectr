@@ -86,7 +86,7 @@ There are `r length(attributes(data)$sig_feats$class)` features that should
 be significant in a binary classification context. They are identified in 
 the attributes of the object itself. We will restrict the search to the 
 top **15** steps (there are
-`r length(featureselectr:::getAnalytes(sim_adat))`
+`r length(featureselectr:::get_analytes(sim_adat))`
 total features; thus approx. 35 false positives).
 
 ### Setup `FS` object
@@ -102,7 +102,7 @@ cs <- function(x) {
   out <- out - mean(out)
   out / sd(out)
 }
-feats <- featureselectr:::getAnalytes(data)
+feats <- featureselectr:::get_analytes(data)
 data[, feats] <- apply(data[, feats], 2, cs)
 
 # set model type and column name of response variable
@@ -110,12 +110,12 @@ mt <- modelType_nb(response = "class_response")
 
 # set search method function to 'forward' and 'model'
 # restrict to the top 10 steps in the search; then stop
-sm <- searchType_forwardModel(max.steps = 15)
+sm <- searchType_forwardModel(max_steps = 15)
 
 # setup feature selection object
-fs_setup <- featureSelection(data, candidate.markers = feats, model.type = mt,
-                             search.type = sm, runs = 5, folds = 4,
-                             cost = "AUC", random.seed = 1)
+fs_setup <- feature_selection(data, candidate_markers = feats, model_type = mt,
+                              search_type = sm, runs = 5, folds = 4,
+                              cost = "AUC", random_seed = 1)
 
 class(fs_setup)
 # print setup object
@@ -137,13 +137,14 @@ fs_nb <- readRDS("fs_nb_obj.rds")   # load this secretly
 
 ### Plot the feature selections
 
-A S3 `plot()` method easily visualizes the steps of the selection, and highlights
-the peak (AUC) and the models at 1$\sigma$ and 2$\sigma$ from the peak. The 
-2 panels show a distribution-free representation of the data 
+A S3 `plot()` method easily visualizes the steps of the selection,
+and highlights the peak (AUC) and the models at
+1$\sigma$ and 2$\sigma$ from the peak.
+The 2 panels show a distribution-free representation of the data 
 (left; median; Wilcoxon signed-ranks) and a distribution dependent
 representation (right; means; standard errors).
 
-```{r plot_nb, warning = FALSE, message = FALSE, out.width = "100%", fig.width = 10, fig.height = 5}
+```{r plot-nb, warning = FALSE, message = FALSE, out.width = "100%", fig.width = 10, fig.height = 5}
 plot(fs_nb)
 ```
 
@@ -160,9 +161,11 @@ object.
 # True positive features
 attributes(sim_adat)$sig_feats$class
 
-fs_update <- update(fs_setup,
-                    model.type = modelType_glm(response = "class_response"),
-                    stratified = TRUE)
+fs_update <- update(
+  fs_setup,
+  model_type = modelType_glm(response = "class_response"),
+  stratified = TRUE
+)
                     
 class(fs_update)
 
@@ -186,9 +189,4 @@ fs_lr <- readRDS("fs_lr_obj.rds")   # load this secretly
 plot(fs_lr)
 ```
 
-
 ---------------
-
-
-Created by [Rmarkdown](https://github.com/rstudio/rmarkdown)
-(v`r utils::packageVersion("rmarkdown")`) and `r R.version$version.string`.

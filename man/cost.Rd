@@ -8,7 +8,7 @@ cost(x)
 }
 \arguments{
 \item{x}{An object of class \code{feature_select} (\code{typeof = list}) from a call
-call to \code{\link[=featureSelection]{featureSelection()}}.}
+call to \code{\link[=feature_selection]{feature_selection()}}.}
 }
 \value{
 The return value is one of: Area Under the Curve (AUC),

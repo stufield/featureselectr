@@ -1,9 +1,9 @@
 # Utilities and internals
 
-getRun  <- function(x) paste0("Run", x$cross.val$current.run)
-getFold <- function(x) paste0("Fold", x$cross.val$current.fold)
+get_run  <- function(x) paste0("Run", x$cross_val$current_run)
+get_fold <- function(x) paste0("Fold", x$cross_val$current_fold)
 
-calcCI95se <- function(x) {
+calc_CI95 <- function(x) {
   se <- sd(x) / sqrt(length(x))
   c(lower = (mean(x) - (1.96 * se)),
     mean  = mean(x),
@@ -14,17 +14,17 @@ calcCI95se <- function(x) {
 #' Check if `feature_select` class object
 #' Preforms a check of if object is a feature selection object
 #' @noRd
-is.feature_select <- function(x) {
+is_feature_select <- function(x) {
   class <- inherits(x, "feature_select")
   nms   <- all(c("data",
-                 "candidate.markers",
-                 "model.type",
-                 "cross.val",
+                 "candidate_markers",
+                 "model_type",
+                 "cross_val",
                  "cost",
                  "call",
-                 "keep.models",
-                 "search.type",
-                 "cost.fxn",
+                 "keep_models",
+                 "search_type",
+                 "cost_fxn",
                  "runs",
                  "folds") %in% names(x))
   (class && nms)
@@ -38,8 +38,8 @@ is.feature_select <- function(x) {
 #' @return If complete, does nothing. Just a pass through.
 #' @noRd
 check_complete <- function(x) {
-  if ( !x$search.complete &&
-      (x$cross.val$current.run + x$cross.val$current.fold) == 0 ) {
+  if ( !x$search_complete &&
+      (x$cross_val$current_run + x$cross_val$current_fold) == 0 ) {
     stop(
       "Feature selection not yet been performed on this `feature_select` object.\n",
       "Nothing to do here. Perhaps run `Search()`?", call. = FALSE
@@ -56,24 +56,24 @@ check_complete <- function(x) {
 #' @param x A `feature_select` class object.
 #' @note This function is expected to grow as additional checks/traps are implemented.
 #' @noRd
-checkFeatureSelect <- function(x) {
+check_feature_select <- function(x) {
 
-  msg <- paste("Looks like you mixed up `model.type` ",
-               "and `search.type` in object definition.")
+  msg <- paste("Looks like you mixed up `model_type` ",
+               "and `search_type` in object definition.")
 
-  if ( inherits(x$model.type, c("fs_forward_model", "fs_backward_model") )) {
+  if ( inherits(x$model_type, c("fs_forward_model", "fs_backward_model") )) {
     stop(msg, call. = FALSE)
   }
-  if ( inherits(x$search.type, c("fs_nb", "fs_glm", "fs_lm") )) {
+  if ( inherits(x$search_type, c("fs_nb", "fs_glm", "fs_lm") )) {
     stop(msg, call. = FALSE)
   }
-  if ( !"response" %in% names(x$model.type)) {
-    stop("No `response` in `model.type` definition.", call. = FALSE)
+  if ( !"response" %in% names(x$model_type)) {
+    stop("No `response` in `model_type` definition.", call. = FALSE)
   }
-  if ( sum(grepl("forward", class(x$search.type))) > 0 &&
-       !"max.steps"%in%names(x$search.type) ) {
+  if ( sum(grepl("forward", class(x$search_type))) > 0 &&
+       !"max_steps"%in%names(x$search_type) ) {
     stop(
-      "No `max.steps` defined ... not compatible with a Forward search.",
+      "No `max_steps` defined ... not compatible with a Forward search.",
       call. = FALSE
     )
   }
@@ -86,19 +86,19 @@ checkFeatureSelect <- function(x) {
 #' processing via \pkg{parallel} and [parallel::mclapply()].
 #' Only supported on Linux systems.
 #'
-#' @param num.cores Integer. The number of cores to use.
+#' @param num_cores `integer(1)`. The number of cores to use.
 #' @return The numeric value of the number of cores to be used.
 #' @seealso [parallel::mclapply()]
 #' @importFrom parallel mclapply
 #' @noRd
-parallelSetup <- function(num.cores) {
+parallel_setup <- function(num_cores) {
 
-  if ( num.cores > 1L ) {                 # Checks for parallel processing
+  if ( num_cores > 1L ) {                 # Checks for parallel processing
     sys <- R.Version()$system
     if ( grepl("linux|darwin", sys) ) {   # Linux system
       if ( requireNamespace("parallel", quietly = TRUE) ) {
         signal_todo(
-          "<<< Using", value(num.cores), "CPUs parallel processing >>>\n",
+          "<<< Using", value(num_cores), "CPUs parallel processing >>>\n",
           "Please ensure you set the number of cores appropriately:\n",
           "  If running MODEL selection algorithm:\n",
           "    parallel processing is on the", add_style$red("*RUNS*"), "\n",
@@ -111,17 +111,17 @@ parallelSetup <- function(num.cores) {
           "Did not find the `parallel` pkg installed on your Linux system ..."
         )
         signal_done("Setting `num.cores = 1` and continuing in serial.")
-        num.cores <- 1L
+        num_cores <- 1L
       }
     } else if ( grepl("ming", sys) ) {   # Windows system
       signal_oops("Windows OS detected ... parallel processing is not supported.")
       signal_done("Setting `num.cores = 1L` and continuing in serial.")
-      num.cores <- 1L
+      num_cores <- 1L
     } else {
       stop("Unknown operating system type: ", value(sys), call. = FALSE)
     }
   }
-  num.cores
+  num_cores
 }
 
 
@@ -134,26 +134,22 @@ parallelSetup <- function(num.cores) {
 #' @param x A `feature_select` class object.
 #' @importFrom graphics segments plot axis legend abline
 #' @noRd
-checkStratification <- function(x) {
-
-  resp  <- x$model.type$response
+check_strat <- function(x) {
+  resp  <- x$model_type$response
   tab   <- table(x$data[[resp]])
-  runs  <- x$cross.val$runs
-  folds <- x$cross.val$folds
+  runs  <- x$cross_val$runs
+  folds <- x$cross_val$folds
 
   if ( length(tab) == 2L ) { # binary response
-
     signal_done(
       "Checking stratification of cross-folds for BINARY responses"
     )
-    data.prev <- prop.table(tab)[1L]
-
+    data_prev <- prop.table(tab)[1L]
     dimnms <- list(fold = paste0("Fold", 1:folds), run = paste0("Run", 1:runs))
-
     tbls <- lapply(c("training", "test"), function(cv) {
                      lapply(1:runs, function(r)
                             sapply(1:folds, function(f)
-                                   table(x$data[[resp]][ x$cross.val[[sprintf("Run%s", r)]][[f]][[sprintf("%s.rows", cv)]] ])))
+                                   table(x$data[[resp]][x$cross_val[[sprintf("Run%s", r)]][[f]][[sprintf("%s.rows", cv)]] ])))
                    }) |>
       setNames(c("training", "test"))
 
@@ -167,16 +163,16 @@ checkStratification <- function(x) {
     }
 
     prev_df   <- lapply(prev_tables, as.numeric)
-    plot.vals <- c(do.call("rbind", prev_df))
-    l         <- length(plot.vals)
+    plot_vals <- c(do.call("rbind", prev_df))
+    l         <- length(plot_vals)
     axs_names <- expand.grid(dimnms, stringsAsFactors = FALSE, KEEP.OUT.ATTRS = FALSE)
     axs_names <- paste0(axs_names$fold, "_", axs_names$run)
-    plot(c(data.prev, plot.vals),
+    plot(c(data_prev, plot_vals),
          ylim = 0:1,
          pch = 21, col = 1, cex = 1.5,
          bg = c(2, rep(c(3, 4), times = length(plot.vals) / 2)), xlab = "",
-         main = sprintf("Prevalence of '%s' in Stratified Cross-Folds", names(data.prev)),
-         ylab = sprintf("Prevalence: %s", names(data.prev)),
+         main = sprintf("Prevalence of '%s' in Stratified Cross-Folds", names(data_prev)),
+         ylab = sprintf("Prevalence: %s", names(data_prev)),
          axes = FALSE, frame.plot = TRUE)
     graphics::segments(seq(2, l, by = 2),
                        prev_df$training,
@@ -184,8 +180,8 @@ checkStratification <- function(x) {
                        prev_df$test, col = 5)
     graphics::axis(1, seq(2, l, by = 2) + 0.5, las = 2, cex.axis = 0.66, labels = axs_names)
     graphics::axis(2)
-    graphics::abline(h = data.prev, col = 2, lty=2, lwd = 1.5)
-    graphics::abline(v = seq(1, length(plot.vals), by = 2) + 0.5,
+    graphics::abline(h = data_prev, col = 2, lty=2, lwd = 1.5)
+    graphics::abline(v = seq(1, length(plot_vals), by = 2) + 0.5,
                      col = "gray60", lty = 2, lwd = 1)
     graphics::legend("topleft",
                      legend = c("Full Data", "Training", "Test"),

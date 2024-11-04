@@ -11,25 +11,25 @@
 #' attributes (class) to reflect the appropriate search values.
 #'
 #' @name searchType
-#' @param max.steps Maximum number of covariates allowed into the model.
-#' @param display.name Character. A title or display name to use by S3 plot
+#' @param max_steps Maximum number of covariates allowed into the model.
+#' @param display_name Character. A title or display name to use by S3 plot
 #'   generics.
 #' @return A list containing:
-#'   \item{max.steps}{Maximum model steps to search. If forward search implemented.}
-#'   \item{display.name}{The official "Display Title" to be used by any plot
+#'   \item{max_steps}{Maximum model steps to search. If forward search implemented.}
+#'   \item{display_name}{The official "Display Title" to be used by any plot
 #'     methods called on the object.}
 #' @author Kirk DeLisle & Stu Field
 #' @examples
 #' searchType_forwardModel()                 # the default=20
-#' searchType_forwardModel(max.steps = 15)   # set to 15
+#' searchType_forwardModel(max_steps = 15)   # set to 15
 #' searchType_forwardModel(15, "My Awesome Forward Search")   # set title
 NULL
 
 #' @describeIn searchType
 #'   Forwards model selection search
 #' @export
-searchType_forwardModel <- function(max.steps = 20,
-                                    display.name = "Forward Stepwise Model Search") {
+searchType_forwardModel <- function(max_steps = 20L,
+                                    display_name = "Forward Stepwise Model Search") {
   as.list(environment()) |> add_class("fs_forward_model")
 }
 
@@ -46,7 +46,7 @@ Search.fs_forward_model <- function(x, ...) {
   writeLines(
     signal_rule("Using `Forward-Stepwise` model search", line_col = "magenta")
   )
-  cores <- list(...)$num.cores
+  cores <- list(...)$num_cores
   op <- options(stringsAsFactors = FALSE)
   on.exit(options(op))
 
@@ -55,91 +55,87 @@ Search.fs_forward_model <- function(x, ...) {
   # for model search, the cross-validated folds determine which
   # paramter is chosen at any given step
 
-  search.progress <- data.frame(step          = numeric(0),
-                                cumul.markers = character(0),
+  search_progress <- data.frame(step          = numeric(0),
+                                cumul_markers = character(0),
                                 cost          = numeric(0))
-  used.candidates <- character(0)
+  used_candidates <- character(0)
   models      <- list()
-  cost.tables <- list()
+  cost_tables <- list()
 
-  for ( step in 1:x$search.type$max.steps ) {
+  for ( step in 1:x$search_type$max_steps ) {
 
-    sprintf("Step %i of %s", step, x$search.type$max.steps) |>
+    sprintf("Step %i of %s", step, x$search_type$max_steps) |>
       signal_rule(line_col = "blue") |>
       writeLines()
 
-     rem.candidates <- setdiff(x$candidate.markers, used.candidates)
+     rem_candidates <- setdiff(x$candidate_markers, used_candidates)
 
-     candidate.models <- lapply(rem.candidates, function(cnd) {
-          frmla <- sprintf("%s ~ %s",
-                           x$model.type$response,
-                           paste(c(used.candidates, cnd),
-                                 collapse = " + ")) |> as.formula()
-          #run.res <- foreach ( r=1:x$cross.val$runs ) %dopar% {   # dopar
-          parallel::mclapply(1:x$cross.val$runs, function(r) {
+     candidate_models <- lapply(rem_candidates, function(cnd) {
+          frmla <- create_form(x$model_type$response,
+                               paste(c(used_candidates, cnd)))
+          #run.res <- foreach ( r=1:x$cross_val$runs ) %dopar% {   # dopar
+          parallel::mclapply(seq_len(x$cross_val$runs), function(r) {
                     run <- sprintf("Run%d", r)
-                    x$cross.val$current.run <- r
-                    lapply(1:x$cross.val$folds, function(f) {
-                           x$cross.val$current.fold <- f
+                    x$cross_val$current_run <- r
+                    lapply(seq_len(x$cross_val$folds), function(f) {
+                           x$cross_val$current_fold <- f
                            fold    <- sprintf("Fold%d", f)
                            mod     <- fitmodel(x, frmla = frmla)
                            cst     <- cost(mod)
-                           mod.out <- if (x$keep.models)
-                             mod$cross.val[[run]][[fold]]$model
+                           mod_out <- if (x$keep_models)
+                             mod$cross_val[[run]][[fold]]$model
                            else
                              NULL
-                           list(cost = cst, model = mod.out)
+                           list(cost = cst, model = mod_out)
                          }) |>
-             setNames(sprintf("Fold%s", 1:x$cross.val$folds))
+             setNames(sprintf("Fold%s", 1:x$cross_val$folds))
           }, mc.cores = cores) |>
-          setNames(sprintf("Run%s", 1:x$cross.val$runs))
-       #} |> setNames(sprintf("Run%s", 1:x$cross.val$runs))
-       }) |> setNames(rem.candidates)
+          setNames(sprintf("Run%s", 1:x$cross_val$runs))
+       #} |> setNames(sprintf("Run%s", 1:x$cross_val$runs))
+       }) |> setNames(rem_candidates)
 
      #construct results table for selection of this candidate step
-     cost.table <- lapply(names(candidate.models), function(cnd) {
-                          sapply(names(candidate.models[[cnd]]), function(r) {
-                                 sapply(names(candidate.models[[cnd]][[r]]), function(f) {
-                                        candidate.models[[cnd]][[r]][[f]]$cost
+     cost_table <- lapply(names(candidate_models), function(cnd) {
+                          sapply(names(candidate_models[[cnd]]), function(r) {
+                                 sapply(names(candidate_models[[cnd]][[r]]), function(f) {
+                                        candidate_models[[cnd]][[r]][[f]]$cost
                                 })
                           })
                     }) |>
-       setNames(names(candidate.models))
+       setNames(names(candidate_models))
 
-     ci95df <- sapply(cost.table, calcCI95se) |> t() |> data.frame()
+     ci95df <- sapply(cost_table, calc_CI95) |> t() |> data.frame()
 
      # select the best
-     if ( x$cost.fxn$maximize ) {
+     if ( x$cost_fxn$maximize ) {
        top_idx <- which.max(ci95df$mean)
      } else {
        top_idx <- which.min(ci95df$mean)
      }
 
      #print(top_idx)
-     ci95top <- ci95df[ top_idx, ]      # select "top" row; 1 row df with rowname
-     new.par <- rownames(ci95top)
-     used.candidates <- c(used.candidates, new.par)
-     #print(used.candidates)
+     ci95top <- ci95df[top_idx, ]      # select "top" row; 1 row df with rowname
+     new_par <- rownames(ci95top)
+     used_candidates <- c(used_candidates, new_par)
 
-     search.progress <- rbind(search.progress,
+     search_progress <- rbind(search_progress,
                               data.frame(step = step,
-                                         cumul.markers = new.par,
-                                         cost.lower.ci95 = ci95top$lower,
-                                         cost.mean = ci95top$mean,
-                                         cost.upper.ci95 = ci95top$upper))
+                                         cumul_markers = new_par,
+                                         cost_lower_ci95 = ci95top$lower,
+                                         cost_mean = ci95top$mean,
+                                         cost_upper_ci95 = ci95top$upper))
 
      step_name <- sprintf("Step_%d", step)
-     cost.tables[[step_name]] <- cost.table
-
+     cost_tables[[step_name]] <- cost_table
   }
 
   # keep results of search
-  x$cross.val$search.progress <- search.progress
-  x$cross.val$cost.tables     <- cost.tables
+  x$cross_val$search_progress <- search_progress
+  x$cross_val$cost_tables     <- cost_tables
 
   # update iterators
-  x$cross.val$current.run  <- x$runs
-  x$cross.val$current.fold <- x$folds
+  x$cross_val$current_run  <- x$runs
+  x$cross_val$current_fold <- x$folds
 
   invisible(x)
 }
@@ -159,10 +155,10 @@ plot.fs_forward_model <- function(x, ...) {
   check_complete(x)
 
   # progress mean/95% CI
-  restbl <- x$cross.val$search.progress
+  restbl <- x$cross_val$search_progress
 
   # complete cost tables
-  csttbl <- x$cross.val$cost.tables
+  csttbl <- x$cross_val$cost_tables
 
   row_nms <- list(fold = paste0("Fold", seq(x$folds)),
                   run  = paste0("Run", seq(x$runs))) |>
@@ -170,18 +166,18 @@ plot.fs_forward_model <- function(x, ...) {
   row_nms <- paste0(row_nms$fold, "_", row_nms$run)
   #print(row_nms)
 
-  bxtbl <- liter(restbl$step, restbl$cumul.markers, function(.x, .y) {
+  bxtbl <- liter(restbl$step, restbl$cumul_markers, function(.x, .y) {
       as.numeric(csttbl[[.x]][[.y]]) # matrix -> vector
     }) |>
     data.frame(row.names = row_nms) |>
-    setNames(ifelse(is.apt(restbl$cumul.markers),
-                    getSeqId(restbl$cumul.markers), restbl$cumul.markers))
+    setNames(ifelse(is_seq(restbl$cumul_markers),
+                    get_seq(restbl$cumul_markers), restbl$cumul_markers))
 
   box_cols  <- rep("grey", nrow(restbl))
-  idx       <- getPeakWilcox(bxtbl)
+  idx       <- get_peak_wilcox(bxtbl)
   tmp_col   <- c("red", # box colors by Wilcox signed rank test
-                 SomaPlotr::soma_colors$purple,
-                 SomaPlotr::soma_colors$lightgreen)
+                 col_palette$purple,
+                 col_palette$lightgreen)
 
   for ( i in 1:length(idx) ) {
     box_cols[idx[i]] <- tmp_col[i]
@@ -190,19 +186,19 @@ plot.fs_forward_model <- function(x, ...) {
   p1 <- bxtbl |>
     SomaPlotr::boxplotBeeswarm(
       main = sprintf("Median %s\nWilcoxon Signed-Rank Peak Criterion",
-                     x$cost.fxn$display.name),
-      y.lab = x$cost.fxn$display.name,
+                     x$cost_fxn$display_name),
+      y.lab = x$cost_fxn$display_name,
       x.lab = paste("features added", symbl$arrow_right),
       notch = TRUE, cols = box_cols, ...) +
     ggplot2::scale_x_discrete(labels = names(bxtbl)) +
     ggplot2::theme(legend.position = "none",
                    axis.text.x = ggplot2::element_text(angle = 90, hjust = 1))
 
-  idx     <- getPeakSE(bxtbl)
+  idx     <- get_peak_se(bxtbl)
   ci_cols <- c(Peak      = "red",
-               Features  = SomaPlotr::soma_colors$lightgrey,
-               "1*se"    = SomaPlotr::soma_colors$purple,
-               "1.96*se" = SomaPlotr::soma_colors$lightgreen)
+               Features  = col_palette$lightgrey,
+               "1*se"    = col_palette$purple,
+               "1.96*se" = col_palette$lightgreen)
 
   restbl$id                               <- "Features"
   restbl$id[restbl$step == idx["max"]]    <- "Peak"
@@ -210,25 +206,25 @@ plot.fs_forward_model <- function(x, ...) {
   restbl$id[restbl$step == idx["p0.001"]] <- "1.96*se"
 
   p2 <-  restbl |>
-    ggplot2::ggplot(ggplot2::aes(step, cost.mean, colour = id)) +
+    ggplot2::ggplot(ggplot2::aes(step, cost_mean, colour = id)) +
     ggplot2::geom_pointrange(
-      ggplot2::aes(ymin = cost.lower.ci95, ymax = cost.upper.ci95),
+      ggplot2::aes(ymin = cost_lower_ci95, ymax = cost_upper_ci95),
       size = 0.75, alpha = 0.75) +
     ggplot2::scale_colour_manual(values = ci_cols) +
     ggplot2::labs(
-      y = x$cost.fxn$display.name,
+      y = x$cost_fxn$display_name,
       x = paste("features added", symbl$arrow_right),
       title = sprintf("Mean %s %s 95%% CI\nStandard Error Peak Criterion",
-                      x$cost.fxn$display.name, symbl$pm)
+                      x$cost_fxn$display_name, symbl$pm)
     ) +
-    SomaPlotr::theme_soma(legend.position = "right") +
     ggplot2::scale_x_continuous(
       breaks = restbl$step,
-      labels = ifelse(is.apt(restbl$cumul.markers),
-                      getSeqId(restbl$cumul.markers), restbl$cumul.markers)
+      labels = ifelse(is_seq(restbl$cumul_markers),
+                      get_seq(restbl$cumul_markers), restbl$cumul_markers)
       ) +
     ggplot2::theme(legend.title = ggplot2::element_blank(),
+                   legend.position = "right",
                    axis.text.x = ggplot2::element_text(angle = 90, hjust = 1))
 
-  gridExtra::grid.arrange(p1, p2, ncol = 2)
+  withr::with_namespace("patchwork", p1 + p2)
 }

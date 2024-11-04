@@ -8,7 +8,7 @@
 #' algorithm and is unlikely to require direct calls from the user.
 #'
 #' @param x An object of class `feature_select` (`typeof = list`) from a call
-#'   call to [featureSelection()].
+#'   call to [feature_selection()].
 #' @return The return value is one of: Area Under the Curve (AUC),
 #'   Correspondence Correlation Coefficient (CCC), Mean Squared Error (MSE),
 #'   R-squared, or Sensitivity + Specificity, for the supplied predictions
@@ -21,31 +21,32 @@ cost <- function(x) UseMethod("cost")
 #' Create Model Cost Function Definitions for S3 Methods (internal)
 #'
 #' Declares a cost function object within the Feature Selection framework.
-#' These functions should be called in the "feature_select" 
-#' object declaration passed to \code{\link{featureSelection}} with 
-#' their defaults in place (see examples). See *Details* for options.
+#'   These functions should be called in the "feature_select" 
+#'   object declaration passed to [feature_selection()] with 
+#'   their defaults in place (see examples). See *Details* for options.
 #'
-#' These functions create a list object for use by S3 methods called on the
-#' `feature_select` object. There are currently 5 cost functions implemented:\cr
-#' \itemize{
-#'   \item AUC
-#'   \item MSE (Mean-Squared Error)
-#'   \item CCC (Concordance Correlation Coefficient)
-#'   \item R2
-#'   \item Sensitivity + Specificity
-#' }
+#'   These functions create a list object for use by S3 methods called on the
+#'   `feature_select` object. There are currently 5 cost functions implemented:\cr
+#'   \itemize{
+#'     \item AUC
+#'     \item MSE (Mean-Squared Error)
+#'     \item CCC (Concordance Correlation Coefficient)
+#'     \item R2
+#'     \item Sensitivity + Specificity
+#'   }
 #'
 #' @note These are a series of internal functions called according to the "cost"
-#'   argument of [featureSelection()].
+#'   argument of [feature_selection()].
+#'
 #' @return A list containing:
-#' \item{display.name }{The official Display Title to be used by any plot methods
+#' \item{display_name }{The official Display Title to be used by any plot methods
 #'   called on the object.}
 #' \item{maximize }{Whether the object (and its cost function) should be maximized or
 #'   minimized.}
 #' @author Kirk DeLisle, Stu Field
 #' @noRd
 CostFxn_AUC <- function() {
-  list(display.name = "AUC", maximize = TRUE ) |>
+  list(display_name = "AUC", maximize = TRUE ) |>
     add_class("fs_auc")
 }
 
@@ -55,12 +56,12 @@ CostFxn_AUC <- function() {
 #' @noRd
 #' @export
 cost.fs_auc <- function(x) {
-  run      <- getRun(x)
-  fold     <- getFold(x)
-  tst_rows <- x$cross.val[[run]][[fold]]$test.rows
-  auc      <- caTools::colAUC(x$cross.val[[run]][[fold]]$test.predicts,
-                              x$data[tst_rows, x$model.type$response])   # calAUC accepts strings or factors
-  invisible(as.numeric(auc))
+  run      <- get_run(x)
+  fold     <- get_fold(x)
+  tst_rows <- x$cross_val[[run]][[fold]]$test_rows
+  auc      <- libml::calc_auc(x$data[tst_rows, x$model_type$response],
+                              x$cross_val[[run]][[fold]]$test_predicts)
+  invisible(auc)
 }
 
 
@@ -68,10 +69,10 @@ cost.fs_auc <- function(x) {
 #'
 #' This is the cost funciton for the Concordance Correlation Coefficient.
 #' @note These are a series of internal functions
-#'   called according to the "cost" argument of [featureSelection()].
+#'   called according to the "cost" argument of [feature_selection()].
 #' @noRd
 CostFxn_CCC <- function() {
-  list(display.name = "CCC", maximize = TRUE) |>
+  list(display_name = "CCC", maximize = TRUE) |>
     add_class("fs_ccc")
 }
 
@@ -81,12 +82,12 @@ CostFxn_CCC <- function() {
 #' @noRd
 #' @export
 cost.fs_ccc <- function(x) {
-  run      <- getRun(x)
-  fold     <- getFold(x)
-  tst_rows <- x$cross.val[[run]][[fold]]$test.rows
-  cv_obj   <- x$cross.val[[run]][[fold]]
-  ccc      <- calcCCC(cv_obj$test.predicts,
-                      x$data[tst_rows, x$model.type$response])
+  run      <- get_run(x)
+  fold     <- get_fold(x)
+  tst_rows <- x$cross_val[[run]][[fold]]$test_rows
+  cv_obj   <- x$cross_val[[run]][[fold]]
+  ccc      <- calc_ccc(cv_obj$test_predicts,
+                       x$data[tst_rows, x$model_type$response])
   invisible(ccc$rho.c)
 }
 
@@ -96,10 +97,10 @@ cost.fs_ccc <- function(x) {
 #' This is the cost funciton for the Mean Squared Error
 #'
 #' @note These are a series of internal functions called
-#'   according to the "cost" argument of [featureSelection()].
+#'   according to the "cost" argument of [feature_selection()].
 #' @noRd
 CostFxn_MSE <- function() {
-  list(display.name = "MSE", maximize = FALSE) |>
+  list(display_name = "MSE", maximize = FALSE) |>
     add_class("fs_mse")
 }
 
@@ -109,11 +110,11 @@ CostFxn_MSE <- function() {
 #' @noRd
 #' @export
 cost.fs_mse <- function(x) {
-  run      <- getRun(x)
-  fold     <- getFold(x)
-  tst_rows <- x$cross.val[[run]][[fold]]$test.rows
-  cv_obj   <- x$cross.val[[run]][[fold]]
-  mse      <- mean((cv_obj$test.predicts-x$data[tst_rows, x$model.type$response])^2)
+  run      <- get_run(x)
+  fold     <- get_fold(x)
+  tst_rows <- x$cross_val[[run]][[fold]]$test_rows
+  cv_obj   <- x$cross_val[[run]][[fold]]
+  mse      <- mean((cv_obj$test_predicts - x$data[tst_rows, x$model_type$response])^2)
   invisible(as.numeric(mse))
 }
 
@@ -123,10 +124,10 @@ cost.fs_mse <- function(x) {
 #' This is the cost funciton for the R2
 #'
 #' @note These are a series of internal functions called
-#'   according to the "cost" argument of [featureSelection()].
+#'   according to the "cost" argument of [feature_selection()].
 #' @noRd
 CostFxn_R2 <- function() {
-  list(display.name = "R-squared", maximize = TRUE) |>
+  list(display_name = "R-squared", maximize = TRUE) |>
     add_class("fs_r2")
 }
 
@@ -137,12 +138,12 @@ CostFxn_R2 <- function() {
 #' @importFrom stats cor.test
 #' @export
 cost.fs_r2 <- function(x) {
-  run      <- getRun(x)
-  fold     <- getFold(x)
-  tst_rows <- x$cross.val[[run]][[fold]]$test.rows
-  cv_obj   <- x$cross.val[[run]][[fold]]
-  r2       <- stats::cor.test(cv_obj$test.predicts,
-                              x$data[tst_rows, x$model.type$response])$estimate^2
+  run      <- get_run(x)
+  fold     <- get_fold(x)
+  tst_rows <- x$cross_val[[run]][[fold]]$test_rows
+  cv_obj   <- x$cross_val[[run]][[fold]]
+  r2       <- stats::cor.test(cv_obj$test_predicts,
+                              x$data[tst_rows, x$model_type$response])$estimate^2
   invisible(as.numeric(r2))
 }
 
@@ -152,10 +153,10 @@ cost.fs_r2 <- function(x) {
 #' This is the cost funciton for the Sensitivity + Specificity
 #'
 #' @note These are a series of internal functions called
-#'   according to the "cost" argument of [featureSelection()].
+#'   according to the "cost" argument of [feature_selection()].
 #' @noRd
 CostFxn_SensSpec <- function() {
-  list(display.name = "Sensitivity + Specificity", maximize = TRUE) |>
+  list(display_name = "Sensitivity + Specificity", maximize = TRUE) |>
     add_class("fs_sens_spec")
 }
 
@@ -166,11 +167,11 @@ CostFxn_SensSpec <- function() {
 #' @importFrom libml calc_confusion pull_stat
 #' @export
 cost.fs_sens_spec <- function(x) {
-  run      <- getRun(x)
-  fold     <- getFold(x)
-  tst_rows <- x$cross.val[[run]][[fold]]$test.rows
-  df       <- data.frame(pred  = x$cross.val[[run]][[fold]]$test.predicts,
-                         class = x$data[tst_rows, x$model.type$response])
+  run      <- get_run(x)
+  fold     <- get_fold(x)
+  tst_rows <- x$cross_val[[run]][[fold]]$test_rows
+  df       <- data.frame(pred  = x$cross_val[[run]][[fold]]$test_predicts,
+                         class = x$data[tst_rows, x$model_type$response])
   # pos.class = 2nd factor level!
   cm <- calc_confusion(truth     = df$class,
                        predicted = df$pred,

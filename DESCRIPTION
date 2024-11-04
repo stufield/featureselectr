@@ -32,7 +32,7 @@ Suggests:
     knitr,
     rmarkdown,
     SomaPlotr,
-    SomaDataIO,
+    patchwork,
     spelling,
     splyr,
     tibble,

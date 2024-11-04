@@ -1,18 +1,21 @@
 #' Get Wilcox Peak
 #'
 #' Calculate differences from the peak performance based
-#' on Wilcoxon Signed-Rank Test.
+#'   on Wilcoxon Signed-Rank Test.
 #'
 #' @param x The `boxtbl` object created during the S3 plot method.
 #' @param type Whether forward or backward calculations should be made.
-#' @return A vector of length 3: `c(index of peak, index of p = 0.05, index of p = 0.001)`.
+#' @return A vector of length 3:
+#'   `c(index of peak,
+#'      index of p = 0.05,
+#'      index of p = 0.001)`.
 #' @importFrom stats median wilcox.test setNames
 #' @noRd
-getPeakWilcox <- function(x, type = c("forward", "backward")) {
+get_peak_wilcox <- function(x, type = c("forward", "backward")) {
 
   forward <- match.arg(type) == "forward"
 
-  if ( nrow(x) < 10 ) {
+  if ( nrow(x) < 10L ) {
     stop(
       "Large-sample Normal approximation of Wilcoxon Signed Rank ",
       "test statistic invalid for n < 10", call. = FALSE
@@ -27,9 +30,9 @@ getPeakWilcox <- function(x, type = c("forward", "backward")) {
   }
 
   iter <- if ( forward ) {
-    1:(peak_idx - 1)
+    1:(peak_idx - 1L)
   } else {
-    (peak_idx + 1):ncol(x)
+    (peak_idx + 1L):ncol(x)
   }
   wilcox <- lapply(iter, function(.x) {
     y1 <- if (forward) x[[peak_idx]] else x[[.x]]
@@ -46,15 +49,15 @@ getPeakWilcox <- function(x, type = c("forward", "backward")) {
   #print(bool2)
   if ( forward ) {
     c(max    = peak_idx,
-      p0.05  = detectIndex(bool1, isTRUE, dir = "backward"),
-      p0.001 = detectIndex(bool2, isTRUE, dir = "backward")
+      p0.05  = detect_idx(bool1, isTRUE, dir = "backward"),
+      p0.001 = detect_idx(bool2, isTRUE, dir = "backward")
     ) |>
-    discardZeros()
+    discard_zeros()
   } else {
-    out <- c(p0.05  = detectIndex(bool1, isTRUE),
-      p0.001 = detectIndex(bool2, isTRUE)
+    out <- c(p0.05  = detect_idx(bool1, isTRUE),
+      p0.001 = detect_idx(bool2, isTRUE)
     ) |>
-    discardZeros()
+    discard_zeros()
     c(max = peak_idx, out + peak_idx)
   }
 }
@@ -63,49 +66,48 @@ getPeakWilcox <- function(x, type = c("forward", "backward")) {
 #' Get SE Peak
 #'
 #' Calculate differences from the peak performance based
-#' on Standard Errors of the mean.
+#'   on Standard Errors of the mean.
 #'
 #' @param x The `"boxtbl"` object created during the S3 plot method.
 #' @param type Whether forward or backward calculations should be made.
-#' @return vector of length 3:
-#' `c(index of peak, index of -1se, index of -1.96se)`
+#' @return vector of length 3: `c(index of peak, index of -1se, index of -1.96se)`
 #' @keywords internal
 #' @noRd
-getPeakSE <- function(x, type = c("forward", "backward")) {
+get_peak_se <- function(x, type = c("forward", "backward")) {
 
   forward     <- match.arg(type) == "forward"
-  cost.mean   <- apply(x, 2, mean)
-  peak_idx    <- unname(which.max(cost.mean))
-  box.max.est <- max(cost.mean)                                   # max cost value
-  se          <- sd(x[[peak_idx]]) / sqrt(length(x[[peak_idx]]))  # se max cost model
+  cost_mean   <- apply(x, 2, mean)
+  peak_idx    <- unname(which.max(cost_mean))
+  box_max_est <- max(cost_mean)                             # max cost value
+  se    <- sd(x[[peak_idx]]) / sqrt(length(x[[peak_idx]]))  # se max cost model
   iter  <- if ( forward ) {
     1:max(1, (peak_idx - 1))   # max(): cannot have peak < 1
   } else {
     min(ncol(x), (peak_idx + 1)):ncol(x)  # min(): cannot have peak > ncol()
   }
-  bool1 <- vapply(iter, function(x) abs(box.max.est - cost.mean[x]) > se, NA)
-  bool2 <- vapply(iter, function(x) abs(box.max.est - cost.mean[x]) > 1.96 * se, NA)
+  bool1 <- vapply(iter, function(x) abs(box_max_est - cost_mean[x]) > se, NA)
+  bool2 <- vapply(iter, function(x) abs(box_max_est - cost_mean[x]) > 1.96 * se, NA)
   #print(peak_idx)
   #print(iter)
   #print(bool1)
   #print(bool2)
   if ( forward ) {
     c(max    = peak_idx,
-      p0.05  = detectIndex(bool1, isTRUE, dir = "backward"),
-      p0.001 = detectIndex(bool2, isTRUE, dir = "backward")
+      p0.05  = detect_idx(bool1, isTRUE, dir = "backward"),
+      p0.001 = detect_idx(bool2, isTRUE, dir = "backward")
     ) |>
-    discardZeros()
+    discard_zeros()
   } else {
-    out <- c(p0.05  = detectIndex(bool1, isTRUE),
-      p0.001 = detectIndex(bool2, isTRUE)
+    out <- c(p0.05  = detect_idx(bool1, isTRUE),
+      p0.001 = detect_idx(bool2, isTRUE)
     ) |>
-    discardZeros()
+    discard_zeros()
     c(max = peak_idx, out + peak_idx)
   }
 }
 
-# similar to purrr::detect_index
-detectIndex <- function(x, f, dir = c("forward", "backward"), ...) {
+# similar to purrr::detect_index()
+detect_idx <- function(x, f, dir = c("forward", "backward"), ...) {
   dir <- match.arg(dir)
   index <- if ( dir == "forward" ) seq(x) else rev(seq(x))
   for ( i in index ) {
@@ -114,6 +116,6 @@ detectIndex <- function(x, f, dir = c("forward", "backward"), ...) {
   0L
 }
 
-discardZeros <- function(x) {
+discard_zeros <- function(x) {
   x[x != 0]
 }

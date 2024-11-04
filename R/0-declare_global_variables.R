@@ -8,14 +8,14 @@
 if ( getRversion() >= "2.15.1" ) {
   utils::globalVariables(
     c(".",
-      "cost.lower.ci95",
-      "cost.mean",
-      "cost.upper.ci95",
-      "cumul.markers",
-      "elim.markers",
+      "cost_lower_ci95",
+      "cost_mean",
+      "cost_upper_ci95",
+      "cumul_markers",
+      "elim_markers",
       "id",
       "metric",
-      "AptName",
+      "Feature",
       "step"
     )
   )

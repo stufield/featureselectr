@@ -8,7 +8,7 @@ fitmodel(x, ...)
 }
 \arguments{
 \item{x}{An object of class \code{feature_select} (list) from a call
-call to \code{\link[=featureSelection]{featureSelection()}}.}
+call to \code{\link[=feature_selection]{feature_selection()}}.}
 
 \item{...}{Additional arguments passed to the \code{fitmodel} generic S3
 method, which performs the appropriate search algorithm depending on the
@@ -32,7 +32,7 @@ with the desired formula. Without this and in the correct form, the method
 will fail. Usually it is fine to leave the defaults in place.
 }
 \seealso{
-\code{\link[=featureSelection]{featureSelection()}}, \code{\link[=glm]{glm()}}, \code{\link[=lm]{lm()}}, \code{\link[=fit_nb]{fit_nb()}},
+\code{\link[=feature_selection]{feature_selection()}}, \code{\link[=glm]{glm()}}, \code{\link[=lm]{lm()}}, \code{\link[=fit_nb]{fit_nb()}},
 
 \code{\link[=modelType_glm]{modelType_glm()}}, \code{\link[=modelType_lm]{modelType_lm()}}, \code{\link[=modelType_nb]{modelType_nb()}}
 }

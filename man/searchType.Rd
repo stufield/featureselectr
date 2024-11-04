@@ -7,23 +7,23 @@
 \alias{searchType_forwardModel}
 \title{Create Model Search Definitions for S3 Methods}
 \usage{
-searchType_backwardModel(display.name = "Backward Stepwise Model Search")
+searchType_backwardModel(display_name = "Backward Stepwise Model Search")
 
 searchType_forwardModel(
-  max.steps = 20,
-  display.name = "Forward Stepwise Model Search"
+  max_steps = 20L,
+  display_name = "Forward Stepwise Model Search"
 )
 }
 \arguments{
-\item{display.name}{Character. A title or display name to use by S3 plot
+\item{display_name}{Character. A title or display name to use by S3 plot
 generics.}
 
-\item{max.steps}{Maximum number of covariates allowed into the model.}
+\item{max_steps}{Maximum number of covariates allowed into the model.}
 }
 \value{
 A list containing:
-\item{max.steps}{Maximum model steps to search. If forward search implemented.}
-\item{display.name}{The official "Display Title" to be used by any plot
+\item{max_steps}{Maximum model steps to search. If forward search implemented.}
+\item{display_name}{The official "Display Title" to be used by any plot
 methods called on the object.}
 }
 \description{
@@ -46,7 +46,7 @@ attributes (class) to reflect the appropriate search values.
 }}
 \examples{
 searchType_forwardModel()                 # the default=20
-searchType_forwardModel(max.steps = 15)   # set to 15
+searchType_forwardModel(max_steps = 15)   # set to 15
 searchType_forwardModel(15, "My Awesome Forward Search")   # set title
 }
 \author{
