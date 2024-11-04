@@ -78,7 +78,7 @@ fitmodel.fs_nb <- function(x, ...) {
   tst_rows <- x$cross_val[[run]][[fold]]$test_rows
 
   fit   <- fit_nb(args$frmla, data = x$data[trn_rows, ])
-  tst_p <- predict(fit, x$data[tst_rows, x$candidate_markers],
+  tst_p <- predict(fit, x$data[tst_rows, x$candidate_markers, drop = FALSE],
                    type = "raw")
 
   # pack all the results for return

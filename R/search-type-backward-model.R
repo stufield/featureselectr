@@ -1,15 +1,12 @@
 
-#' @describeIn searchType
-#'   Backwards model selection search
+#' @describeIn search_type
+#'   Backward model selection search
 #' @export
-searchType_backwardModel <- function(display_name = "Backward Stepwise Model Search") {
+search_type_backward_model <- function(display_name = "Backward Stepwise Model Search") {
   as.list(environment()) |> add_class("fs_backward_model")
 }
 
-#' S3 Backward Search Type
-#'
 #' Backward search type for feature selection models
-#'
 #' @noRd
 #' @importFrom stats as.formula setNames
 #' @export

@@ -69,7 +69,7 @@
 #' data$class_response <- as.factor(data$class_response)
 #' mt  <- model_type_glm(response = "class_response")
 #' cst <- "AUC"
-#' sm  <- searchType_forwardModel(max_steps = 10, display_name = "FeatureSelection Plot")
+#' sm  <- search_type_forward_model(10L, display_name = "FeatureSelection Plot")
 #' ft  <- head(featureselectr:::get_analytes(data))  # select candidate features
 #' mcp <- feature_selection(data,
 #'                          candidate_markers = ft,

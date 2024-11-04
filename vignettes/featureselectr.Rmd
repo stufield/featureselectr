@@ -36,24 +36,24 @@ selection, model building, and/or classifier development.
 
 
 ### Search type helper functions
-There are _two_ main search types to choose from. See `?searchType`.
+There are _two_ main search types to choose from. See `?search_type`.
 
-```{r searchType}
-searchType_forwardModel()     # Forward stepwise
+```{r search-type}
+search_type_forward_model()   # Forward stepwise
 
-searchType_backwardModel()    # Backward stepwise
+search_type_backward_model()  # Backward stepwise
 ```
 
 ### Model Type helper functions
 
-There are _three_ main model types to choose from. See `?modelType`.
+There are _three_ main model types to choose from. See `?model_type`.
 
-```{r modelType}
-modelType_glm()      # Logistic regression
+```{r model-type}
+model_type_glm()  # Logistic regression
 
-modelType_lm()       # Linear regression
+model_type_lm()   # Linear regression
 
-modelType_nb()       # Naive Bayes
+model_type_nb()   # Naive Bayes
 ```
 
 ### Cost functions
@@ -67,7 +67,7 @@ See `?featureSelection` and perhaps `?cost`.
 * **CCC**: Concordance Correlation Coefficient (regression)
 * **MSE**: Mean-squared Error (regression)
 * **R2**: R-squared (regression)
-* **sens or spec**: Sensitivity `+` Specificity (sum; classification)
+* **sens/spec**: Sensitivity `+` Specificity (sum; classification)
 
 
 
@@ -106,11 +106,11 @@ feats <- featureselectr:::get_analytes(data)
 data[, feats] <- apply(data[, feats], 2, cs)
 
 # set model type and column name of response variable
-mt <- modelType_nb(response = "class_response")
+mt <- model_type_nb(response = "class_response")
 
 # set search method function to 'forward' and 'model'
 # restrict to the top 10 steps in the search; then stop
-sm <- searchType_forwardModel(max_steps = 15)
+sm <- search_type_forward_model(max_steps = 15L)
 
 # setup feature selection object
 fs_setup <- feature_selection(data, candidate_markers = feats, model_type = mt,
@@ -127,7 +127,7 @@ fs_setup
 The S3 method `Search()` performs the actual feature selection,
 and method dispatch occurs depending on the class of `fs_nb`.
 
-```{r search_nb, eval = FALSE, message = FALSE}
+```{r search-nb, eval = FALSE, message = FALSE}
 fs_nb <- Search(fs_setup)
 ```
 
@@ -163,7 +163,7 @@ attributes(sim_adat)$sig_feats$class
 
 fs_update <- update(
   fs_setup,
-  model_type = modelType_glm(response = "class_response"),
+  model_type = model_type_glm(response = "class_response"),
   stratified = TRUE
 )
                     

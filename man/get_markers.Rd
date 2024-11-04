@@ -28,7 +28,7 @@ forward or backward selection from a \code{feature_select} class object.
 data  <- splyr::sim_adat
 feats <- attributes(data)$sig_feats$class
 fs <- feature_selection(data, candidate_markers = feats,
-                        search_type = searchType_forwardModel(),
+                        search_type = search_type_forward_model(),
                         model_type = model_type_glm("class_response"),
                         stratified = TRUE,
                         cost = "AUC", runs = 2, folds = 2)

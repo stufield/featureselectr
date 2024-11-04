@@ -10,7 +10,7 @@
 #' This information is called within the object creation to modify the its
 #' attributes (class) to reflect the appropriate search values.
 #'
-#' @name searchType
+#' @name search_type
 #' @param max_steps Maximum number of covariates allowed into the model.
 #' @param display_name Character. A title or display name to use by S3 plot
 #'   generics.
@@ -20,24 +20,21 @@
 #'     methods called on the object.}
 #' @author Kirk DeLisle & Stu Field
 #' @examples
-#' searchType_forwardModel()                 # the default=20
-#' searchType_forwardModel(max_steps = 15)   # set to 15
-#' searchType_forwardModel(15, "My Awesome Forward Search")   # set title
+#' search_type_forward_model()                 # the default = 20L
+#' search_type_forward_model(max_steps = 15L)  # set to 15
+#' search_type_forward_model(15L, "My Forward Search")   # set title
 NULL
 
-#' @describeIn searchType
-#'   Forwards model selection search
+#' @describeIn search_type
+#'   Forward model selection search
 #' @export
-searchType_forwardModel <- function(max_steps = 20L,
-                                    display_name = "Forward Stepwise Model Search") {
+search_type_forward_model <- function(max_steps = 20L,
+                                      display_name = "Forward Stepwise Model Search") {
   as.list(environment()) |> add_class("fs_forward_model")
 }
 
 
-#' S3 Forward Search Type
-#'
 #' Forward Search type for feature selection models
-#'
 #' @noRd
 #' @importFrom stats as.formula setNames
 #' @export
@@ -53,7 +50,7 @@ Search.fs_forward_model <- function(x, ...) {
   # assume a certain number of runs within which there are cross-validated folds
   # loop over r, f, and step ( runs, folds, and candidates )
   # for model search, the cross-validated folds determine which
-  # paramter is chosen at any given step
+  # parameter is chosen at any given step
 
   search_progress <- data.frame(step          = numeric(0),
                                 cumul_markers = character(0),

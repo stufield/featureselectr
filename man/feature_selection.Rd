@@ -35,8 +35,8 @@ i.e. columns names, from the data object.}
 \item{model_type}{An instantiated \code{model_type} object, generated via a call
 to one of the \code{\link[=model_type]{model_type()}} functions.}
 
-\item{search_type}{An instantiated \code{searchType} object, generated via a
-call to one of the \code{\link[=searchType]{searchType()}} functions.}
+\item{search_type}{An instantiated \code{search_type} object, generated via a
+call to one of the \code{\link[=search_type]{search_type()}} functions.}
 
 \item{runs}{\code{integer(1)}. How many runs to perform.}
 
@@ -124,7 +124,7 @@ data$class_response <- factor(data$class_response)
 
 mt <- model_type_glm(response = "class_response")
 cf <- "sens"
-sm <- searchType_forwardModel(15, display_name = "FeatureSelection Plot")
+sm <- search_type_forward_model(15L, display_name = "FeatureSelection Plot")
 ft <- featureselectr:::get_analytes(data) # select candidate features
 fs <- feature_selection(data, candidate_markers = ft,
                         model_type = mt, search_type = sm, cost = cf,

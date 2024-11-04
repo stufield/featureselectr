@@ -45,7 +45,7 @@ cost <- function(x) UseMethod("cost")
 #'   minimized.}
 #' @author Kirk DeLisle, Stu Field
 #' @noRd
-CostFxn_AUC <- function() {
+cost_auc <- function() {
   list(display_name = "AUC", maximize = TRUE ) |>
     add_class("fs_auc")
 }
@@ -54,7 +54,6 @@ CostFxn_AUC <- function() {
 #' Area under the Curve (AUC)
 #'
 #' @noRd
-#' @export
 cost.fs_auc <- function(x) {
   run      <- get_run(x)
   fold     <- get_fold(x)
@@ -71,7 +70,7 @@ cost.fs_auc <- function(x) {
 #' @note These are a series of internal functions
 #'   called according to the "cost" argument of [feature_selection()].
 #' @noRd
-CostFxn_CCC <- function() {
+cost_ccc <- function() {
   list(display_name = "CCC", maximize = TRUE) |>
     add_class("fs_ccc")
 }
@@ -99,7 +98,7 @@ cost.fs_ccc <- function(x) {
 #' @note These are a series of internal functions called
 #'   according to the "cost" argument of [feature_selection()].
 #' @noRd
-CostFxn_MSE <- function() {
+cost_mse <- function() {
   list(display_name = "MSE", maximize = FALSE) |>
     add_class("fs_mse")
 }
@@ -108,7 +107,6 @@ CostFxn_MSE <- function() {
 #' Mean Squared Error (MSE)
 #'
 #' @noRd
-#' @export
 cost.fs_mse <- function(x) {
   run      <- get_run(x)
   fold     <- get_fold(x)
@@ -126,9 +124,9 @@ cost.fs_mse <- function(x) {
 #' @note These are a series of internal functions called
 #'   according to the "cost" argument of [feature_selection()].
 #' @noRd
-CostFxn_R2 <- function() {
+cost_rsq <- function() {
   list(display_name = "R-squared", maximize = TRUE) |>
-    add_class("fs_r2")
+    add_class("fs_rsq")
 }
 
 
@@ -136,7 +134,6 @@ CostFxn_R2 <- function() {
 #'
 #' @noRd
 #' @importFrom stats cor.test
-#' @export
 cost.fs_r2 <- function(x) {
   run      <- get_run(x)
   fold     <- get_fold(x)
@@ -155,7 +152,7 @@ cost.fs_r2 <- function(x) {
 #' @note These are a series of internal functions called
 #'   according to the "cost" argument of [feature_selection()].
 #' @noRd
-CostFxn_SensSpec <- function() {
+cost_sens_spec <- function() {
   list(display_name = "Sensitivity + Specificity", maximize = TRUE) |>
     add_class("fs_sens_spec")
 }
@@ -165,7 +162,6 @@ CostFxn_SensSpec <- function() {
 #'
 #' @noRd
 #' @importFrom libml calc_confusion pull_stat
-#' @export
 cost.fs_sens_spec <- function(x) {
   run      <- get_run(x)
   fold     <- get_fold(x)

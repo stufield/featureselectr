@@ -18,7 +18,7 @@
 #' data  <- splyr::sim_adat
 #' feats <- attributes(data)$sig_feats$class
 #' fs <- feature_selection(data, candidate_markers = feats,
-#'                         search_type = searchType_forwardModel(),
+#'                         search_type = search_type_forward_model(),
 #'                         model_type = model_type_glm("class_response"),
 #'                         stratified = TRUE,
 #'                         cost = "AUC", runs = 2, folds = 2)
@@ -30,20 +30,23 @@
 get_markers <- function(x) UseMethod("get_markers")
 
 #' @noRd
+#' @export
 get_markers.default <- function(x) {
   stop(
-    "Could not determine `searchType` of this search object:",
+    "Could not determine `search_type` of this search object:",
     value(class(x)), call. = FALSE
   )
 }
 
 #' @noRd
+#' @export
 get_markers.fs_forward_param <- function(x) {
   stop("Forward Parameter Searches have been deprecated.",
        call. = FALSE)
 }
 
 #' @noRd
+#' @export
 get_markers.fs_forward_model <- function(x) {
 
   marker_index <- "cumul_markers"
@@ -76,6 +79,7 @@ get_markers.fs_forward_model <- function(x) {
 }
 
 #' @noRd
+#' @export
 get_markers.fs_backward_model <- function(x) {
 
   marker_index <- "elim_markers"

@@ -11,8 +11,8 @@
 #'   i.e. columns names, from the data object.
 #' @param model_type An instantiated `model_type` object, generated via a call
 #'   to one of the [model_type()] functions.
-#' @param search_type An instantiated `searchType` object, generated via a
-#'   call to one of the [searchType()] functions.
+#' @param search_type An instantiated `search_type` object, generated via a
+#'   call to one of the [search_type()] functions.
 #' @param cost Character. A string to be used in defining the cost
 #'   function. Currently one of:
 #' \describe{
@@ -76,7 +76,7 @@
 #'
 #' mt <- model_type_glm(response = "class_response")
 #' cf <- "sens"
-#' sm <- searchType_forwardModel(15, display_name = "FeatureSelection Plot")
+#' sm <- search_type_forward_model(15L, display_name = "FeatureSelection Plot")
 #' ft <- featureselectr:::get_analytes(data) # select candidate features
 #' fs <- feature_selection(data, candidate_markers = ft,
 #'                         model_type = mt, search_type = sm, cost = cf,
@@ -121,12 +121,12 @@ feature_selection <- function(data, candidate_markers, model_type,
 
   cost_str <- match.arg(cost)
   cost_fxn <- switch(cost_str,
-                     sens = CostFxn_SensSpec(),
-                     spec = CostFxn_SensSpec(),
-                     AUC  = CostFxn_AUC(),
-                     CCC  = CostFxn_CCC(),
-                     R2   = CostFxn_R2(),
-                     MSE  = CostFxn_MSE())
+                     sens = cost_sens_spec(),
+                     spec = cost_sens_spec(),
+                     AUC  = cost_auc(),
+                     CCC  = cost_ccc(),
+                     R2   = cost_rsq(),
+                     MSE  = cost_mse())
 
   # start the list
   fsret <- list(data = data,
