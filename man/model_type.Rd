@@ -2,12 +2,12 @@
 % Please edit documentation in R/model-type.R
 \name{model_type}
 \alias{model_type}
-\alias{model_type_glm}
+\alias{model_type_lr}
 \alias{model_type_nb}
 \alias{model_type_lm}
 \title{Create Model Type Function Definitions}
 \usage{
-model_type_glm(response = "Response")
+model_type_lr(response = "Response")
 
 model_type_nb(response = "Response")
 
@@ -19,7 +19,7 @@ response variable. Assumed to be two-class, factor type.}
 }
 \value{
 An object of the appropriate class according to the
-model type chosen, one of: \code{fs_glm}, \code{fs_nb}, or \code{fs_lm}.
+model type chosen, one of: \code{fs_lr}, \code{fs_nb}, or \code{fs_lm}.
 In addition, key-value pairs in a list containing:
 \item{response}{See function arguments above.}
 }
@@ -27,12 +27,12 @@ In addition, key-value pairs in a list containing:
 Declares a model type the Feature Selection framework. There are
 currently 3 model type options:
 \itemize{
-\item Logistic Regression Models (glm)
+\item Logistic Regression Models (lr)
 \item Linear Regression Models (lm)
 \item Naive Bayes Models (nb)
 }
 Typically these functions can be called with their defaults, especially if
-called upon a data set of class \code{tr_data} (See Classify).
+called upon a data set of class \code{tr_data}.
 
 Naive Bayes Models
 
@@ -40,7 +40,7 @@ Linear Regression Models
 }
 \examples{
 # Logistic Regression
-model_type_glm()
+model_type_lr()
 
 # Robust Parameter Naive Bayes (default)
 model_type_nb()

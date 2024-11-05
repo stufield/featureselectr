@@ -64,7 +64,7 @@ check_feature_select <- function(x) {
   if ( inherits(x$model_type, c("fs_forward_model", "fs_backward_model") )) {
     stop(msg, call. = FALSE)
   }
-  if ( inherits(x$search_type, c("fs_nb", "fs_glm", "fs_lm") )) {
+  if ( inherits(x$search_type, c("fs_nb", "fs_lr", "fs_lm") )) {
     stop(msg, call. = FALSE)
   }
   if ( !"response" %in% names(x$model_type)) {

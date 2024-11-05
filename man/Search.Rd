@@ -78,7 +78,7 @@ data <- splyr::sim_adat
 
 # Setup response variable
 data$class_response <- as.factor(data$class_response)
-mt  <- model_type_glm(response = "class_response")
+mt  <- model_type_lr(response = "class_response")
 cst <- "AUC"
 sm  <- search_type_forward_model(10L, display_name = "FeatureSelection Plot")
 ft  <- head(featureselectr:::get_analytes(data))  # select candidate features

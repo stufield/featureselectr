@@ -4,7 +4,6 @@ get_seq  <- function(x) sub("\\.", "-", sub("^seq\\.", "", x))
 add_seq <- getFromNamespace("add_seq", "helpr")
 get_analytes <- getFromNamespace("get_analytes", "helpr")
 get_meta <- getFromNamespace("get_meta", "helpr")
-#getSeqId <- getFromNamespace("getSeqId", "SomaDataIO")
 
 col_palette <- list(
   purple     = "#24135F",

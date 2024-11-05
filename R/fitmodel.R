@@ -19,10 +19,10 @@
 #'   method, which performs the appropriate search algorithm depending on the
 #'   object class. This is typically performed internally via the `frmla =`
 #'   argument which is used to create a formula prior to being passed to one of:
-#'   [glm()], `fit_nb()`, [lm()].
+#'   [fit_logistic()], [fit_nb()], [stats::lm()].
 #' @author Kirk DeLisle & Stu Field
-#' @seealso [feature_selection()], [glm()], [lm()], [fit_nb()],
-#' @seealso [model_type_glm()], [model_type_lm()], [model_type_nb()]
+#' @seealso [feature_selection()], [fit_logistic()], [lm()], [fit_nb()],
+#' @seealso [model_type_lr()], [model_type_lm()], [model_type_nb()]
 #' @export
 fitmodel <- function(x, ...) UseMethod("fitmodel")
 
@@ -30,9 +30,9 @@ fitmodel <- function(x, ...) UseMethod("fitmodel")
 #' Fit Model Type: Logistic Regression
 #'
 #' @noRd
-#' @importFrom libml stripLMC
-#' @importFrom stats glm predict
-fitmodel.fs_glm <- function(x, ...) {
+#' @importFrom libml fit_logistic
+#' @importFrom stats predict
+fitmodel.fs_lr <- function(x, ...) {
 
   # ensure response is a factor
   if ( !is.factor(x$data[, x$model_type$response ]) ) {
@@ -46,8 +46,7 @@ fitmodel.fs_glm <- function(x, ...) {
   trn_rows <- x$cross_val[[run]][[fold]]$training_rows
   tst_rows <- x$cross_val[[run]][[fold]]$test_rows
 
-  fit <- stats::glm(args$frmla, family = "binomial",
-                    data = x$data[trn_rows, ], model = FALSE)
+  fit <- fit_logistic(args$frmla, data = x$data[trn_rows, ], strip = TRUE)
   tst_p <- stats::predict(fit, x$data[tst_rows, x$candidate_markers],
                           type = "response")
 
