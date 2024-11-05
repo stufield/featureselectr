@@ -170,7 +170,7 @@ check_strat <- function(x) {
     plot(c(data_prev, plot_vals),
          ylim = 0:1,
          pch = 21, col = 1, cex = 1.5,
-         bg = c(2, rep(c(3, 4), times = length(plot.vals) / 2)), xlab = "",
+         bg = c(2, rep(c(3, 4), times = length(plot_vals) / 2)), xlab = "",
          main = sprintf("Prevalence of '%s' in Stratified Cross-Folds", names(data_prev)),
          ylab = sprintf("Prevalence: %s", names(data_prev)),
          axes = FALSE, frame.plot = TRUE)

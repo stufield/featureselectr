@@ -64,7 +64,7 @@ Search.fs_backward_model <- function(x, ...) {
                                               mod$cross_val[[run]][[fold]]$model
                                            else
                                              NULL
-                                           list(cost = cst, model = mod.out)
+                                           list(cost = cst, model = mod_out)
                         }) |>
               setNames(sprintf("Fold%s", 1:x$cross_val$folds))
         }, mc.cores = cores) |>
