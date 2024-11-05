@@ -1,12 +1,12 @@
 #' Feature Selection Search Algorithms
 #'
 #' These step-wise search methods can be used to identify a locally optimal
-#' model complexity through greedy search. The methods either build up
-#' (forward) or break down (backward) a model one covariate at a time based
-#' upon the results of all "Runs" and "Folds" of cross-validation sets, i.e.
-#' for 5 runs of 5-fold cross-validation, 25 evaluations are made to determine
-#' which covariate yields the best average performance (for a given cost
-#' function). See *Details* for more information on options.
+#'   model complexity through greedy search. The methods either build up
+#'   (forward) or break down (backward) a model one covariate at a time based
+#'   upon the results of all "Runs" and "Folds" of cross-validation sets, i.e.
+#'   for 5 runs of 5-fold cross-validation, 25 evaluations are made to determine
+#'   which covariate yields the best average performance (for a given cost
+#'   function). See *Details* for more information on options.
 #'
 #' There are currently 2 search options, all of which are "greedy" algorithms:
 #' \describe{
@@ -33,11 +33,14 @@
 #'     is a single model determined to be locally optimal
 #'     based upon the performances across all runs and folds.}
 #' }
+#'
 #' @param x A `feature_select` class object from a call
 #'   call to [feature_selection()].
-#' @param num.cores Integer. How many cores to use during the search.
-#'   Defaults to `1`, which does not use parallel processing. Values `> 1`
+#'
+#' @param num_cores `integer(1)`. How many cores to use during the search.
+#'   Defaults to `1L`, which does not use parallel processing. Values `> 1`
 #'   only available in Linux systems.
+#'
 #' @return A completed `feature_select` class object and list consisting:
 #' \item{data}{The original feature data to use.}
 #' \item{candidate_markers}{The list of candidate features.}
@@ -60,8 +63,10 @@
 #'   various cross validation folds.}
 #' \item{search.complete}{Logical if the object has completed a search}
 #' \item{call}{The original matched call.}
+#'
 #' @author Kirk DeLisle, Stu Field
 #' @seealso [feature_selection()]
+#'
 #' @examples
 #' data <- splyr::sim_adat
 #'

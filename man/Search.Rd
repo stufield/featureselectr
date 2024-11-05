@@ -10,8 +10,8 @@ Search(x, num_cores)
 \item{x}{A \code{feature_select} class object from a call
 call to \code{\link[=feature_selection]{feature_selection()}}.}
 
-\item{num.cores}{Integer. How many cores to use during the search.
-Defaults to \code{1}, which does not use parallel processing. Values \verb{> 1}
+\item{num_cores}{\code{integer(1)}. How many cores to use during the search.
+Defaults to \code{1L}, which does not use parallel processing. Values \verb{> 1}
 only available in Linux systems.}
 }
 \value{

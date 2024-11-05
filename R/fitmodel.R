@@ -31,11 +31,11 @@ fitmodel <- function(x, ...) UseMethod("fitmodel")
 #'
 #' @noRd
 #' @importFrom libml fit_logistic
-#' @importFrom stats predict
+#' @importFrom stats predict model.frame
 fitmodel.fs_lr <- function(x, ...) {
 
   # ensure response is a factor
-  if ( !is.factor(x$data[, x$model_type$response ]) ) {
+  if ( !is.factor(x$data[[x$model_type$response]]) ) {
     x$data[[x$model_type$response]] <- factor(x$data[[x$model_type$response]])
   }
 
@@ -46,12 +46,14 @@ fitmodel.fs_lr <- function(x, ...) {
   trn_rows <- x$cross_val[[run]][[fold]]$training_rows
   tst_rows <- x$cross_val[[run]][[fold]]$test_rows
 
-  fit <- fit_logistic(args$frmla, data = x$data[trn_rows, ], strip = TRUE)
-  tst_p <- stats::predict(fit, x$data[tst_rows, x$candidate_markers],
-                          type = "response")
+  fit_lr <- be_quiet(fit_logistic)
+  mf     <- stats::model.frame(args$frmla, data = x$data[trn_rows, ])
+  fit    <- fit_lr(args$frmla, data = mf, strip = TRUE)$result
+  tst_p  <- stats::predict(fit, x$data[tst_rows, x$candidate_markers],
+                           type = "response")
 
   # pack all the results for return
-  x$cross_val[[run]][[fold]]$model         <- stripLMC(fit)
+  x$cross_val[[run]][[fold]]$model         <- fit
   x$cross_val[[run]][[fold]]$fitted_values <- fit$fitted.values
   x$cross_val[[run]][[fold]]$test_predicts <- tst_p
   invisible(x)
@@ -66,7 +68,7 @@ fitmodel.fs_nb <- function(x, ...) {
 
   # ensure response is a factor
   if ( !is.factor(x$data[[x$model_type$response]]) ) {
-    x$data[[x$model_type$response]] <- factor(x$data[[ x$model_type$response]])
+    x$data[[x$model_type$response]] <- factor(x$data[[x$model_type$response]])
   }
 
   args <- list(...)
@@ -76,7 +78,8 @@ fitmodel.fs_nb <- function(x, ...) {
   trn_rows <- x$cross_val[[run]][[fold]]$training_rows
   tst_rows <- x$cross_val[[run]][[fold]]$test_rows
 
-  fit   <- fit_nb(args$frmla, data = x$data[trn_rows, ])
+  mf    <- stats::model.frame(args$frmla, data = x$data[trn_rows, ])
+  fit   <- fit_nb(args$frmla, data = mf)
   tst_p <- predict(fit, x$data[tst_rows, x$candidate_markers, drop = FALSE],
                    type = "raw")
 
@@ -95,8 +98,8 @@ fitmodel.fs_nb <- function(x, ...) {
 fitmodel.fs_lm <- function(x, ...) {
 
   # ensure response is continuous
-  if ( !is.numeric(x$data[,x$model_type$response ]) ) {
-    x$data[, x$model_type$response ] <- numeric(x$data[, x$model_type$response])
+  if ( !is.numeric(x$data[[x$model_type$response]]) ) {
+    x$data[[x$model_type$response]] <- numeric(x$data[[x$model_type$response]])
   }
 
   args <- list(...)
@@ -106,7 +109,8 @@ fitmodel.fs_lm <- function(x, ...) {
   trn_rows <- x$cross_val[[run]][[fold]]$training_rows
   tst_rows <- x$cross_val[[run]][[fold]]$test_rows
 
-  fit <- stats::lm(args$frmla, data = x$data[trn_rows, ], model = FALSE)
+  mf  <- stats::model.frame(args$frmla, data = x$data[trn_rows, ])
+  fit <- stats::lm(args$frmla, data = mf, model = FALSE)
   tst_p <- stats::predict(fit, x$data[ tst_rows, x$candidate_markers ],
                           type = "response")
 

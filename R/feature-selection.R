@@ -65,8 +65,9 @@
 #'
 #' @author Kirk DeLisle, Stu Field
 #' @seealso [Search()]
-#' @references Hastie, Tibshirani, and Friedman. Elements of Statistical Learning:
-#'   Data Mining, Inference , and Prediction. 2nd Edition. Springer. 2009.
+#' @references Hastie, Tibshirani, and Friedman.
+#'   Elements of Statistical Learning:
+#'   Data Mining, Inference, and Prediction. *2nd Ed*. Springer. 2009.
 #' @examples
 #' # Simulated Test Data
 #' data <- splyr::sim_adat
@@ -256,8 +257,7 @@ print.feature_select <- function(x, ...) {
 #' @rdname feature_selection
 #' @param object An object of class `feature_select`.
 #' @param ... Arguments declared for update in `argument = value` format.
-#'   Arguments from the original call are preserved. Alternatively, a pass through
-#'   for the deprecation of FSMCP -> feature_selection (will eventually be removed).
+#'   Non-declared arguments from the *original* call are preserved.
 #' @export
 update.feature_select <- function(object, ...) {
 

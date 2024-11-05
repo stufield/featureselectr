@@ -15,15 +15,15 @@ Search.fs_backward_model <- function(x, ...) {
   writeLines(
     signal_rule("Using `Backward-Stepwise` model search", line_col = "magenta")
   )
-  cores <- list(...)$num.cores
+  cores <- list(...)$num_cores
   op <- options(stringsAsFactors = FALSE)
   on.exit(options(op))
 
   # assume a certain number of runs within which there
-  # are cross-validated folds
-  # loop over r, f, and step ( runs, folds, and candidates )
-  # for model search, the cross-validated folds determine
-  # which parameter is chosen at any given step
+  #   are cross-validated folds
+  #   loop over r, f, and step ( runs, folds, and candidates )
+  #   for model search, the cross-validated folds determine
+  #   which parameter is chosen at any given step
 
   search_progress <- data.frame(step         = numeric(0),
                                 elim_markers = character(0),

@@ -110,12 +110,12 @@ parallel_setup <- function(num_cores) {
         signal_oops(
           "Did not find the `parallel` pkg installed on your Linux system ..."
         )
-        signal_done("Setting `num.cores = 1` and continuing in serial.")
+        signal_done("Setting `num_cores = 1` and continuing in serial.")
         num_cores <- 1L
       }
     } else if ( grepl("ming", sys) ) {   # Windows system
       signal_oops("Windows OS detected ... parallel processing is not supported.")
-      signal_done("Setting `num.cores = 1L` and continuing in serial.")
+      signal_done("Setting `num_cores = 1L` and continuing in serial.")
       num_cores <- 1L
     } else {
       stop("Unknown operating system type: ", value(sys), call. = FALSE)

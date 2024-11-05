@@ -76,8 +76,7 @@ reproducibility.}
 call to \code{\link[=feature_selection]{feature_selection()}}.}
 
 \item{...}{Arguments declared for update in \code{argument = value} format.
-Arguments from the original call are preserved. Alternatively, a pass through
-for the deprecation of FSMCP -> feature_selection (will eventually be removed).}
+Non-declared arguments from the \emph{original} call are preserved.}
 
 \item{object}{An object of class \code{feature_select}.}
 }
@@ -145,8 +144,9 @@ fs3
 
 }
 \references{
-Hastie, Tibshirani, and Friedman. Elements of Statistical Learning:
-Data Mining, Inference , and Prediction. 2nd Edition. Springer. 2009.
+Hastie, Tibshirani, and Friedman.
+Elements of Statistical Learning:
+Data Mining, Inference, and Prediction. \emph{2nd Ed}. Springer. 2009.
 }
 \seealso{
 \code{\link[=Search]{Search()}}

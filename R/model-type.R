@@ -15,8 +15,6 @@
 #'   response variable. Assumed to be two-class, factor type.
 #' @return An object of the appropriate class according to the
 #'   model type chosen, one of: `fs_lr`, `fs_nb`, or `fs_lm`.
-#'   In addition, key-value pairs in a list containing:
-#'   \item{response}{See function arguments above.}
 #' @author Kirk DeLisle, Stu Field
 #' @examples
 #' # Logistic Regression

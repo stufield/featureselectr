@@ -29,8 +29,8 @@ data  <- splyr::sim_adat
 feats <- attributes(data)$sig_feats$class
 fs <- feature_selection(data, candidate_markers = feats,
                         search_type = search_type_forward_model(),
-                        model_type = model_type_lr("class_response"),
-                        stratified = TRUE,
+                        model_type  = model_type_lr("class_response"),
+                        stratified  = TRUE,
                         cost = "AUC", runs = 2, folds = 2)
 fs_obj <- Search(fs)
 get_markers(fs_obj)

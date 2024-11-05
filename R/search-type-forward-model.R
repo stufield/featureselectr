@@ -48,9 +48,9 @@ Search.fs_forward_model <- function(x, ...) {
   on.exit(options(op))
 
   # assume a certain number of runs within which there are cross-validated folds
-  # loop over r, f, and step ( runs, folds, and candidates )
-  # for model search, the cross-validated folds determine which
-  # parameter is chosen at any given step
+  #   loop over r, f, and step ( runs, folds, and candidates )
+  #   for model search, the cross-validated folds determine which
+  #   parameter is chosen at any given step
 
   search_progress <- data.frame(step          = numeric(0),
                                 cumul_markers = character(0),

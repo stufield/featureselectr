@@ -20,8 +20,6 @@ response variable. Assumed to be two-class, factor type.}
 \value{
 An object of the appropriate class according to the
 model type chosen, one of: \code{fs_lr}, \code{fs_nb}, or \code{fs_lm}.
-In addition, key-value pairs in a list containing:
-\item{response}{See function arguments above.}
 }
 \description{
 Declares a model type the Feature Selection framework. There are
