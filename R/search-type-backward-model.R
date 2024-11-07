@@ -211,5 +211,5 @@ plot.fs_backward_model <- function(x, box.col = 8, ...) {
                    legend.position = "right",
                    axis.text.x  = ggplot2::element_text(angle = 90, hjust = 1))
 
-  withr::with_namespace("patchwork", p1 + p2)
+  withr::with_package("patchwork", p1 + p2)
 }
