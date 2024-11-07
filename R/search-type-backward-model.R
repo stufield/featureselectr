@@ -12,12 +12,9 @@ search_type_backward_model <- function(display_name = "Backward Stepwise Model S
 #' @export
 Search.fs_backward_model <- function(x, ...) {
 
-  writeLines(
-    signal_rule("Using `Backward-Stepwise` model search", line_col = "magenta")
-  )
+  signal_rule("Using `Backward-Stepwise` model search", line_col = "magenta")
   cores <- list(...)$num_cores
-  op <- options(stringsAsFactors = FALSE)
-  on.exit(options(op))
+  withr::local_options(list(stringsAsFactors = FALSE))
 
   # assume a certain number of runs within which there
   #   are cross-validated folds
@@ -40,8 +37,7 @@ Search.fs_backward_model <- function(x, ...) {
     sprintf("Step %i of %i",
             #length(x$candidate_markers) + 1 - step,
             step, length(x$candidate_markers)) |>
-      signal_rule(line_col = "blue") |>
-      writeLines()
+      signal_rule(line_col = "blue")
 
     rem_candidates <- setdiff(mod_candidate_markers, deleted_candidates)
 

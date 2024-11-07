@@ -40,12 +40,9 @@ search_type_forward_model <- function(max_steps = 20L,
 #' @export
 Search.fs_forward_model <- function(x, ...) {
 
-  writeLines(
-    signal_rule("Using `Forward-Stepwise` model search", line_col = "magenta")
-  )
+  signal_rule("Using `Forward-Stepwise` model search", line_col = "magenta")
   cores <- list(...)$num_cores
-  op <- options(stringsAsFactors = FALSE)
-  on.exit(options(op))
+  withr::local_options(list(stringsAsFactors = FALSE))
 
   # assume a certain number of runs within which there are cross-validated folds
   #   loop over r, f, and step ( runs, folds, and candidates )
@@ -62,8 +59,7 @@ Search.fs_forward_model <- function(x, ...) {
   for ( step in 1:x$search_type$max_steps ) {
 
     sprintf("Step %i of %s", step, x$search_type$max_steps) |>
-      signal_rule(line_col = "blue") |>
-      writeLines()
+      signal_rule(line_col = "blue")
 
      rem_candidates <- setdiff(x$candidate_markers, used_candidates)
 

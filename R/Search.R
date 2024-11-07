@@ -128,7 +128,7 @@ Search.feature_select <- function(x, num_cores = 1L) {
     )
   }
 
-  signal_rule(line_col = "green", lty = "double") |> writeLines()
+  signal_rule(line_col = "green", lty = "double")
   sprintf("---Starting the Feature Selection algorithm %s Search",
           x$search_method) |>
     add_style$red() |>

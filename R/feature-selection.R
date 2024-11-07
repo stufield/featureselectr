@@ -189,28 +189,26 @@ feature_selection <- function(data, candidate_markers, model_type,
 #' @export
 print.feature_select <- function(x, ...) {
 
-  writeLines(
-    signal_rule("Feature Selection Object", lty = "double", line_col = "magenta")
-  )
-  writeLines(
-    signal_rule("Dataset Info", line_col = "blue")
-  )
+  signal_rule("Feature Selection Object", lty = "double", line_col = "magenta")
+  signal_rule("Dataset Info", line_col = "blue")
   key <- c(
     "Rows",
     "Columns",
     "FeatureData"
   ) |> pad(25)
+
   value <- c(
     length(row.names(x$data)),
     length(names(x$data)),
     length(setdiff(x$candidate_markers, x$response))
   )
+
   liter(key, value, function(.x, .y) {
     writeLines(paste(add_color(symbl$bullet, "red"), .x, value(.y)))
   })
-  writeLines(
-    signal_rule("Search Optimization Info", line_col = "red")
-  )
+
+  signal_rule("Search Optimization Info", line_col = "red")
+
   key2 <- c(
     "No. Candidates",
     "Response Field",
@@ -226,6 +224,7 @@ print.feature_select <- function(x, ...) {
     "Display Name",
     "Search Complete"
   ) |> pad(25)
+
   value2 <- c(
     length(x$candidate_markers),
     x$model_type$response,
@@ -241,10 +240,12 @@ print.feature_select <- function(x, ...) {
     x$search_type$display_name,
     x$search_complete
   )
+
   liter(key2, value2, function(.x, .y) {
     writeLines(paste(add_color(symbl$bullet, "red"), .x, value(.y)))
   })
-  writeLines(signal_rule(lty = "double", line_col = "green"))
+
+  signal_rule(lty = "double", line_col = "green")
   invisible(x)
 }
 
