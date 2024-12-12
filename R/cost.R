@@ -168,11 +168,11 @@ cost.fs_sens_spec <- function(x) {
   tst_rows <- x$cross_val[[run]][[fold]]$test_rows
   df       <- data.frame(pred  = x$cross_val[[run]][[fold]]$test_predicts,
                          class = x$data[tst_rows, x$model_type$response])
-  # pos.class = 2nd factor level!
+  # pos class = 2nd factor level!
   cm <- calc_confusion(truth     = df$class,
                        predicted = df$pred,
                        cutoff    = 0.5,
-                       pos.class = levels(df$class)[2L]) |>
+                       pos_class = levels(df$class)[2L]) |>
     summary()
   pull_stat(cm, "Sens") + pull_stat(cm, "Spec")
 }

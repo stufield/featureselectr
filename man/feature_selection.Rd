@@ -116,7 +116,7 @@ The S3 update method allows for modification of existing
 }
 \examples{
 # Simulated Test Data
-data <- splyr::sim_adat
+data <- wranglr::simdata
 
 # Setup response variable
 data$class_response <- factor(data$class_response)

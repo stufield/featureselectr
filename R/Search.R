@@ -68,7 +68,7 @@
 #' @seealso [feature_selection()]
 #'
 #' @examples
-#' data <- splyr::sim_adat
+#' data <- wranglr::simdata
 #'
 #' # Setup response variable
 #' data$class_response <- as.factor(data$class_response)

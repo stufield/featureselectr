@@ -34,7 +34,7 @@ Suggests:
     SomaPlotr,
     patchwork,
     spelling,
-    splyr,
+    wranglr,
     tibble,
     testthat
 VignetteBuilder: 

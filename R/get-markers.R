@@ -15,7 +15,7 @@
 #'       cost function.}
 #' @author Stu Field
 #' @examples
-#' data  <- splyr::sim_adat
+#' data  <- wranglr::simdata
 #' feats <- attributes(data)$sig_feats$class
 #' fs <- feature_selection(data, candidate_markers = feats,
 #'                         search_type = search_type_forward_model(),

@@ -13,7 +13,7 @@ library(ggplot2)
 knitr::opts_chunk$set(
   collapse = TRUE, comment = "#>"
 )
-sim_adat <- splyr::sim_adat
+simdata <- wranglr::simdata
 ```
 
 
@@ -78,7 +78,7 @@ See `?featureSelection` and perhaps `?cost`.
 ## Feature Selection for Naive Bayes
 
 The analysis below is performed with the simulated data set from
-`splyr::sim_adat`. We will fit a naive Bayes model during the
+`wranglr::simdata`. We will fit a naive Bayes model during the
 feature selection. The setup below specifies **5** independent runs 
 of **4** fold cross-validation.
 Higher folds might generate slightly different results, but a **20-25%**
@@ -87,13 +87,13 @@ There are `r length(attributes(data)$sig_feats$class)` features that should
 be significant in a binary classification context. They are identified in 
 the attributes of the object itself. We will restrict the search to the 
 top **15** steps (there are
-`r length(featureselectr:::get_analytes(sim_adat))`
+`r length(featureselectr:::get_analytes(simdata))`
 total features; thus approx. 35 false positives).
 
 ### Setup `FS` object
 
 ```{r fs-setup-nb}
-data <- sim_adat
+data <- simdata
 
 # True positive features
 attributes(data)$sig_feats$class
