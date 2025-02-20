@@ -1,7 +1,7 @@
 #' Get Feature Selection Markers
 #'
 #' Function to return the maximum, se1, and se2 markers from either
-#' forward or backward selection from a `feature_select` class object.
+#'   forward or backward selection from a `feature_select` class object.
 #'
 #' @param x A `feature_select` search object.
 #' @return A list containing:
@@ -11,9 +11,8 @@
 #'   cost function that is one standard error (SE) from the
 #'   maximum/minimum mean cost function.}
 #' \item{markers_2se_from_max}{Combination of features that has a mean
-#'       cost function that is 1.96*SE from the maximum/minimum mean
-#'       cost function.}
-#' @author Stu Field
+#'   cost function that is `1.96*SE` from the maximum/minimum mean
+#'   cost function.}
 #' @examples
 #' data  <- wranglr::simdata
 #' feats <- attributes(data)$sig_feats$class

@@ -5,7 +5,7 @@
 #'
 #' @param x The `boxtbl` object created during the S3 plot method.
 #' @param type Whether forward or backward calculations should be made.
-#' @return A vector of length 3:
+#' @return A `numeric(3)` object containing:
 #'   `c(index of peak,
 #'      index of p = 0.05,
 #'      index of p = 0.001)`.

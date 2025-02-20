@@ -3,6 +3,7 @@
 \name{feature_selection}
 \alias{feature_selection}
 \alias{print.feature_select}
+\alias{is_feature_select}
 \alias{update.feature_select}
 \title{Feature Selection Object Declaration}
 \usage{
@@ -11,8 +12,8 @@ feature_selection(
   candidate_markers,
   model_type,
   search_type,
-  runs = 1,
-  folds = 1,
+  runs = 1L,
+  folds = 1L,
   cost = c("AUC", "R2", "CCC", "MSE", "sens", "spec"),
   keep_models = FALSE,
   bootstrap = FALSE,
@@ -22,6 +23,8 @@ feature_selection(
 )
 
 \method{print}{feature_select}(x, ...)
+
+is_feature_select(x)
 
 \method{update}{feature_select}(object, ...)
 }
@@ -72,8 +75,7 @@ cross-validation or bootstrap folds. If \code{NULL} (default), column name
 \item{random_seed}{\code{integer(1)}. Used to control the random number generator for
 reproducibility.}
 
-\item{x}{An object of class \code{feature_select} (list) from a call
-call to \code{\link[=feature_selection]{feature_selection()}}.}
+\item{x}{A \code{feature_select} class object.}
 
 \item{...}{Arguments declared for update in \code{argument = value} format.
 Non-declared arguments from the \emph{original} call are preserved.}
@@ -114,6 +116,11 @@ The S3 print method for objects of class \code{feature_select}.
 The S3 update method allows for modification of existing
 \code{feature_select} objects on-the-fly.
 }
+\section{Functions}{
+\itemize{
+\item \code{is_feature_select()}: Check if a valid \code{feature_select} class object.
+
+}}
 \examples{
 # Simulated Test Data
 data <- wranglr::simdata
@@ -145,8 +152,8 @@ fs3
 }
 \references{
 Hastie, Tibshirani, and Friedman.
-Elements of Statistical Learning:
-Data Mining, Inference, and Prediction. \emph{2nd Ed}. Springer. 2009.
+Elements of Statistical Learning: Data Mining, Inference, and Prediction.
+\emph{2nd Ed}. Springer. 2009.
 }
 \seealso{
 \code{\link[=Search]{Search()}}

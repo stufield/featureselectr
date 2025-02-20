@@ -15,13 +15,13 @@
 #'   call to one of the [search_type()] functions.
 #' @param cost Character. A string to be used in defining the cost
 #'   function. Currently one of:
-#' \describe{
-#'   \item{`AUC`}{Area Under the Curve}
-#'   \item{`MSE`}{Mean-Squared Error}
-#'   \item{`CCC`}{Concordance Correlation Coefficient}
-#'   \item{`R2`}{R-squared - regression models}
-#'   \item{`sens` or `spec`}{Sensitivity + Specificity}
-#' }
+#'   \describe{
+#'     \item{`AUC`}{Area Under the Curve}
+#'     \item{`MSE`}{Mean-Squared Error}
+#'     \item{`CCC`}{Concordance Correlation Coefficient}
+#'     \item{`R2`}{R-squared - regression models}
+#'     \item{`sens` or `spec`}{Sensitivity + Specificity}
+#'   }
 #' @param runs `integer(1)`. How many runs to perform.
 #' @param folds `integer(1)`. How many fold cross-validation to perform.
 #' @param keep_models `logical(1)`. Should model objects be retained in the
@@ -39,35 +39,35 @@
 #'   `"Response"` will be used and thus must be present.
 #' @param random_seed `integer(1)`. Used to control the random number generator for
 #'   reproducibility.
-#' @param x An object of class `feature_select` (list) from a call
-#'   call to [feature_selection()].
+#' @param x A `feature_select` class object.
+#'
 #' @return A `"feature_select"` class object and list containing:
-#' \item{data}{The original feature data to use.}
-#' \item{candidate_markers}{The list of candidate features.}
-#' \item{model_type}{A list containing model type variables of the
-#'   appropriate class for the desired model type.}
-#' \item{search_type}{A list containing search type variables of the
-#'   appropriate class for the desired search type.}
-#' \item{cost}{A string of the type of cost function.}
-#' \item{cost_fxn}{A list containing cost variables of the
-#'   appropriate class for the desired object cost function.}
-#' \item{runs}{The number of runs.}
-#' \item{folds}{The number of folds.}
-#' \item{keep_models}{If intermediate cross-validation models are kept?}
-#' \item{bootstrap}{Is bootstrapping performed?}
-#' \item{stratified}{Is cross-validation stratification performed?}
-#' \item{strat_column}{Which field string is used in stratification.}
-#' \item{random_seed}{The random seed used}
-#' \item{cross_val}{A list containing the training and test indices of the
-#'   various cross validation folds.}
-#' \item{search_complete}{Logical if the object has completed a search}
-#' \item{call}{The original matched call.}
+#'   \item{data}{The original feature data to use.}
+#'   \item{candidate_markers}{The list of candidate features.}
+#'   \item{model_type}{A list containing model type variables of the
+#'     appropriate class for the desired model type.}
+#'   \item{search_type}{A list containing search type variables of the
+#'     appropriate class for the desired search type.}
+#'   \item{cost}{A string of the type of cost function.}
+#'   \item{cost_fxn}{A list containing cost variables of the
+#'     appropriate class for the desired object cost function.}
+#'   \item{runs}{The number of runs.}
+#'   \item{folds}{The number of folds.}
+#'   \item{keep_models}{If intermediate cross-validation models are kept?}
+#'   \item{bootstrap}{Is bootstrapping performed?}
+#'   \item{stratified}{Is cross-validation stratification performed?}
+#'   \item{strat_column}{Which field string is used in stratification.}
+#'   \item{random_seed}{The random seed used}
+#'   \item{cross_val}{A list containing the training and test indices of the
+#'     various cross validation folds.}
+#'   \item{search_complete}{Logical if the object has completed a search}
+#'   \item{call}{The original matched call.}
 #'
 #' @author Kirk DeLisle, Stu Field
 #' @seealso [Search()]
 #' @references Hastie, Tibshirani, and Friedman.
-#'   Elements of Statistical Learning:
-#'   Data Mining, Inference, and Prediction. *2nd Ed*. Springer. 2009.
+#'   Elements of Statistical Learning: Data Mining, Inference, and Prediction.
+#'   *2nd Ed*. Springer. 2009.
 #' @examples
 #' # Simulated Test Data
 #' data <- wranglr::simdata
@@ -98,7 +98,7 @@
 #'
 #' @export
 feature_selection <- function(data, candidate_markers, model_type,
-                              search_type, runs = 1, folds = 1,
+                              search_type, runs = 1L, folds = 1L,
                               cost = c("AUC", "R2", "CCC", "MSE", "sens", "spec"),
                               keep_models = FALSE, bootstrap = FALSE,
                               stratified = FALSE, strat_column = NULL,
@@ -247,6 +247,26 @@ print.feature_select <- function(x, ...) {
 
   signal_rule(lty = "double", line_col = "green")
   invisible(x)
+}
+
+
+#' @describeIn feature_selection
+#'  Check if a valid `feature_select` class object.
+#' @export
+is_feature_select <- function(x) {
+  class <- inherits(x, "feature_select")
+  nms   <- all(c("data",
+                 "candidate_markers",
+                 "model_type",
+                 "cross_val",
+                 "cost",
+                 "call",
+                 "keep_models",
+                 "search_type",
+                 "cost_fxn",
+                 "runs",
+                 "folds") %in% names(x))
+  (class && nms)
 }
 
 

@@ -17,7 +17,7 @@ mean cost function.}
 cost function that is one standard error (SE) from the
 maximum/minimum mean cost function.}
 \item{markers_2se_from_max}{Combination of features that has a mean
-cost function that is 1.96*SE from the maximum/minimum mean
+cost function that is \code{1.96*SE} from the maximum/minimum mean
 cost function.}
 }
 \description{
@@ -34,7 +34,4 @@ fs <- feature_selection(data, candidate_markers = feats,
                         cost = "AUC", runs = 2, folds = 2)
 fs_obj <- Search(fs)
 get_markers(fs_obj)
-}
-\author{
-Stu Field
 }

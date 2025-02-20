@@ -1,20 +1,19 @@
 #' Model Fitting Methods of Various Forms
 #'
 #' Provides linear regression, Naive Bayes, and logistic regression
-#' functionality within the Feature Selection framework. The model type object
-#' requires an input object that is structured appropriately (see above).
-#' This functionality is performed internally within the feature selection
-#' algorithm and is unlikely to require direct calls from the user.
+#'   functionality within the Feature Selection framework. The model type object
+#'   requires an input object that is structured appropriately (see above).
+#'   This functionality is performed internally within the feature selection
+#'   algorithm and is unlikely to require direct calls from the user.
 #'
 #' The Feature Selection framework provides for generic model types to be
-#' defined. This S3 method allows for model types to be fit for appropriately
-#' structured objects. The model input object *must* be structured
-#' appropriately (see above). Note the inclusion of a `frmla` argument
-#' with the desired formula. Without this and in the correct form, the method
-#' will fail. Usually it is fine to leave the defaults in place.
+#'   defined. This S3 method allows for model types to be fit for appropriately
+#'   structured objects. The model input object *must* be structured
+#'   appropriately (see above). Note the inclusion of a `frmla` argument
+#'   with the desired formula. Without this and in the correct form, the method
+#'   will fail. Usually it is fine to leave the defaults in place.
 #'
-#' @param x An object of class `feature_select` (list) from a call
-#' call to [feature_selection()].
+#' @param x A `feature_select` class object.
 #' @param ... Additional arguments passed to the `fitmodel` generic S3
 #'   method, which performs the appropriate search algorithm depending on the
 #'   object class. This is typically performed internally via the `frmla =`

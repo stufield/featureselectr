@@ -1,11 +1,11 @@
 #' Feature Selection Cost Functions
 #'
 #' The Feature Selection framework provides for generic cost functions to be
-#' defined. This S3 method allows for model fit/cost to be calculated for
-#' appropriately structured objects and requires an input object that is
-#' structured appropriately (see above).
-#' This functionality is performed internally within the feature selection
-#' algorithm and is unlikely to require direct calls from the user.
+#'   defined. This S3 method allows for model fit/cost to be calculated for
+#'   appropriately structured objects and requires an input object that is
+#'   structured appropriately (see above).
+#'   This functionality is performed internally within the feature selection
+#'   algorithm and is unlikely to require direct calls from the user.
 #'
 #' @param x An object of class `feature_select` (`typeof = list`) from a call
 #'   call to [feature_selection()].
@@ -35,8 +35,8 @@ cost <- function(x) UseMethod("cost")
 #'     \item Sensitivity + Specificity
 #'   }
 #'
-#' @note These are a series of internal functions called according to the "cost"
-#'   argument of [feature_selection()].
+#' @note These are a series of internal functions called according
+#'   to the "cost" argument of [feature_selection()].
 #'
 #' @return A list containing:
 #' \item{display_name }{The official Display Title to be used by any plot methods

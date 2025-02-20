@@ -11,26 +11,6 @@ calc_CI95 <- function(x) {
 }
 
 
-#' Check if `feature_select` class object
-#' Preforms a check of if object is a feature selection object
-#' @noRd
-is_feature_select <- function(x) {
-  class <- inherits(x, "feature_select")
-  nms   <- all(c("data",
-                 "candidate_markers",
-                 "model_type",
-                 "cross_val",
-                 "cost",
-                 "call",
-                 "keep_models",
-                 "search_type",
-                 "cost_fxn",
-                 "runs",
-                 "folds") %in% names(x))
-  (class && nms)
-}
-
-
 #' Check if Search is Complete
 #'
 #' Catch for Search not yet performed on the `feature_select` object?

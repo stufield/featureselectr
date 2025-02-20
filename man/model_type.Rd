@@ -14,8 +14,8 @@ model_type_nb(response = "Response")
 model_type_lm(response = "Response")
 }
 \arguments{
-\item{response}{Character. The string of the column name to use as the
-response variable. Assumed to be two-class, factor type.}
+\item{response}{\code{character(1)}. The string of the column name to use as the
+response variable. Assumed to be a binary factor type.}
 }
 \value{
 An object of the appropriate class according to the
@@ -29,8 +29,8 @@ currently 3 model type options:
 \item Linear Regression Models (lm)
 \item Naive Bayes Models (nb)
 }
-Typically these functions can be called with their defaults, especially if
-called upon a data set of class \code{tr_data}.
+Typically these functions can be called with their defaults,
+especially if called upon a data set of class \code{tr_data}.
 
 Naive Bayes Models
 

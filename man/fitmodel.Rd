@@ -7,8 +7,7 @@
 fitmodel(x, ...)
 }
 \arguments{
-\item{x}{An object of class \code{feature_select} (list) from a call
-call to \code{\link[=feature_selection]{feature_selection()}}.}
+\item{x}{A \code{feature_select} class object.}
 
 \item{...}{Additional arguments passed to the \code{fitmodel} generic S3
 method, which performs the appropriate search algorithm depending on the
