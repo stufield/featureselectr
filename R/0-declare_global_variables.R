@@ -15,6 +15,8 @@ if ( getRversion() >= "2.15.1" ) {
       "elim_markers",
       "id",
       "metric",
+      "training",
+      "test",
       "Feature",
       "step"
     )

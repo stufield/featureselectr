@@ -3,10 +3,10 @@
 #' This S3 method sets up the internal the *non-stratified* cross-validation.
 #'   Since these are mostly internal methods, documentation is minimal.
 #'
-#' @param x A `feature_select` class object from a call
-#'   call to [feature_selection()].
+#' @param x A `feature_select` class object, if [plot_cross_strat()],
+#'  an object with stratification.
 #'
-#' @author Kirk DeLisle
+#' @author Stu Field
 #'
 #' @export
 setup_cross <- function(x) UseMethod("setup_cross")
@@ -141,4 +141,86 @@ setup_cross_strat.feature_select <- function(x) {
     }
   }
   invisible(x)
+}
+
+
+#' Check the cross-validation stratification visually.
+#'
+#' @rdname setup_cross
+#'
+#' @importFrom ggplot2 ggplot geom_point aes geom_vline geom_hline
+#' @importFrom ggplot2 geom_segment coord_cartesian scale_color_manual
+#' @importFrom ggplot2 theme element_blank ggtitle labs
+#'
+#' @export
+plot_cross_strat <- function(x) {
+  resp <- x$model_type$response
+  class_vec <- x$data[[resp]]
+  tab  <- table(x$data[[resp]])
+
+  if ( length(tab) == 2L ) { # binary response
+    class_prev <- prop.table(tab)[1L]
+    base_class <- names(class_prev)
+    cross_list <- x$cross_val[grep("Run[0-9]", names(x$cross_val))]
+    calc_prev  <- function(i) prop.table(table(class_vec[i]))[1L]
+    prevs <- lapply(cross_list, function(.run) {
+      unlist(.run, recursive = FALSE, use.names = TRUE) |>
+      vapply(calc_prev, NA_real_)
+    }) |> data.frame()
+
+    plot_df <- rn2col(prevs, "rn") |>
+      tidyr::pivot_longer(cols = -rn, names_to = "run", values_to = "prop") |>
+      tidyr::separate(rn, sep = "[.]", into = c("fold", "group")) |>
+      dplyr::arrange(run, fold, group) |>
+      dplyr::mutate(group = gsub("_rows$", "", group)) |>
+      tibble::rowid_to_column("id")
+
+    # create special df with data for segments
+    seg_df <- plot_df |>
+      dplyr::select(group, prop) |>
+      tidyr::pivot_wider(
+        names_from = group,
+        values_from = prop,
+        values_fn = list
+      ) |>
+      tidyr::unnest(cols = c(test, training)) |>
+      dplyr::mutate(
+        x = seq(1, nrow(plot_df), by = 2),
+        xend = x + 1,
+        y = test,
+        yend = training
+      )
+
+    p <- plot_df |>
+      ggplot(aes(x = id, y = prop, color = group)) +
+      geom_point(size = 3, alpha = 0.7) +
+      coord_cartesian(ylim = c(0, 1)) +
+      scale_color_manual(
+        values = c(col_palette$purple, col_palette$lightblue)) +
+      geom_segment(data = seg_df,
+        aes(x = x, y = y, xend = xend, yend = yend),
+        color = col_palette$lightgreen, linewidth = 0.5) +
+      theme(
+        axis.text.x  = element_blank(),
+        axis.ticks.x = element_blank(),
+        legend.title = element_blank(),
+        axis.title.x = element_blank()
+        ) +
+      ggtitle(sprintf("Prevalence of '%s' in Stratified Cross-Folds",
+                      base_class)) +
+      labs(y = sprintf("Prevalence: %s", base_class)) +
+      geom_hline(yintercept = class_prev, linetype = "longdash",
+                 color = col_palette$magenta, alpha = 0.75) +
+      geom_vline(xintercept = seg_df$xend + 0.5, linetype = "longdash",
+                 color = col_palette$lightgrey, alpha = 0.9)
+  } else if ( length(tab) > 2L ) { # regression response
+    signal_info(
+      "Checking stratification of cross-folds for CONTINUOUS-type responses"
+    )
+    # Kirk: please complete here when ready
+    stop("CONTINUOUS RESPONSES INCOMPLETE!")
+  } else {
+    stop("Incompatible levels of the `response` variable", call. = FALSE)
+  }
+  p
 }

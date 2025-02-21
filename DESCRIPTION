@@ -36,6 +36,7 @@ Suggests:
     spelling,
     wranglr,
     tibble,
+    tidyr,
     testthat
 VignetteBuilder: 
     knitr
