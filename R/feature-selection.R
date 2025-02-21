@@ -95,7 +95,7 @@
 #' ft <- featureselectr:::get_analytes(data) # select candidate features
 #' fs <- feature_selection(data, candidate_markers = ft,
 #'                         model_type = mt, search_type = sm, cost = cf,
-#'                         strat_column = "class_response", runs = 5, folds = 5)
+#'                         strat_column = "class_response", runs = 5L, folds = 5L)
 #' # S3 Print method
 #' fs
 #'

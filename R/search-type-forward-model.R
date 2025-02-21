@@ -5,7 +5,6 @@
 #'   \itemize{
 #'     \item forward stepwise model
 #'     \item backward stepwise model
-#'     \item forward stepwise parameter (deprecated)
 #'   }
 #'   This information is called within the object creation to modify the its
 #'   attributes (class) to reflect the appropriate search values.
