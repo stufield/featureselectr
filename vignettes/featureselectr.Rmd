@@ -87,7 +87,7 @@ There are `r length(attributes(data)$sig_feats$class)` features that should
 be significant in a binary classification context. They are identified in 
 the attributes of the object itself. We will restrict the search to the 
 top **15** steps (there are
-`r length(featureselectr:::get_analytes(simdata))`
+`r length(helpr:::get_analytes(simdata))`
 total features; thus approx. 35 false positives).
 
 ### Setup `FS` object
@@ -106,7 +106,7 @@ cs <- function(x) {
 }
 
 # scramble order of feats random
-feats <- withr::with_seed(123, sample(featureselectr:::get_analytes(data)))
+feats <- withr::with_seed(123, sample(helpr:::get_analytes(data)))
 data[, feats] <- apply(data[, feats], 2, cs)
 
 # set model type and column name of response variable
