@@ -10,12 +10,13 @@ cost(x)
 \item{x}{A \code{feature_select} class object.}
 }
 \value{
-The return value is one of:
-\item Area Under the Curve (AUC)
-\item Correspondence Correlation Coefficient (CCC)
-\item Mean Squared Error (MSE)
-\item R-squared (R2)
-\item Sensitivity + Specificity
+A metric, a numeric value, to be optimized depending
+on the type, one of:
+\item{}{Area Under the Curve (AUC), max}
+\item{}{Correspondence Correlation Coefficient (CCC), max}
+\item{}{Mean Squared Error (MSE), min}
+\item{}{R-squared (R2), max}
+\item{}{Sensitivity + Specificity, max}
 }
 \description{
 The Feature Selection framework provides for generic cost functions to be

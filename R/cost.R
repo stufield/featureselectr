@@ -9,12 +9,13 @@
 #'
 #' @param x A `feature_select` class object.
 #'
-#' @return The return value is one of:
-#'   \item Area Under the Curve (AUC)
-#'   \item Correspondence Correlation Coefficient (CCC)
-#'   \item Mean Squared Error (MSE)
-#'   \item R-squared (R2)
-#'   \item Sensitivity + Specificity
+#' @return A metric, a numeric value, to be optimized depending
+#'   on the type, one of:
+#'   \item{}{Area Under the Curve (AUC), max}
+#'   \item{}{Correspondence Correlation Coefficient (CCC), max}
+#'   \item{}{Mean Squared Error (MSE), min}
+#'   \item{}{R-squared (R2), max}
+#'   \item{}{Sensitivity + Specificity, max}
 #'
 #' @author Kirk DeLisle, Stu Field
 #'
