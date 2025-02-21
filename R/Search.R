@@ -75,7 +75,7 @@
 #' mt  <- model_type_lr(response = "class_response")
 #' cst <- "AUC"
 #' sm  <- search_type_forward_model(10L, display_name = "FeatureSelection Plot")
-#' ft  <- head(get_analytes(data))  # select candidate features
+#' ft  <- head(helpr:::get_analytes(data))  # select candidate features
 #' mcp <- feature_selection(data,
 #'                          candidate_markers = ft,
 #'                          model_type = mt,
