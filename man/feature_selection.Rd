@@ -126,7 +126,7 @@ data$class_response <- factor(data$class_response)
 mt <- model_type_lr(response = "class_response")
 cf <- "sens"
 sm <- search_type_forward_model(15L, display_name = "FeatureSelection Plot")
-ft <- featureselectr:::get_analytes(data) # select candidate features
+ft <- get_analytes(data)   # select candidate features
 fs <- feature_selection(data, candidate_markers = ft,
                         model_type = mt, search_type = sm, cost = cf,
                         strat_column = "class_response", runs = 5L, folds = 5L)
