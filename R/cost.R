@@ -10,12 +10,7 @@
 #' @param x A `feature_select` class object.
 #'
 #' @return A metric, a numeric value, to be optimized depending
-#'   on the type, one of:
-#'   \item{}{Area Under the Curve (AUC), max}
-#'   \item{}{Correspondence Correlation Coefficient (CCC), max}
-#'   \item{}{Mean Squared Error (MSE), min}
-#'   \item{}{R-squared (R2), max}
-#'   \item{}{Sensitivity + Specificity, max}
+#'   on the type, one of AUC, CCC, MSE, R2, Sens + Spec.
 #'
 #' @author Kirk DeLisle, Stu Field
 #'

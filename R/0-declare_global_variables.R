@@ -14,6 +14,7 @@ if ( getRversion() >= "2.15.1" ) {
       "cumul_markers",
       "elim_markers",
       "id",
+      "fold", "group", "prop", "rn", "run", "xend", "y", "yend",  # plot_cross_strat
       "metric",
       "training",
       "test",
