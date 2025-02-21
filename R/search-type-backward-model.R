@@ -1,14 +1,17 @@
 
+
 #' @describeIn search_type
-#'   Backward model selection search
+#'   Backward model selection search.
+#'
 #' @export
 search_type_backward_model <- function(display_name = "Backward Stepwise Model Search") {
   as.list(environment()) |> add_class("fs_backward_model")
 }
 
-#' Backward search type for feature selection models
-#' @noRd
+#' S3 Search method for backward searches
+#'
 #' @importFrom stats as.formula setNames
+#' @noRd
 #' @export
 Search.fs_backward_model <- function(x, ...) {
 
@@ -120,16 +123,13 @@ Search.fs_backward_model <- function(x, ...) {
 }
 
 
-
 #' S3 plot method for fs_backward_model
 #'
-#' Plotting for `fs_backward_model` class.
-#'
-#' @noRd
 #' @importFrom ggplot2 ggplot aes theme element_text labs geom_pointrange
 #' @importFrom ggplot2 element_blank scale_color_manual scale_x_continuous
+#' @noRd
 #' @export
-plot.fs_backward_model <- function(x, box.col = 8, ...) {
+plot.fs_backward_model <- function(x, ...) {
 
   check_complete(x)
 

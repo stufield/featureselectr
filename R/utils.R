@@ -1,9 +1,9 @@
 
-is_seq <- getFromNamespace("is_seq", "helpr")
 get_seq  <- function(x) sub("\\.", "-", sub("^seq\\.", "", x))
-add_seq <- getFromNamespace("add_seq", "helpr")
-get_analytes <- getFromNamespace("get_analytes", "helpr")
-get_meta <- getFromNamespace("get_meta", "helpr")
+#is_seq <- getFromNamespace("is_seq", "helpr")
+#add_seq <- getFromNamespace("add_seq", "helpr")
+#get_analytes <- getFromNamespace("get_analytes", "helpr")
+#get_meta <- getFromNamespace("get_meta", "helpr")
 
 col_palette <- list(
   purple     = "#24135F",

@@ -22,7 +22,7 @@ cost function.}
 }
 \description{
 Function to return the maximum, se1, and se2 markers from either
-forward or backward selection from a \code{feature_select} class object.
+forward or backward selection from a \code{feature_select} object.
 }
 \examples{
 data  <- wranglr::simdata
@@ -30,8 +30,8 @@ feats <- attributes(data)$sig_feats$class
 fs <- feature_selection(data, candidate_markers = feats,
                         search_type = search_type_forward_model(),
                         model_type  = model_type_lr("class_response"),
-                        stratified  = TRUE,
-                        cost = "AUC", runs = 2, folds = 2)
+                        stratified  = TRUE, cost = "AUC",
+                        runs = 2L, folds = 2L)
 fs_obj <- Search(fs)
 get_markers(fs_obj)
 }

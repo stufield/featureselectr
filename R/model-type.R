@@ -8,14 +8,24 @@
 #'     \item Naive Bayes Models (nb)
 #'   }
 #'   Typically these functions can be called with their defaults,
-#'   especially if called upon a data set of class `tr_data`.
+#'   especially if called upon a `tr_data` class object (see \pkg{libml}).
 #'
 #' @name model_type
+#'
 #' @param response `character(1)`. The string of the column name to use as the
 #'   response variable. Assumed to be a binary factor type.
+#'
 #' @return An object of the appropriate class according to the
 #'   model type chosen, one of: `fs_lr`, `fs_nb`, or `fs_lm`.
+#'
 #' @author Kirk DeLisle, Stu Field
+NULL
+
+
+
+#' Model Type Logistic Regression
+#'
+#' @rdname model_type
 #' @examples
 #' # Logistic Regression
 #' model_type_lr()
@@ -26,8 +36,6 @@ model_type_lr <- function(response = "Response") {
 }
 
 #' Model Type Naive Bayes
-#'
-#' Naive Bayes Models
 #'
 #' @rdname model_type
 #' @examples
@@ -40,8 +48,6 @@ model_type_nb <- function(response = "Response") {
 }
 
 #' Model Type Linear Regression
-#'
-#' Linear Regression Models
 #'
 #' @rdname model_type
 #' @examples

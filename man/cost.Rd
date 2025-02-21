@@ -7,22 +7,23 @@
 cost(x)
 }
 \arguments{
-\item{x}{An object of class \code{feature_select} (\code{typeof = list}) from a call
-call to \code{\link[=feature_selection]{feature_selection()}}.}
+\item{x}{A \code{feature_select} class object.}
 }
 \value{
-The return value is one of: Area Under the Curve (AUC),
-Correspondence Correlation Coefficient (CCC), Mean Squared Error (MSE),
-R-squared, or Sensitivity + Specificity, for the supplied predictions
-relative to the actual values.
+The return value is one of:
+\item Area Under the Curve (AUC)
+\item Correspondence Correlation Coefficient (CCC)
+\item Mean Squared Error (MSE)
+\item R-squared (R2)
+\item Sensitivity + Specificity
 }
 \description{
 The Feature Selection framework provides for generic cost functions to be
 defined. This S3 method allows for model fit/cost to be calculated for
 appropriately structured objects and requires an input object that is
-structured appropriately (see above).
+structured appropriately.
 This functionality is performed internally within the feature selection
-algorithm and is unlikely to require direct calls from the user.
+algorithm and is unlikely to require direct user calls.
 }
 \author{
 Kirk DeLisle, Stu Field

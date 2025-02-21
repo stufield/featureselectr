@@ -4,11 +4,14 @@
 #'   on Wilcoxon Signed-Rank Test.
 #'
 #' @param x The `boxtbl` object created during the S3 plot method.
+#'
 #' @param type Whether forward or backward calculations should be made.
+#'
 #' @return A `numeric(3)` object containing:
 #'   `c(index of peak,
 #'      index of p = 0.05,
 #'      index of p = 0.001)`.
+#'
 #' @importFrom stats median wilcox.test setNames
 #' @noRd
 get_peak_wilcox <- function(x, type = c("forward", "backward")) {
@@ -24,13 +27,13 @@ get_peak_wilcox <- function(x, type = c("forward", "backward")) {
 
   peak_idx <- which.max(apply(x, 2, median, na.rm = TRUE)) |> unname()
 
-  if ( (peak_idx == 1 && forward) || (peak_idx == ncol(x) && !forward) ) {
+  if ( (peak_idx == 1L && forward) || (peak_idx == ncol(x) && !forward) ) {
     # special case catch
-    return(rep(peak_idx, 3))
+    return(rep(peak_idx, 3L))
   }
 
   iter <- if ( forward ) {
-    1:(peak_idx - 1L)
+    1L:(peak_idx - 1L)
   } else {
     (peak_idx + 1L):ncol(x)
   }
@@ -41,12 +44,10 @@ get_peak_wilcox <- function(x, type = c("forward", "backward")) {
                 alternative = ifelse(forward, "g", "l"))
     }) |>
     setNames(names(x)[iter])
+
   bool1 <- vapply(wilcox, function(x) x$p.value < 0.05, NA)
   bool2 <- vapply(wilcox, function(x) x$p.value < 0.001, NA)
-  #print(peak_idx)
-  #print(iter)
-  #print(bool1)
-  #print(bool2)
+
   if ( forward ) {
     c(max    = peak_idx,
       p0.05  = detect_idx(bool1, isTRUE, dir = "backward"),
@@ -81,9 +82,9 @@ get_peak_se <- function(x, type = c("forward", "backward")) {
   box_max_est <- max(cost_mean)                             # max cost value
   se    <- sd(x[[peak_idx]]) / sqrt(length(x[[peak_idx]]))  # se max cost model
   iter  <- if ( forward ) {
-    1:max(1, (peak_idx - 1))   # max(): cannot have peak < 1
+    1L:max(1L, (peak_idx - 1L))   # max(): cannot have peak < 1
   } else {
-    min(ncol(x), (peak_idx + 1)):ncol(x)  # min(): cannot have peak > ncol()
+    min(ncol(x), (peak_idx + 1L)):ncol(x)  # min(): cannot have peak > ncol()
   }
   bool1 <- vapply(iter, function(x) abs(box_max_est - cost_mean[x]) > se, NA)
   bool2 <- vapply(iter, function(x) abs(box_max_est - cost_mean[x]) > 1.96 * se, NA)

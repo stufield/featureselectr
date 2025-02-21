@@ -88,7 +88,7 @@ mcp <- feature_selection(data,
                          search_type = sm,
                          cost = cst,
                          strat_column = "class_response",
-                         runs = 4, folds = 3, random_seed = 99)
+                         runs = 4L, folds = 3L, random_seed = 99L)
 
 FSresult <- Search(mcp)
 FSresult

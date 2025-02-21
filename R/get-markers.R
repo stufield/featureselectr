@@ -1,32 +1,35 @@
 #' Get Feature Selection Markers
 #'
 #' Function to return the maximum, se1, and se2 markers from either
-#'   forward or backward selection from a `feature_select` class object.
+#'   forward or backward selection from a `feature_select` object.
 #'
 #' @param x A `feature_select` search object.
+#'
 #' @return A list containing:
-#' \item{max_markers}{Combination of features that gives maximum/minimum
-#'   mean cost function.}
-#' \item{markers_1se_from_max}{Combination of features that has a mean
-#'   cost function that is one standard error (SE) from the
-#'   maximum/minimum mean cost function.}
-#' \item{markers_2se_from_max}{Combination of features that has a mean
-#'   cost function that is `1.96*SE` from the maximum/minimum mean
-#'   cost function.}
+#'   \item{max_markers}{Combination of features that gives maximum/minimum
+#'     mean cost function.}
+#'   \item{markers_1se_from_max}{Combination of features that has a mean
+#'     cost function that is one standard error (SE) from the
+#'     maximum/minimum mean cost function.}
+#'   \item{markers_2se_from_max}{Combination of features that has a mean
+#'     cost function that is `1.96*SE` from the maximum/minimum mean
+#'     cost function.}
+#'
 #' @examples
 #' data  <- wranglr::simdata
 #' feats <- attributes(data)$sig_feats$class
 #' fs <- feature_selection(data, candidate_markers = feats,
 #'                         search_type = search_type_forward_model(),
 #'                         model_type  = model_type_lr("class_response"),
-#'                         stratified  = TRUE,
-#'                         cost = "AUC", runs = 2, folds = 2)
+#'                         stratified  = TRUE, cost = "AUC",
+#'                         runs = 2L, folds = 2L)
 #' fs_obj <- Search(fs)
 #' get_markers(fs_obj)
 #' @importFrom stats sd
 #' @importFrom stats setNames
 #' @export
 get_markers <- function(x) UseMethod("get_markers")
+
 
 #' @noRd
 #' @export

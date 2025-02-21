@@ -10,21 +10,20 @@
 search_type_backward_model(display_name = "Backward Stepwise Model Search")
 
 search_type_forward_model(
-  max_steps = 20L,
-  display_name = "Forward Stepwise Model Search"
+  display_name = "Forward Stepwise Model Search",
+  max_steps = 20L
 )
 }
 \arguments{
-\item{display_name}{Character. A title or display name to use by S3 plot
-generics.}
+\item{display_name}{\code{character(1)}. A title used by S3 plot methods.}
 
-\item{max_steps}{Maximum number of covariates allowed into the model.}
+\item{max_steps}{\code{integer(1)}. Maximum number of features allowed in the model.}
 }
 \value{
 A list containing:
-\item{max_steps}{Maximum model steps to search. If forward search implemented.}
-\item{display_name}{The official "Display Title" to be used by any plot
-methods called on the object.}
+\item{display_name}{The official "Title" to be used by downstream plot
+methods called on the \code{feature_select} object.}
+\item{max_steps}{Maximum model steps to search. Forward search only!}
 }
 \description{
 Functions for creating model type definitions for objects in the Feature
@@ -39,7 +38,7 @@ attributes (class) to reflect the appropriate search values.
 }
 \section{Functions}{
 \itemize{
-\item \code{search_type_backward_model()}: Backward model selection search
+\item \code{search_type_backward_model()}: Backward model selection search.
 
 \item \code{search_type_forward_model()}: Forward model selection search
 
@@ -47,7 +46,7 @@ attributes (class) to reflect the appropriate search values.
 \examples{
 search_type_forward_model()                 # the default = 20L
 search_type_forward_model(max_steps = 15L)  # set to 15
-search_type_forward_model(15L, "My Forward Search")   # set title
+search_type_forward_model("My Forward Search")   # set title
 }
 \author{
 Kirk DeLisle & Stu Field

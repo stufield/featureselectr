@@ -7,14 +7,18 @@
 #'
 #' @param data A `data.frame` containing features and clinical
 #'   data suitable for modeling.
+#'
 #' @param candidate_markers `character(n)`. List of candidate markers,
 #'   i.e. columns names, from the data object.
+#'
 #' @param model_type An instantiated `model_type` object, generated via a call
 #'   to one of the [model_type()] functions.
+#'
 #' @param search_type An instantiated `search_type` object, generated via a
 #'   call to one of the [search_type()] functions.
-#' @param cost Character. A string to be used in defining the cost
-#'   function. Currently one of:
+#'
+#' @param cost `character(1)`. A string to be used in defining the cost
+#'   function. One of:
 #'   \describe{
 #'     \item{`AUC`}{Area Under the Curve}
 #'     \item{`MSE`}{Mean-Squared Error}
@@ -22,23 +26,31 @@
 #'     \item{`R2`}{R-squared - regression models}
 #'     \item{`sens` or `spec`}{Sensitivity + Specificity}
 #'   }
+#'
 #' @param runs `integer(1)`. How many runs to perform.
+#'
 #' @param folds `integer(1)`. How many fold cross-validation to perform.
+#'
 #' @param keep_models `logical(1)`. Should model objects be retained in the
 #'   cross validation sub-list? This eats up memory (`default = FALSE`).
+#'
 #' @param bootstrap `logical(1)`. Should data be bootstrapped rather
 #'   than set up in cross-validation folds? The result is multiple runs (defined
 #'   by runs) with 1 Fold each. The full dataset will be sampled with replacement
 #'   to generate a training set of equivalent size. The samples not chosen during
 #'   sampling make up the test set.
+#'
 #' @param stratified `logical(1)`. Should cross-validation or bootstrap
 #'   folds be stratified based upon the stratification column specified in
 #'   `strat_column`?
+#'
 #' @param strat_column `character(1)`. Which column to use for stratification of
 #'   cross-validation or bootstrap folds. If `NULL` (default), column name
 #'   `"Response"` will be used and thus must be present.
+#'
 #' @param random_seed `integer(1)`. Used to control the random number generator for
 #'   reproducibility.
+#'
 #' @param x A `feature_select` class object.
 #'
 #' @return A `"feature_select"` class object and list containing:
@@ -65,9 +77,11 @@
 #'
 #' @author Kirk DeLisle, Stu Field
 #' @seealso [Search()]
+#'
 #' @references Hastie, Tibshirani, and Friedman.
 #'   Elements of Statistical Learning: Data Mining, Inference, and Prediction.
 #'   *2nd Ed*. Springer. 2009.
+#'
 #' @examples
 #' # Simulated Test Data
 #' data <- wranglr::simdata
@@ -88,12 +102,12 @@
 #' # Using the S3 Update method to modify existing FS object:
 #' # change model type, cost function, and random seed
 #' fs2 <- update(fs, model_type = model_type_nb(),
-#'               cost = "AUC", random_seed = 99)
+#'               cost = "AUC", random_seed = 99L)
 #' fs2
 #'
 #' # change number of runs & folds
 #' # requires re-calculation of cross-validation parameters
-#' fs3 <- update(fs, runs = 20, folds = 10)
+#' fs3 <- update(fs, runs = 20L, folds = 10L)
 #' fs3
 #'
 #' @export
@@ -102,7 +116,7 @@ feature_selection <- function(data, candidate_markers, model_type,
                               cost = c("AUC", "R2", "CCC", "MSE", "sens", "spec"),
                               keep_models = FALSE, bootstrap = FALSE,
                               stratified = FALSE, strat_column = NULL,
-                              random_seed = sample(1000, 1)) {
+                              random_seed = 101L) {
 
   # logic to ensure compatibility among model_type,
   # search_type, and cost selections should go here;
@@ -183,8 +197,6 @@ feature_selection <- function(data, candidate_markers, model_type,
 
 #' S3 print method for class `feature_select`
 #'
-#' The S3 print method for objects of class `feature_select`.
-#'
 #' @rdname feature_selection
 #' @export
 print.feature_select <- function(x, ...) {
@@ -252,6 +264,7 @@ print.feature_select <- function(x, ...) {
 
 #' @describeIn feature_selection
 #'  Check if a valid `feature_select` class object.
+#'
 #' @export
 is_feature_select <- function(x) {
   class <- inherits(x, "feature_select")
@@ -270,15 +283,16 @@ is_feature_select <- function(x) {
 }
 
 
-#' S3 update method for class `feature_select`
-#'
 #' The S3 update method allows for modification of existing
 #' `feature_select` objects on-the-fly.
 #'
 #' @rdname feature_selection
+#'
 #' @param object An object of class `feature_select`.
+#'
 #' @param ... Arguments declared for update in `argument = value` format.
 #'   Non-declared arguments from the *original* call are preserved.
+#'
 #' @export
 update.feature_select <- function(object, ...) {
 

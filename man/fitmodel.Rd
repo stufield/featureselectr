@@ -18,15 +18,15 @@ argument which is used to create a formula prior to being passed to one of:
 \description{
 Provides linear regression, Naive Bayes, and logistic regression
 functionality within the Feature Selection framework. The model type object
-requires an input object that is structured appropriately (see above).
+requires an input object that is structured appropriately.
 This functionality is performed internally within the feature selection
-algorithm and is unlikely to require direct calls from the user.
+algorithm and is unlikely to require direct user calls.
 }
 \details{
 The Feature Selection framework provides for generic model types to be
 defined. This S3 method allows for model types to be fit for appropriately
 structured objects. The model input object \emph{must} be structured
-appropriately (see above). Note the inclusion of a \code{frmla} argument
+appropriately. Note the inclusion of a \code{frmla} argument
 with the desired formula. Without this and in the correct form, the method
 will fail. Usually it is fine to leave the defaults in place.
 }

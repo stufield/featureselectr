@@ -1,42 +1,49 @@
 #' Create Model Search Definitions for S3 Methods
 #'
 #' Functions for creating model type definitions for objects in the Feature
-#' Selection framework. Current available search types/methods are:
-#' \itemize{
-#'   \item forward stepwise model
-#'   \item backward stepwise model
-#'   \item forward stepwise parameter (deprecated)
-#' }
-#' This information is called within the object creation to modify the its
-#' attributes (class) to reflect the appropriate search values.
+#'   Selection framework. Current available search types/methods are:
+#'   \itemize{
+#'     \item forward stepwise model
+#'     \item backward stepwise model
+#'     \item forward stepwise parameter (deprecated)
+#'   }
+#'   This information is called within the object creation to modify the its
+#'   attributes (class) to reflect the appropriate search values.
 #'
 #' @name search_type
-#' @param max_steps Maximum number of covariates allowed into the model.
-#' @param display_name Character. A title or display name to use by S3 plot
-#'   generics.
+#'
+#' @param max_steps `integer(1)`. Maximum number of features allowed in the model.
+#'
+#' @param display_name `character(1)`. A title used by S3 plot methods.
+#'
 #' @return A list containing:
-#'   \item{max_steps}{Maximum model steps to search. If forward search implemented.}
-#'   \item{display_name}{The official "Display Title" to be used by any plot
-#'     methods called on the object.}
+#'   \item{display_name}{The official "Title" to be used by downstream plot
+#'     methods called on the `feature_select` object.}
+#'   \item{max_steps}{Maximum model steps to search. Forward search only!}
+#'
 #' @author Kirk DeLisle & Stu Field
+#'
 #' @examples
 #' search_type_forward_model()                 # the default = 20L
 #' search_type_forward_model(max_steps = 15L)  # set to 15
-#' search_type_forward_model(15L, "My Forward Search")   # set title
+#' search_type_forward_model("My Forward Search")   # set title
 NULL
+
 
 #' @describeIn search_type
 #'   Forward model selection search
+#'
 #' @export
-search_type_forward_model <- function(max_steps = 20L,
-                                      display_name = "Forward Stepwise Model Search") {
+search_type_forward_model <- function(display_name = "Forward Stepwise Model Search",
+                                      max_steps    = 20L) {
   as.list(environment()) |> add_class("fs_forward_model")
 }
 
 
-#' Forward Search type for feature selection models
-#' @noRd
+#' S3 Search method for forward searches
+#'
 #' @importFrom stats as.formula setNames
+#' @noRd
 #' @export
 Search.fs_forward_model <- function(x, ...) {
 
@@ -134,14 +141,11 @@ Search.fs_forward_model <- function(x, ...) {
 }
 
 
-
 #' S3 plot method for fs_forward_model
 #'
-#' Plotting for `fs_forward_model` class.
-#'
-#' @noRd
 #' @importFrom ggplot2 ggplot aes theme element_text labs geom_pointrange
 #' @importFrom ggplot2 element_blank scale_color_manual scale_x_continuous
+#' @noRd
 #' @export
 plot.fs_forward_model <- function(x, ...) {
 

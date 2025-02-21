@@ -1,22 +1,21 @@
 #' Set up Cross-Validation Folds
 #'
-#' This is a S3 method that sets up the internal functions for
-#'   the cross-validation. Since these are internal only methods,
-#'   documentation will be minimal.
+#' This S3 method sets up the internal the *non-stratified* cross-validation.
+#'   Since these are mostly internal methods, documentation is minimal.
 #'
-#' @param x An object of class `"feature_select"` from a call
+#' @param x A `feature_select` class object from a call
 #'   call to [feature_selection()].
+#'
 #' @author Kirk DeLisle
+#'
 #' @export
 setup_cross <- function(x) UseMethod("setup_cross")
 
 
-#' Set up Stratified Cross-Validation Folds
-#'
 #' The *stratified* version is a S3 method that sets up the
-#'   internal functions for the cross-validation for stratified folds.
-#'   Stratified implies that the internal structure of the response
-#'   variable is maintained (e.g. the proportion of disease samples in the
+#'   internal cross-validation for stratified folds.
+#'   Stratified implies that the structure (proportions) of the response
+#'   variable is maintained (i.e. the proportion of disease samples in the
 #'   fold is comparable to the disease proportion in the full training set).
 #'
 #' @rdname setup_cross
@@ -24,13 +23,10 @@ setup_cross <- function(x) UseMethod("setup_cross")
 setup_cross_strat <- function(x) UseMethod("setup_cross_strat")
 
 
-
-#' Cross-validation and Bootstrap Setup
+#' Cross-validation and Bootstrap Setup (non-stratified)
 #'
-#' Create cross-validation folds for each run: non-stratified.
-#'
-#' @noRd
 #' @importFrom withr local_seed
+#' @noRd
 #' @export
 setup_cross.feature_select <- function(x) {
 
@@ -72,10 +68,10 @@ setup_cross.feature_select <- function(x) {
 }
 
 
-#' Cross-validation Setup
-#' Create cross-validation folds for each run: stratified.
-#' @noRd
+#' Cross-validation Setup (stratified)
+#'
 #' @importFrom withr local_seed
+#' @noRd
 #' @export
 setup_cross_strat.feature_select <- function(x) {
 

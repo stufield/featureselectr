@@ -1,6 +1,7 @@
-# Utilities and internals
+# Internal utilities
 
 get_run  <- function(x) paste0("Run", x$cross_val$current_run)
+
 get_fold <- function(x) paste0("Fold", x$cross_val$current_fold)
 
 calc_CI95 <- function(x) {
@@ -9,7 +10,6 @@ calc_CI95 <- function(x) {
     mean  = mean(x),
     upper = (mean(x) + (1.96 * se)))
 }
-
 
 #' Check if Search is Complete
 #'
@@ -31,10 +31,9 @@ check_complete <- function(x) {
 #' Checks `feature_select` Object
 #'
 #' Check the `feature_select` object for abnormalities in
-#' its construction and incongruencies in models/searches.
+#'   its construction and incongruencies in models/searches.
 #'
 #' @param x A `feature_select` class object.
-#' @note This function is expected to grow as additional checks/traps are implemented.
 #' @noRd
 check_feature_select <- function(x) {
 
@@ -63,12 +62,13 @@ check_feature_select <- function(x) {
 #' Set up Parallel Processing
 #'
 #' Performs checks and traps necessary for proper parallel
-#' processing via \pkg{parallel} and [parallel::mclapply()].
-#' Only supported on Linux systems.
+#'   processing via \pkg{parallel} and [parallel::mclapply()].
+#'   Only supported on Linux systems.
 #'
 #' @param num_cores `integer(1)`. The number of cores to use.
-#' @return The numeric value of the number of cores to be used.
-#' @seealso [parallel::mclapply()]
+#'
+#' @return `integer(1)`. The number of cores to be used.
+#'
 #' @importFrom parallel mclapply
 #' @noRd
 parallel_setup <- function(num_cores) {
@@ -108,10 +108,11 @@ parallel_setup <- function(num_cores) {
 #' Stratification Checks
 #'
 #' Check the random stratification of the cross-validation visually.
-#' The plot compares the proportion of class 1 (level 1) of each fold
-#' by run between the training and test sets, as well as the original data.
+#'   The plot compares the proportion of class 1 (level 1) of each fold
+#'   by run between the training and test sets, as well as the original data.
 #'
 #' @param x A `feature_select` class object.
+#'
 #' @importFrom graphics segments plot axis legend abline
 #' @noRd
 check_strat <- function(x) {

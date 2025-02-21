@@ -19,7 +19,7 @@ feature_selection(
   bootstrap = FALSE,
   stratified = FALSE,
   strat_column = NULL,
-  random_seed = sample(1000, 1)
+  random_seed = 101L
 )
 
 \method{print}{feature_select}(x, ...)
@@ -45,8 +45,8 @@ call to one of the \code{\link[=search_type]{search_type()}} functions.}
 
 \item{folds}{\code{integer(1)}. How many fold cross-validation to perform.}
 
-\item{cost}{Character. A string to be used in defining the cost
-function. Currently one of:
+\item{cost}{\code{character(1)}. A string to be used in defining the cost
+function. One of:
 \describe{
 \item{\code{AUC}}{Area Under the Curve}
 \item{\code{MSE}}{Mean-Squared Error}
@@ -110,11 +110,6 @@ Declares and generates a \code{feature_selection} class object within the
 Feature Selection framework. This object acts as the holder of data
 (bootstrapped or cross-validation folds), model type, search type,
 cost function, and an underlying data structure for use by other functions.
-
-The S3 print method for objects of class \code{feature_select}.
-
-The S3 update method allows for modification of existing
-\code{feature_select} objects on-the-fly.
 }
 \section{Functions}{
 \itemize{
@@ -141,12 +136,12 @@ fs
 # Using the S3 Update method to modify existing FS object:
 # change model type, cost function, and random seed
 fs2 <- update(fs, model_type = model_type_nb(),
-              cost = "AUC", random_seed = 99)
+              cost = "AUC", random_seed = 99L)
 fs2
 
 # change number of runs & folds
 # requires re-calculation of cross-validation parameters
-fs3 <- update(fs, runs = 20, folds = 10)
+fs3 <- update(fs, runs = 20L, folds = 10L)
 fs3
 
 }

@@ -42,27 +42,27 @@
 #'   only available in Linux systems.
 #'
 #' @return A completed `feature_select` class object and list consisting:
-#' \item{data}{The original feature data to use.}
-#' \item{candidate_markers}{The list of candidate features.}
-#' \item{model_type}{A list containing model type variables of the
-#'   appropriate class for the desired model type.}
-#' \item{search_type}{A list containing search type variables of the
-#'   appropriate class for the desired search type.}
-#' \item{cost}{A string of the type of cost function.}
-#' \item{cost_fxn}{A list containing cost variables of the
-#'   appropriate class for the desired object cost function.}
-#' \item{runs}{The number of runs.}
-#' \item{folds}{The number of folds.}
-#' \item{do_log}{Was log-transform performed? Should be `FALSE`.}
-#' \item{keep_models}{If intermediate cross-validation models are kept?}
-#' \item{bootstrap}{Is bootstrapping performed?}
-#' \item{stratified}{Is cross-validation stratification performed?}
-#' \item{strat_column}{Which field string is used in stratification.}
-#' \item{random_seed}{The random seed used}
-#' \item{cross_val}{A list containing the training and test indices of the
-#'   various cross validation folds.}
-#' \item{search.complete}{Logical if the object has completed a search}
-#' \item{call}{The original matched call.}
+#'   \item{data}{The original feature data to use.}
+#'   \item{candidate_markers}{The list of candidate features.}
+#'   \item{model_type}{A list containing model type variables of the
+#'     appropriate class for the desired model type.}
+#'   \item{search_type}{A list containing search type variables of the
+#'     appropriate class for the desired search type.}
+#'   \item{cost}{A string of the type of cost function.}
+#'   \item{cost_fxn}{A list containing cost variables of the
+#'     appropriate class for the desired object cost function.}
+#'   \item{runs}{The number of runs.}
+#'   \item{folds}{The number of folds.}
+#'   \item{do_log}{Was log-transform performed? Should be `FALSE`.}
+#'   \item{keep_models}{If intermediate cross-validation models are kept?}
+#'   \item{bootstrap}{Is bootstrapping performed?}
+#'   \item{stratified}{Is cross-validation stratification performed?}
+#'   \item{strat_column}{Which field string is used in stratification.}
+#'   \item{random_seed}{The random seed used}
+#'   \item{cross_val}{A list containing the training and test indices of the
+#'     various cross validation folds.}
+#'   \item{search.complete}{Logical if the object has completed a search}
+#'   \item{call}{The original matched call.}
 #'
 #' @author Kirk DeLisle, Stu Field
 #' @seealso [feature_selection()]
@@ -82,7 +82,7 @@
 #'                          search_type = sm,
 #'                          cost = cst,
 #'                          strat_column = "class_response",
-#'                          runs = 4, folds = 3, random_seed = 99)
+#'                          runs = 4L, folds = 3L, random_seed = 99L)
 #'
 #' FSresult <- Search(mcp)
 #' FSresult
@@ -97,10 +97,10 @@
 #' @export
 Search <- function(x, num_cores) UseMethod("Search")
 
+
 #' S3 Search default method
 #'
 #' @noRd
-#' @note Setting default fall back
 #' @export
 Search.default <- function(x, num_cores) {
   stop(
@@ -110,9 +110,6 @@ Search.default <- function(x, num_cores) {
 }
 
 #' S3 Search method for class `feature_select`
-#'
-#' Preforms the actual search algorithm defined within the
-#' `feature_select` object.
 #'
 #' @noRd
 #' @export

@@ -30,11 +30,7 @@ currently 3 model type options:
 \item Naive Bayes Models (nb)
 }
 Typically these functions can be called with their defaults,
-especially if called upon a data set of class \code{tr_data}.
-
-Naive Bayes Models
-
-Linear Regression Models
+especially if called upon a \code{tr_data} class object (see \pkg{libml}).
 }
 \examples{
 # Logistic Regression

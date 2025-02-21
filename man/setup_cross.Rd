@@ -10,19 +10,12 @@ setup_cross(x)
 setup_cross_strat(x)
 }
 \arguments{
-\item{x}{An object of class \code{"feature_select"} from a call
+\item{x}{A \code{feature_select} class object from a call
 call to \code{\link[=feature_selection]{feature_selection()}}.}
 }
 \description{
-This is a S3 method that sets up the internal functions for
-the cross-validation. Since these are internal only methods,
-documentation will be minimal.
-
-The \emph{stratified} version is a S3 method that sets up the
-internal functions for the cross-validation for stratified folds.
-Stratified implies that the internal structure of the response
-variable is maintained (e.g. the proportion of disease samples in the
-fold is comparable to the disease proportion in the full training set).
+This S3 method sets up the internal the \emph{non-stratified} cross-validation.
+Since these are mostly internal methods, documentation is minimal.
 }
 \author{
 Kirk DeLisle

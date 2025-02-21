@@ -3,47 +3,43 @@
 #' The Feature Selection framework provides for generic cost functions to be
 #'   defined. This S3 method allows for model fit/cost to be calculated for
 #'   appropriately structured objects and requires an input object that is
-#'   structured appropriately (see above).
+#'   structured appropriately.
 #'   This functionality is performed internally within the feature selection
-#'   algorithm and is unlikely to require direct calls from the user.
+#'   algorithm and is unlikely to require direct user calls.
 #'
-#' @param x An object of class `feature_select` (`typeof = list`) from a call
-#'   call to [feature_selection()].
-#' @return The return value is one of: Area Under the Curve (AUC),
-#'   Correspondence Correlation Coefficient (CCC), Mean Squared Error (MSE),
-#'   R-squared, or Sensitivity + Specificity, for the supplied predictions
-#'   relative to the actual values.
+#' @param x A `feature_select` class object.
+#'
+#' @return The return value is one of:
+#'   \item Area Under the Curve (AUC)
+#'   \item Correspondence Correlation Coefficient (CCC)
+#'   \item Mean Squared Error (MSE)
+#'   \item R-squared (R2)
+#'   \item Sensitivity + Specificity
+#'
 #' @author Kirk DeLisle, Stu Field
+#'
 #' @export
 cost <- function(x) UseMethod("cost")
 
 
-#' Create Model Cost Function Definitions for S3 Methods (internal)
+#' Internals to Create Model Cost Function Objects
 #'
-#' Declares a cost function object within the Feature Selection framework.
+#' Create a cost function object within the Feature Selection framework.
 #'   These functions should be called in the "feature_select" 
 #'   object declaration passed to [feature_selection()] with 
 #'   their defaults in place (see examples). See *Details* for options.
 #'
-#'   These functions create a list object for use by S3 methods called on the
-#'   `feature_select` object. There are currently 5 cost functions implemented:\cr
-#'   \itemize{
-#'     \item AUC
-#'     \item MSE (Mean-Squared Error)
-#'     \item CCC (Concordance Correlation Coefficient)
-#'     \item R2
-#'     \item Sensitivity + Specificity
-#'   }
+#'   These functions create an object for use by S3 methods called on the
+#'   `feature_select` object.
 #'
-#' @note These are a series of internal functions called according
-#'   to the "cost" argument of [feature_selection()].
+#' @note These are a series of functions called internally
+#'   according to the "cost" argument of [feature_selection()].
 #'
-#' @return A list containing:
-#' \item{display_name }{The official Display Title to be used by any plot methods
-#'   called on the object.}
-#' \item{maximize }{Whether the object (and its cost function) should be maximized or
-#'   minimized.}
-#' @author Kirk DeLisle, Stu Field
+#' @return All return a list containing:
+#'   \item{display_name }{The official Display Title to be used
+#'      by any plot methods called on the object.}
+#'   \item{maximize }{Whether the cost function should be maximized.}
+#'
 #' @noRd
 cost_auc <- function() {
   list(display_name = "AUC", maximize = TRUE ) |>
@@ -51,9 +47,10 @@ cost_auc <- function() {
 }
 
 
-#' Area under the Curve (AUC)
+#' S3 Area Under the Curve (AUC)
 #'
 #' @noRd
+#' @export
 cost.fs_auc <- function(x) {
   run      <- get_run(x)
   fold     <- get_fold(x)
@@ -66,9 +63,6 @@ cost.fs_auc <- function(x) {
 
 #' Cost Function CCC
 #'
-#' This is the cost funciton for the Concordance Correlation Coefficient.
-#' @note These are a series of internal functions
-#'   called according to the "cost" argument of [feature_selection()].
 #' @noRd
 cost_ccc <- function() {
   list(display_name = "CCC", maximize = TRUE) |>
@@ -76,7 +70,7 @@ cost_ccc <- function() {
 }
 
 
-#' Concordance Correlation Coefficient (CCC)
+#' S3 Concordance Correlation Coefficient (CCC)
 #'
 #' @noRd
 #' @export
@@ -93,10 +87,6 @@ cost.fs_ccc <- function(x) {
 
 #' Cost Function MSE
 #'
-#' This is the cost funciton for the Mean Squared Error
-#'
-#' @note These are a series of internal functions called
-#'   according to the "cost" argument of [feature_selection()].
 #' @noRd
 cost_mse <- function() {
   list(display_name = "MSE", maximize = FALSE) |>
@@ -104,9 +94,10 @@ cost_mse <- function() {
 }
 
 
-#' Mean Squared Error (MSE)
+#' S3 Mean Squared Error (MSE)
 #'
 #' @noRd
+#' @export
 cost.fs_mse <- function(x) {
   run      <- get_run(x)
   fold     <- get_fold(x)
@@ -119,10 +110,6 @@ cost.fs_mse <- function(x) {
 
 #' Cost Function R2
 #'
-#' This is the cost funciton for the R2
-#'
-#' @note These are a series of internal functions called
-#'   according to the "cost" argument of [feature_selection()].
 #' @noRd
 cost_rsq <- function() {
   list(display_name = "R-squared", maximize = TRUE) |>
@@ -130,10 +117,11 @@ cost_rsq <- function() {
 }
 
 
-#' R-squared (R2)
+#' S3 R-squared (R2)
 #'
 #' @noRd
 #' @importFrom stats cor.test
+#' @export
 cost.fs_r2 <- function(x) {
   run      <- get_run(x)
   fold     <- get_fold(x)
@@ -147,10 +135,6 @@ cost.fs_r2 <- function(x) {
 
 #' Cost Function SensSpec
 #'
-#' This is the cost funciton for the Sensitivity + Specificity
-#'
-#' @note These are a series of internal functions called
-#'   according to the "cost" argument of [feature_selection()].
 #' @noRd
 cost_sens_spec <- function() {
   list(display_name = "Sensitivity + Specificity", maximize = TRUE) |>
@@ -158,10 +142,11 @@ cost_sens_spec <- function() {
 }
 
 
-#' Sensitivity + Specificity (S+S)
+#' S3 Sensitivity + Specificity (S + S)
 #'
-#' @noRd
 #' @importFrom libml calc_confusion pull_stat
+#' @noRd
+#' @export
 cost.fs_sens_spec <- function(x) {
   run      <- get_run(x)
   fold     <- get_fold(x)
