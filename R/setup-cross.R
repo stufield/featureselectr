@@ -106,8 +106,8 @@ setup_cross_strat.feature_select <- function(x) {
 
   for ( n in names(tbl) ) {
     for ( r in 1:x$cross_val$runs ) {
-      run              <- sprintf("Run%d", r)
-      avail_rows       <- which(x$data[, x$strat_column]==n) # remaining rows to choose from
+      run        <- sprintf("Run%d", r)
+      avail_rows <- which(x$data[, x$strat_column] == n) # remaining rows to choose from
       rem_rows         <- avail_rows
       samples_per_fold <- floor(length(avail_rows) / x$cross_val$folds)
       extra_samples    <- length(avail_rows) - samples_per_fold * x$cross_val$folds
@@ -129,8 +129,14 @@ setup_cross_strat.feature_select <- function(x) {
           training_rows <- setdiff(avail_rows, test_rows)
           rem_rows      <- setdiff(rem_rows, test_rows)
         }
-        x$cross_val[[run]][[fold]]$test_rows <- c(x$cross_val[[run]][[fold]]$test_rows, test_rows)
-        x$cross_val[[run]][[fold]]$training_rows <- c(x$cross_val[[run]][[fold]]$training_rows, training_rows)
+        x$cross_val[[run]][[fold]]$test_rows <- c(
+          x$cross_val[[run]][[fold]]$test_rows,
+          test_rows
+        )
+        x$cross_val[[run]][[fold]]$training_rows <- c(
+          x$cross_val[[run]][[fold]]$training_rows,
+          training_rows
+        )
       }
     }
   }

@@ -40,17 +40,17 @@ check_feature_select <- function(x) {
   msg <- paste("Looks like you mixed up `model_type` ",
                "and `search_type` in object definition.")
 
-  if ( inherits(x$model_type, c("fs_forward_model", "fs_backward_model") )) {
+  if ( inherits(x$model_type, c("fs_forward_model", "fs_backward_model") ) ) {
     stop(msg, call. = FALSE)
   }
-  if ( inherits(x$search_type, c("fs_nb", "fs_lr", "fs_lm") )) {
+  if ( inherits(x$search_type, c("fs_nb", "fs_lr", "fs_lm") ) ) {
     stop(msg, call. = FALSE)
   }
-  if ( !"response" %in% names(x$model_type)) {
+  if ( !"response" %in% names(x$model_type) ) {
     stop("No `response` in `model_type` definition.", call. = FALSE)
   }
   if ( sum(grepl("forward", class(x$search_type))) > 0 &&
-       !"max_steps"%in%names(x$search_type) ) {
+       !"max_steps" %in% names(x$search_type) ) {
     stop(
       "No `max_steps` defined ... not compatible with a Forward search.",
       call. = FALSE
@@ -128,18 +128,21 @@ check_strat <- function(x) {
     data_prev <- prop.table(tab)[1L]
     dimnms <- list(fold = paste0("Fold", 1:folds), run = paste0("Run", 1:runs))
     tbls <- lapply(c("training", "test"), function(cv) {
-                     lapply(1:runs, function(r)
-                            sapply(1:folds, function(f)
-                                   table(x$data[[resp]][x$cross_val[[sprintf("Run%s", r)]][[f]][[sprintf("%s.rows", cv)]] ])))
-                   }) |>
+                     lapply(1:runs, function(r) {
+                            sapply(1:folds, function(f) {
+                                   table(x$data[[resp]][x$cross_val[[sprintf("Run%s", r)]][[f]][[sprintf("%s.rows", cv)]]])
+                            })
+                     })
+            }) |>
       setNames(c("training", "test"))
 
     prev_tables <- lapply(tbls, function(cv) {
-                          sapply(cv, function(.x)
-                                 apply(.x, 2, function(col) col[1L] / sum(col)))
+                          sapply(cv, function(.x) {
+                                 apply(.x, 2, function(col) col[1L] / sum(col))
+                          })
                   })
 
-    for ( i in 1:length(tbls) ) {
+    for ( i in seq_along(tbls) ) {
       dimnames(prev_tables[[i]]) <- dimnms
     }
 
@@ -159,9 +162,10 @@ check_strat <- function(x) {
                        prev_df$training,
                        seq(3, l + 1, by = 2),
                        prev_df$test, col = 5)
-    graphics::axis(1, seq(2, l, by = 2) + 0.5, las = 2, cex.axis = 0.66, labels = axs_names)
+    graphics::axis(1, seq(2, l, by = 2) + 0.5, las = 2, cex.axis = 0.66,
+                   labels = axs_names)
     graphics::axis(2)
-    graphics::abline(h = data_prev, col = 2, lty=2, lwd = 1.5)
+    graphics::abline(h = data_prev, col = 2, lty = 2, lwd = 1.5)
     graphics::abline(v = seq(1, length(plot_vals), by = 2) + 0.5,
                      col = "gray60", lty = 2, lwd = 1)
     graphics::legend("topleft",

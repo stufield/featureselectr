@@ -1,6 +1,5 @@
 
 test_that("the featureselectr is in style compliance", {
-  skip("engage linters when ready")
   skip_on_check() # don't run on check()
   skip_on_covr()  # don't run if in 'covr'
   skip_if_not_installed("lintr")

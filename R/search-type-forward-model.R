@@ -59,8 +59,7 @@ Search.fs_forward_model <- function(x, ...) {
                                 cumul_markers = character(0),
                                 cost          = numeric(0))
   used_candidates <- character(0)
-  models      <- list()
-  cost_tables <- list()
+  cost_tables     <- list()
 
   for ( step in 1:x$search_type$max_steps ) {
 
@@ -72,7 +71,6 @@ Search.fs_forward_model <- function(x, ...) {
      candidate_models <- lapply(rem_candidates, function(cnd) {
           frmla <- create_form(x$model_type$response,
                                paste(c(used_candidates, cnd)))
-          #run.res <- foreach ( r=1:x$cross_val$runs ) %dopar% {   # dopar
           parallel::mclapply(seq_len(x$cross_val$runs), function(r) {
                     run <- sprintf("Run%d", r)
                     x$cross_val$current_run <- r
@@ -81,7 +79,7 @@ Search.fs_forward_model <- function(x, ...) {
                            fold    <- sprintf("Fold%d", f)
                            mod     <- fitmodel(x, frmla = frmla)
                            cst     <- cost(mod)
-                           mod_out <- if (x$keep_models)
+                           mod_out <- if ( x$keep_models )
                              mod$cross_val[[run]][[fold]]$model
                            else
                              NULL
@@ -90,10 +88,9 @@ Search.fs_forward_model <- function(x, ...) {
              setNames(sprintf("Fold%s", 1:x$cross_val$folds))
           }, mc.cores = cores) |>
           setNames(sprintf("Run%s", 1:x$cross_val$runs))
-       #} |> setNames(sprintf("Run%s", 1:x$cross_val$runs))
        }) |> setNames(rem_candidates)
 
-     #construct results table for selection of this candidate step
+     # construct results table for selection of this candidate step
      cost_table <- lapply(names(candidate_models), function(cnd) {
                           sapply(names(candidate_models[[cnd]]), function(r) {
                                  sapply(names(candidate_models[[cnd]][[r]]), function(f) {
@@ -112,7 +109,6 @@ Search.fs_forward_model <- function(x, ...) {
        top_idx <- which.min(ci95df$mean)
      }
 
-     #print(top_idx)
      ci95top <- ci95df[top_idx, ]      # select "top" row; 1 row df with rowname
      new_par <- rownames(ci95top)
      used_candidates <- c(used_candidates, new_par)
@@ -160,10 +156,9 @@ plot.fs_forward_model <- function(x, ...) {
                   run  = paste0("Run", seq(x$runs))) |>
     expand.grid(stringsAsFactors = FALSE, KEEP.OUT.ATTRS = FALSE)
   row_nms <- paste0(row_nms$fold, "_", row_nms$run)
-  #print(row_nms)
 
   bxtbl <- liter(restbl$step, restbl$cumul_markers, function(.x, .y) {
-      as.numeric(csttbl[[.x]][[.y]]) # matrix -> vector
+      as.numeric(csttbl[[.x]][[.y]]) # convert matrix to vector
     }) |>
     data.frame(row.names = row_nms) |>
     setNames(ifelse(is_seq(restbl$cumul_markers),
@@ -171,11 +166,11 @@ plot.fs_forward_model <- function(x, ...) {
 
   box_cols  <- rep("grey", nrow(restbl))
   idx       <- get_peak_wilcox(bxtbl)
-  tmp_col   <- c("red", # box colors by Wilcox signed rank test
+  tmp_col   <- c("red",   # box colors by Wilcox signed rank test
                  col_palette$purple,
                  col_palette$lightgreen)
 
-  for ( i in 1:length(idx) ) {
+  for ( i in seq_along(idx) ) {
     box_cols[idx[i]] <- tmp_col[i]
   }
 

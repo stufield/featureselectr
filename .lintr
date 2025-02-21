@@ -1,9 +1,13 @@
 linters: linters_with_defaults(
-  defaults = megaverse::full_linters(),
+  defaults           = megaverse::full_linters(),
   indentation_linter = NULL,
   object_name_linter = NULL
   )
 exclusions: list(
+  "R/get-markers.R" = list(line_length_linter = 112:116),
+  "R/internals.R"   = list(line_length_linter = 133, undesirable_linter = Inf), # sapply()
+  "R/search-type-backward-model.R" = list(undesirable_linter = c(76, 77, 84)),  # sapply()
+  "R/search-type-forward-model.R"  = list(undesirable_linter = c(95, 96, 103)), # sapply()
   "tests/testthat/helper.R",
   "tests/testthat.R"
   )

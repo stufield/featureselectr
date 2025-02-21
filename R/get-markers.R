@@ -52,7 +52,6 @@ get_markers.fs_forward_param <- function(x) {
 get_markers.fs_forward_model <- function(x) {
 
   marker_index <- "cumul_markers"
-  max_steps <- x$search_type$max_steps      # steps
   restbl    <- x$cross_val$search_progress  # progress mean/95% CI
   csttbl    <- x$cross_val$cost_tables      # complete cost tables
 
@@ -67,15 +66,15 @@ get_markers.fs_forward_model <- function(x) {
   box_max_est <- max(restbl$cost_mean)                        # max cost value
   se <- sd(bxtbl[[max_idx]]) / sqrt(length(bxtbl[[max_idx]])) # std. error max cost model
 
-  for ( se1 in max_idx:1 ) {
+  for ( se1 in max_idx:1L ) {
     if ( (box_max_est - restbl$cost_mean[se1]) < se ) next else break
   }
-  for ( se2 in max_idx:1 ) {
+  for ( se2 in max_idx:1L ) {
     if ( (box_max_est - restbl$cost_mean[se2]) < se * 1.96 ) next else break
   }
-  max <- x$candidate_markers[x$candidate_markers %in% restbl[[marker_index]][1:max_idx]]
-  se1 <- x$candidate_markers[x$candidate_markers %in% restbl[[marker_index]][1:se1]]
-  se2 <- x$candidate_markers[x$candidate_markers %in% restbl[[marker_index]][1:se2]]
+  max <- x$candidate_markers[x$candidate_markers %in% restbl[[marker_index]][1L:max_idx]]
+  se1 <- x$candidate_markers[x$candidate_markers %in% restbl[[marker_index]][1L:se1]]
+  se2 <- x$candidate_markers[x$candidate_markers %in% restbl[[marker_index]][1L:se2]]
 
   list(max_markers = max, markers_1se_from_max = se1, markers_2se_from_max = se2)
 }
@@ -100,20 +99,20 @@ get_markers.fs_backward_model <- function(x) {
   box_max_est <- max(restbl$cost_mean)                        # max cost value
   se <- sd(bxtbl[[max_idx]]) / sqrt(length(bxtbl[[max_idx]])) # std. error max cost model
 
-  for (se1 in max_idx:max_steps) {
+  for ( se1 in max_idx:max_steps ) {
     if ( (box_max_est - restbl$cost_mean[se1]) < se ) next else break
   }
 
-  for (se2 in max_idx:max_steps) {
+  for ( se2 in max_idx:max_steps ) {
     if ( (box_max_est - restbl$cost_mean[se2]) < se * 1.96 ) next else break
   }
 
   bs_markers <- c(restbl[[marker_index]],
-                  x$candidate_markers[!(x$candidate_markers %in% restbl[[marker_index]])] )
+                  x$candidate_markers[!(x$candidate_markers %in% restbl[[marker_index]])])
 
-  max <- x$candidate_markers[x$candidate_markers %in% bs_markers[(max_idx + 1):length(bs_markers)]]
-  se1 <- x$candidate_markers[x$candidate_markers %in% bs_markers[(se1 + 1):length(bs_markers)]]
-  se2 <- x$candidate_markers[x$candidate_markers %in% bs_markers[(se2 + 1):length(bs_markers)]]
+  max <- x$candidate_markers[x$candidate_markers %in% bs_markers[(max_idx + 1L):length(bs_markers)]]
+  se1 <- x$candidate_markers[x$candidate_markers %in% bs_markers[(se1 + 1L):length(bs_markers)]]
+  se2 <- x$candidate_markers[x$candidate_markers %in% bs_markers[(se2 + 1L):length(bs_markers)]]
 
   list(max_markers = max, markers_1se_from_max = se1, markers_2se_from_max = se2)
 }

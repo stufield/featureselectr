@@ -298,7 +298,8 @@ update.feature_select <- function(object, ...) {
 
   if ( object$search_complete ) {
     over_write <- readline(
-      "This feature selection object has already been completed, do you wish to over-write? [y/n]: "
+      paste("This `feature_select` object has already been completed,",
+            "do you wish to over-write? [y/n]: ")
     )
     if ( over_write %in% c("n", "N", "c", "C") ) {
       stop(

@@ -38,8 +38,8 @@ get_peak_wilcox <- function(x, type = c("forward", "backward")) {
     (peak_idx + 1L):ncol(x)
   }
   wilcox <- lapply(iter, function(.x) {
-    y1 <- if (forward) x[[peak_idx]] else x[[.x]]
-    y2 <- if (forward) x[[.x]] else x[[peak_idx]]
+    y1 <- if ( forward ) x[[peak_idx]] else x[[.x]]
+    y2 <- if ( forward ) x[[.x]] else x[[peak_idx]]
     wilcox.test(y1, y2, exact = FALSE, correct = FALSE, paired = TRUE,
                 alternative = ifelse(forward, "g", "l"))
     }) |>
@@ -88,10 +88,7 @@ get_peak_se <- function(x, type = c("forward", "backward")) {
   }
   bool1 <- vapply(iter, function(x) abs(box_max_est - cost_mean[x]) > se, NA)
   bool2 <- vapply(iter, function(x) abs(box_max_est - cost_mean[x]) > 1.96 * se, NA)
-  #print(peak_idx)
-  #print(iter)
-  #print(bool1)
-  #print(bool2)
+
   if ( forward ) {
     c(max    = peak_idx,
       p0.05  = detect_idx(bool1, isTRUE, dir = "backward"),
@@ -112,7 +109,9 @@ detect_idx <- function(x, f, dir = c("forward", "backward"), ...) {
   dir <- match.arg(dir)
   index <- if ( dir == "forward" ) seq(x) else rev(seq(x))
   for ( i in index ) {
-    if (f(x[[i]], ...)) return(i)
+    if ( f(x[[i]], ...) ) {
+      return(i)
+    }
   }
   0L
 }

@@ -55,4 +55,3 @@ test_that("`get_peak_wilcox()` backward generates correct indices", {
   expect_type(idx2, "integer")
   expect_equal(idx2, c(max = 5, p0.05 = 7, p0.001 = 7))
 })
-

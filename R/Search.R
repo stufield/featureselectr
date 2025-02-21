@@ -139,9 +139,9 @@ Search.feature_select <- function(x, num_cores = 1L) {
     )
   }
 
-   # Run the search
-   # NextMethod() finds next class Search method
-   x_res <- NextMethod("Search", num_cores = num_cores)
-   x_res$search_complete <- TRUE
-   x_res
+  # Run the search
+  # NextMethod() finds next class Search method
+  x_res <- NextMethod("Search", num_cores = num_cores)
+  x_res$search_complete <- TRUE
+  x_res
 }

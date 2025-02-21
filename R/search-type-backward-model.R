@@ -29,28 +29,24 @@ Search.fs_backward_model <- function(x, ...) {
                                 elim_markers = character(0),
                                 cost         = numeric(0))
   deleted_candidates <- character(0)
-  models             <- list()
   cost_tables        <- list()
 
-  #add the full model as the first step
+  # add the full model as the first step
   mod_candidate_markers <- c("Full_Model", x$candidate_markers)
 
   for ( step in seq_along(x$candidate_markers) ) {
 
-    sprintf("Step %i of %i",
-            #length(x$candidate_markers) + 1 - step,
-            step, length(x$candidate_markers)) |>
+    sprintf("Step %i of %i", step, length(x$candidate_markers)) |>
       signal_rule(line_col = "blue")
 
     rem_candidates <- setdiff(mod_candidate_markers, deleted_candidates)
 
     # reformulated search as a loop to facilitate a full model step
-    candidate.models <- list()
+    candidate_models <- list()
 
     for ( cnd in rem_candidates ) {
       rem_minus_one <- setdiff(rem_candidates, cnd)
       frmla <- create_form(x$model_type$response, paste(rem_minus_one))
-      #run_res <- foreach ( r = 1:x$cross_val$runs ) %dopar% {
       run_res <- parallel::mclapply(seq_len(x$cross_val$runs), function(r) {
                                     run <- sprintf("Run%d", r)
                                     x$cross_val$current_run <- r
@@ -59,67 +55,65 @@ Search.fs_backward_model <- function(x, ...) {
                                            fold    <- sprintf("Fold%d", f)
                                            mod     <- fitmodel(x, frmla = frmla)
                                            cst     <- cost(mod)
-                                           mod_out <- if (x$keep_models)
+                                           mod_out <- if ( x$keep_models )
                                               mod$cross_val[[run]][[fold]]$model
                                            else
                                              NULL
                                            list(cost = cst, model = mod_out)
                         }) |>
               setNames(sprintf("Fold%s", 1:x$cross_val$folds))
-        }, mc.cores = cores) |>
+      }, mc.cores = cores) |>
       setNames(sprintf("Run%s", 1:x$cross_val$runs))
-      #} |> setNames(sprintf("Run%s", 1:x$cross_val$runs))
 
-         candidate_models[[cnd]] <- run_res
-         if ( cnd == "Full_Model" ) {
-            break
-         }
+      candidate_models[[cnd]] <- run_res
+      if ( cnd == "Full_Model" ) {
+        break
       }
+    }
 
-      # construct results table for selection of this candidate step
-      cost_table <- lapply(names(candidate_models), function(cnd) {
-                           sapply(names(candidate_models[[cnd]]), function(r) {
-                                  sapply(names(candidate_models[[cnd]][[r]]), function(f) {
-                                         candidate_models[[cnd]][[r]][[f]]$cost
-                                 })
-                           })
-                     }) |>
-        setNames(names(candidate_models))
+    # construct results table for selection of this candidate step
+    cost_table <- lapply(names(candidate_models), function(cnd) {
+                         sapply(names(candidate_models[[cnd]]), function(r) {
+                                sapply(names(candidate_models[[cnd]][[r]]), function(f) {
+                                       candidate_models[[cnd]][[r]][[f]]$cost
+                               })
+                         })
+                   }) |>
+      setNames(names(candidate_models))
 
-      ci95df <- sapply(cost_table, calc_CI95) |> t() |> data.frame()
+    ci95df <- sapply(cost_table, calc_CI95) |> t() |> data.frame()
 
-      # select the worst
-      if ( x$cost_fxn$maximize ) {
-         top_idx <- which.max(ci95df$mean)
-      } else {
-         top_idx <- which.min(ci95df$mean)
-      }
+    # select the worst
+    if ( x$cost_fxn$maximize ) {
+       top_idx <- which.max(ci95df$mean)
+    } else {
+       top_idx <- which.min(ci95df$mean)
+    }
 
-      #print(top_idx)
-      ci95top <- ci95df[top_idx, ]      # select "top" row; 1 row df with rowname
-      new_par <- rownames(ci95top)
-      deleted_candidates <- c(deleted_candidates, new_par)
+    ci95top <- ci95df[top_idx, ]      # select "top" row; 1 row df with rowname
+    new_par <- rownames(ci95top)
+    deleted_candidates <- c(deleted_candidates, new_par)
 
-      search_progress <- rbind(search_progress,
-                               data.frame(step = step,
-                                          elim_markers = new_par,
-                                          cost_lower_ci95 = ci95top$lower,
-                                          cost_mean = ci95top$mean,
-                                          cost_upper_ci95 = ci95top$upper))
+    search_progress <- rbind(search_progress,
+                             data.frame(step = step,
+                                        elim_markers = new_par,
+                                        cost_lower_ci95 = ci95top$lower,
+                                        cost_mean = ci95top$mean,
+                                        cost_upper_ci95 = ci95top$upper))
 
-      step_name <- sprintf("Step_%d", step)
-      cost_tables[[step_name]] <- cost_table
-   }
+    step_name <- sprintf("Step_%d", step)
+    cost_tables[[step_name]] <- cost_table
+  }
 
-   # keep results of search
-   x$cross_val$search_progress <- search_progress
-   x$cross_val$cost_tables     <- cost_tables
+  # keep results of search
+  x$cross_val$search_progress <- search_progress
+  x$cross_val$cost_tables     <- cost_tables
 
-   # update iterators
-   x$cross_val$current_run  <- x$runs
-   x$cross_val$current_fold <- x$folds
+  # update iterators
+  x$cross_val$current_run  <- x$runs
+  x$cross_val$current_fold <- x$folds
 
-   invisible(x)
+  invisible(x)
 }
 
 
@@ -132,8 +126,6 @@ Search.fs_backward_model <- function(x, ...) {
 plot.fs_backward_model <- function(x, ...) {
 
   check_complete(x)
-
-  max_steps <- length(x$candidate_markers)
 
   # progress mean/95% CI
   restbl     <- x$cross_val$search_progress
@@ -148,10 +140,9 @@ plot.fs_backward_model <- function(x, ...) {
                   run  = paste0("Run", seq(x$runs))) |>
     expand.grid(stringsAsFactors = FALSE, KEEP.OUT.ATTRS = FALSE)
   row_nms <- paste0(row_nms$fold, "_", row_nms$run)
-  #print(row_nms)
 
   bxtbl <- liter(restbl$step, restbl$elim_markers, function(.x, .y) {
-      as.numeric(csttbl[[.x]][[.y]]) # matrix -> vector
+      as.numeric(csttbl[[.x]][[.y]]) # convert matrix to vector
     }) |>
     data.frame(row.names = row_nms) |>
     setNames(ifelse(is_seq(restbl$elim_markers),
@@ -164,7 +155,7 @@ plot.fs_backward_model <- function(x, ...) {
   tmp_col  <- c("red",  # box colors by Wilcox signed rank test
                 col_palette$purple, col_palette$lightgreen)
 
-  for ( i in 1:length(idx) ) {
+  for ( i in seq_along(idx) ) {
     box_cols[idx[i]] <- tmp_col[i]
   }
 

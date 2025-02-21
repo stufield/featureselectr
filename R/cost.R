@@ -25,8 +25,8 @@ cost <- function(x) UseMethod("cost")
 #' Internals to Create Model Cost Function Objects
 #'
 #' Create a cost function object within the Feature Selection framework.
-#'   These functions should be called in the "feature_select" 
-#'   object declaration passed to [feature_selection()] with 
+#'   These functions should be called in the "feature_select"
+#'   object declaration passed to [feature_selection()] with
 #'   their defaults in place (see examples). See *Details* for options.
 #'
 #'   These functions create an object for use by S3 methods called on the
