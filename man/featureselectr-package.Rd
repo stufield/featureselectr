@@ -13,7 +13,7 @@ The feature selection package contains functionality designed for feature select
 
 Authors:
 \itemize{
-  \item Kirk DeLisle \email{kdelisle@somalogic.com}
+  \item Kirk DeLisle \email{rkdelisle@gmail.com}
 }
 
 }

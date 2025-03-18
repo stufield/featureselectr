@@ -11,7 +11,7 @@ Authors@R: c(
     person(given = "Kirk",
            family = "DeLisle",
            role = "aut",
-           email = "kdelisle@somalogic.com")
+           email = "rkdelisle@gmail.com")
     )
 Description: The feature selection package contains
     functionality designed for feature selection, model building,
