@@ -16,7 +16,7 @@ Authors@R: c(
 Description: The feature selection package contains
     functionality designed for feature selection, model building,
     and/or classifier development.
-License: GPL-3 | file LICENSE
+License: MIT + file LICENSE
 Depends:
     R (>= 4.0.0),
     helpr
