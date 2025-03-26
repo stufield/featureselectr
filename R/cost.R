@@ -51,8 +51,8 @@ cost.fs_auc <- function(x) {
   run      <- get_run(x)
   fold     <- get_fold(x)
   tst_rows <- x$cross_val[[run]][[fold]]$test_rows
-  auc      <- libml::calc_auc(x$data[tst_rows, x$model_type$response],
-                              x$cross_val[[run]][[fold]]$test_predicts)
+  auc      <- calc_auc(x$data[tst_rows, x$model_type$response],
+                       x$cross_val[[run]][[fold]]$test_predicts)
   invisible(auc)
 }
 
