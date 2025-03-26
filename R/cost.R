@@ -140,20 +140,26 @@ cost_sens_spec <- function() {
 
 #' S3 Sensitivity + Specificity (S + S)
 #'
-#' @importFrom libml calc_confusion pull_stat
 #' @noRd
 #' @export
 cost.fs_sens_spec <- function(x) {
-  run      <- get_run(x)
-  fold     <- get_fold(x)
-  tst_rows <- x$cross_val[[run]][[fold]]$test_rows
-  df       <- data.frame(pred  = x$cross_val[[run]][[fold]]$test_predicts,
-                         class = x$data[tst_rows, x$model_type$response])
-  # pos class = 2nd factor level!
-  cm <- calc_confusion(truth     = df$class,
-                       predicted = df$pred,
-                       cutoff    = 0.5,
-                       pos_class = levels(df$class)[2L]) |>
-    summary()
-  pull_stat(cm, "Sens") + pull_stat(cm, "Spec")
+  run       <- get_run(x)
+  fold      <- get_fold(x)
+  tst_rows  <- x$cross_val[[run]][[fold]]$test_rows
+  probs     <- x$cross_val[[run]][[fold]]$test_predicts
+  classes   <- x$data[tst_rows, x$model_type$response]
+  neg_class <- levels(classes)[1L]
+  pos_class <- levels(classes)[2L] # 2nd factor level!
+  cm <- data.frame(   # confusion matrix
+    Truth     = classes,
+    Predicted = factor(ifelse(probs >= 0.5, pos_class, neg_class),
+                       levels = c(neg_class, pos_class))
+    ) |> table()
+  tn <- cm[1L, 1L]
+  tp <- cm[2L, 2L]
+  fn <- cm[2L, 1L]
+  fp <- cm[1L, 2L]
+  sens <- tp / (tp + fn)
+  spec <- tn / (tn + fp)
+  sens + spec
 }

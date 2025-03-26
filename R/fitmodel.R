@@ -32,8 +32,7 @@ fitmodel <- function(x, ...) UseMethod("fitmodel")
 
 #' Fit Model Type: Logistic Regression
 #'
-#' @importFrom libml fit_logistic
-#' @importFrom stats predict model.frame
+#' @importFrom stats predict model.frame glm
 #' @noRd
 fitmodel.fs_lr <- function(x, ...) {
 
@@ -49,14 +48,13 @@ fitmodel.fs_lr <- function(x, ...) {
   trn_rows <- x$cross_val[[run]][[fold]]$training_rows
   tst_rows <- x$cross_val[[run]][[fold]]$test_rows
 
-  fit_lr <- be_quiet(fit_logistic)
-  mf     <- stats::model.frame(args$frmla, data = x$data[trn_rows, ])
-  fit    <- fit_lr(args$frmla, data = mf, strip = TRUE)$result
-  tst_p  <- stats::predict(fit, x$data[tst_rows, x$candidate_markers],
-                           type = "response")
+  mf    <- stats::model.frame(args$frmla, data = x$data[trn_rows, ])
+  q_glm <- be_quiet(stats::glm)   # silence warnings
+  fit   <- q_glm(args$frmla, data = mf, family = "binomial", model = FALSE)$result
+  tst_p <- stats::predict(fit, x$data[tst_rows, x$candidate_markers, drop = FALSE],
+                          type = "response") |> unname()
 
-  # pack all the results for return
-  x$cross_val[[run]][[fold]]$model         <- fit
+  x$cross_val[[run]][[fold]]$model         <- stripLMC(fit)
   x$cross_val[[run]][[fold]]$fitted_values <- fit$fitted.values
   x$cross_val[[run]][[fold]]$test_predicts <- tst_p
   invisible(x)
@@ -86,7 +84,6 @@ fitmodel.fs_nb <- function(x, ...) {
   tst_p <- predict(fit, x$data[tst_rows, x$candidate_markers, drop = FALSE],
                    type = "raw")
 
-  # pack all the results for return
   x$cross_val[[run]][[fold]]$model         <- fit
   x$cross_val[[run]][[fold]]$test_predicts <- tst_p[, fit$levels[2L]]
   invisible(x)
@@ -114,10 +111,9 @@ fitmodel.fs_lm <- function(x, ...) {
 
   mf  <- stats::model.frame(args$frmla, data = x$data[trn_rows, ])
   fit <- stats::lm(args$frmla, data = mf, model = FALSE)
-  tst_p <- stats::predict(fit, x$data[ tst_rows, x$candidate_markers ],
+  tst_p <- stats::predict(fit, x$data[tst_rows, x$candidate_markers, drop = FALSE],
                           type = "response")
 
-  # pack all the results for return
   x$cross_val[[run]][[fold]]$model         <- stripLMC(fit)
   x$cross_val[[run]][[fold]]$fitted_values <- fit$fitted.values
   x$cross_val[[run]][[fold]]$test_predicts <- tst_p
