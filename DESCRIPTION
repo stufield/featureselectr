@@ -27,16 +27,15 @@ Imports:
     withr
 Suggests:
     dplyr,
-    gridExtra,
     knitr,
     rmarkdown,
     SomaPlotr,
     patchwork,
     spelling,
-    wranglr,
     tibble,
     tidyr,
-    testthat
+    testthat,
+    wranglr
 VignetteBuilder: 
     knitr
 Encoding: UTF-8
