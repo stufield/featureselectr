@@ -54,7 +54,7 @@ fitmodel.fs_lr <- function(x, ...) {
   tst_p <- stats::predict(fit, x$data[tst_rows, x$candidate_markers, drop = FALSE],
                           type = "response") |> unname()
 
-  x$cross_val[[run]][[fold]]$model         <- stripLMC(fit)
+  x$cross_val[[run]][[fold]]$model         <- .stripLMC(fit)
   x$cross_val[[run]][[fold]]$fitted_values <- fit$fitted.values
   x$cross_val[[run]][[fold]]$test_predicts <- tst_p
   invisible(x)
@@ -93,7 +93,6 @@ fitmodel.fs_nb <- function(x, ...) {
 #' Fit Model Type: Linear Regression
 #'
 #' @importFrom stats lm predict
-#' @importFrom libml stripLMC
 #' @noRd
 fitmodel.fs_lm <- function(x, ...) {
 
@@ -114,7 +113,7 @@ fitmodel.fs_lm <- function(x, ...) {
   tst_p <- stats::predict(fit, x$data[tst_rows, x$candidate_markers, drop = FALSE],
                           type = "response")
 
-  x$cross_val[[run]][[fold]]$model         <- stripLMC(fit)
+  x$cross_val[[run]][[fold]]$model         <- .stripLMC(fit)
   x$cross_val[[run]][[fold]]$fitted_values <- fit$fitted.values
   x$cross_val[[run]][[fold]]$test_predicts <- tst_p
   invisible(x)

@@ -34,3 +34,45 @@ calc_auc <- function(truth, predicted) {
   }
   max(auc, 1 - auc)
 }
+
+.stripLMC <- function(x) UseMethod(".stripLMC")
+
+.stripLMC.default <- function(x) {
+  stop(
+    "Only valid models for `stripLMC()`", value("lm"), " or ",
+    value("glm"), ". You passed: ", value(class(x)),
+    call. = FALSE
+  )
+}
+
+.stripLMC.lm <- function(x) {
+  x$y <- numeric(0)
+  x$x <- matrix(0)
+  x$model <- data.frame()
+  x$fitted <- numeric(0)
+  rownames(x$model) <- NULL
+  x$assign  <- numeric(0)
+  x$effects <- numeric(0)
+  x$xlevels <- list()
+  x$call <- call("dummy_call")
+  environment(x$terms) <- baseenv()
+  x
+}
+
+.stripLMC.glm <- function(x) {
+  x$model <- data.frame()
+  x$effects <- numeric(0)
+  x$fitted  <- numeric(0)
+  x$linear.predictors <- numeric(0)
+  x$weights <- numeric()
+  x$data <- data.frame()
+  x$family$aic <- numeric(0)
+  x$family$validmu  <- numeric(0)
+  x$family$simulate <- numeric(0)
+  x$call <- call("dummy_call")
+  environment(x$family$variance)   <- baseenv()
+  environment(x$family$dev.resids) <- baseenv()
+  environment(x$terms)   <- baseenv()
+  environment(x$formula) <- baseenv()
+  x
+}
