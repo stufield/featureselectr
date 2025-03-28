@@ -18,12 +18,20 @@ calc_CI95 <- function(x) {
 #' @return If complete, does nothing. Just a pass through.
 #' @noRd
 check_complete <- function(x) {
+  stopifnot("`x` must be a `feature_select` object." = is_feature_select(x))
+  .code <- function(x) {
+    paste0("\033[90m", encodeString(x, quote = "`"), "\033[39m")
+  }
+
   if ( !x$search_complete &&
       (x$cross_val$current_run + x$cross_val$current_fold) == 0 ) {
-    stop(
-      "Feature selection not yet been performed on this `feature_select` object.\n",
-      "Nothing to do here. Perhaps run `Search()`?", call. = FALSE
+    signal_oops("Feature selection not yet been performed on this object.")
+    obj <- as.character(sys.calls()[[1L]][2L])
+    signal_info(
+      paste0("Nothing to do here. Perhaps run ",
+             .code(sprintf("Search(%s)", obj)), "?")
     )
+    stop(NULL, call. = FALSE)
   }
 }
 
