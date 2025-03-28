@@ -1,5 +1,4 @@
 
-
 #' @describeIn search_type
 #'   Backward model selection search.
 #'

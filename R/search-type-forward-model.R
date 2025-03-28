@@ -23,14 +23,14 @@
 #' @author Stu Field, Kirk DeLisle
 #'
 #' @examples
-#' search_type_forward_model()                 # the default = 20L
-#' search_type_forward_model(max_steps = 15L)  # set to 15
-#' search_type_forward_model("My Forward Search")   # set title
+#' search_type_forward_model()                    # the default = 20L
+#' search_type_forward_model(max_steps = 15L)     # set to 15
+#' search_type_forward_model("My Forward Search") # set title
 NULL
 
 
 #' @describeIn search_type
-#'   Forward model selection search
+#'   Forward model selection search.
 #'
 #' @export
 search_type_forward_model <- function(display_name = "Forward Stepwise Model Search",

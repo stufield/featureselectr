@@ -39,13 +39,13 @@ attributes (class) to reflect the appropriate search values.
 \itemize{
 \item \code{search_type_backward_model()}: Backward model selection search.
 
-\item \code{search_type_forward_model()}: Forward model selection search
+\item \code{search_type_forward_model()}: Forward model selection search.
 
 }}
 \examples{
-search_type_forward_model()                 # the default = 20L
-search_type_forward_model(max_steps = 15L)  # set to 15
-search_type_forward_model("My Forward Search")   # set title
+search_type_forward_model()                    # the default = 20L
+search_type_forward_model(max_steps = 15L)     # set to 15
+search_type_forward_model("My Forward Search") # set title
 }
 \author{
 Stu Field, Kirk DeLisle

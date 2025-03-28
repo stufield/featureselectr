@@ -35,25 +35,24 @@
 #'   cross validation sub-list? This eats up memory (`default = FALSE`).
 #'
 #' @param bootstrap `logical(1)`. Should data be bootstrapped rather
-#'   than set up in cross-validation folds? The result is multiple runs (defined
-#'   by runs) with 1 Fold each. The full dataset will be sampled with replacement
-#'   to generate a training set of equivalent size. The samples not chosen during
-#'   sampling make up the test set.
+#'   than set up in cross-validation folds? The result is multiple runs
+#'   (defined by runs) with 1 Fold each. The full data set will be sampled
+#'   with replacement to generate a training set of equivalent size.
+#'   The samples not chosen during sampling make up the test set.
 #'
-#' @param stratified `logical(1)`. Should cross-validation or bootstrap
-#'   folds be stratified based upon the stratification column specified in
-#'   `strat_column`?
+#' @param stratified `logical(1)`. Should cross-validation folds be
+#'   stratified based upon the column specified in `strat_column`?
 #'
-#' @param strat_column `character(1)`. Which column to use for stratification of
-#'   cross-validation or bootstrap folds. If `NULL` (default), column name
-#'   `"Response"` will be used and thus must be present.
+#' @param strat_column `character(1)`. Which column to use for stratification
+#'   of cross-validation. If `NULL` (default), column name
+#'   `"Response"` will be used (and thus must be present).
 #'
-#' @param random_seed `integer(1)`. Used to control the random number generator for
-#'   reproducibility.
+#' @param random_seed `integer(1)`. Used to control the random number
+#'   generator for reproducibility.
 #'
-#' @param x A `feature_select` class object.
+#' @param x,object A `feature_select` class object.
 #'
-#' @return A `"feature_select"` class object and list containing:
+#' @return A `"feature_select"` class object; a list of:
 #'   \item{data}{The original feature data to use.}
 #'   \item{candidate_markers}{The list of candidate features.}
 #'   \item{model_type}{A list containing model type variables of the
@@ -66,12 +65,10 @@
 #'   \item{runs}{The number of runs.}
 #'   \item{folds}{The number of folds.}
 #'   \item{keep_models}{If intermediate cross-validation models are kept?}
-#'   \item{bootstrap}{Is bootstrapping performed?}
-#'   \item{stratified}{Is cross-validation stratification performed?}
-#'   \item{strat_column}{Which field string is used in stratification.}
 #'   \item{random_seed}{The random seed used}
 #'   \item{cross_val}{A list containing the training and test indices of the
 #'     various cross validation folds.}
+#'   \item{strat_column}{Which field string is used in stratification.}
 #'   \item{search_complete}{Logical if the object has completed a search}
 #'   \item{call}{The original matched call.}
 #'
@@ -186,10 +183,9 @@ feature_selection <- function(data, candidate_markers, model_type,
     fsret <- setup_cross(fsret)
   }
 
-  fsret$cross_val$current_run  <- 0
-  fsret$cross_val$current_fold <- 0
+  fsret$cross_val$current_run  <- 0L
+  fsret$cross_val$current_fold <- 0L
   fsret$search_complete        <- FALSE
-  fsret$search_method          <- "Model"
   fsret$call <- match.call(expand.dots = TRUE)
   fsret
 }
@@ -229,7 +225,6 @@ print.feature_select <- function(x, ...) {
     "Stratified Folds",
     "Model Type",
     "Search Type",
-    "Search Method",
     "Cost Function",
     "Random Seed",
     "Keep Models",
@@ -245,7 +240,6 @@ print.feature_select <- function(x, ...) {
     x$cross_val$stratified,
     class(x$model_type)[1L],
     class(x$search_type)[1L],
-    x$search_method,
     x$cost,
     x$random_seed,
     x$keep_models,
@@ -287,8 +281,6 @@ is_feature_select <- function(x) {
 #' `feature_select` objects on-the-fly.
 #'
 #' @rdname feature_selection
-#'
-#' @param object An object of class `feature_select`.
 #'
 #' @param ... Arguments declared for update in `argument = value` format.
 #'   Non-declared arguments from the *original* call are preserved.
