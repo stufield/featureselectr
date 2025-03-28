@@ -55,9 +55,9 @@ Search.fs_forward_model <- function(x, ...) {
   #   for model search, the cross-validated folds determine which
   #   parameter is chosen at any given step
 
-  search_progress <- data.frame(step          = numeric(0),
-                                cumul_markers = character(0),
-                                cost          = numeric(0))
+  search_progress <- data.frame(step           = numeric(0),
+                                cumul_features = character(0),
+                                cost           = numeric(0))
   used_candidates <- character(0)
   cost_tables     <- list()
 
@@ -66,7 +66,7 @@ Search.fs_forward_model <- function(x, ...) {
     sprintf("Step %i of %s", step, x$search_type$max_steps) |>
       signal_rule(line_col = "blue")
 
-     rem_candidates <- setdiff(x$candidate_markers, used_candidates)
+     rem_candidates <- setdiff(x$candidate_features, used_candidates)
 
      candidate_models <- lapply(rem_candidates, function(cnd) {
           frmla <- create_form(x$model_type$response,
@@ -115,7 +115,7 @@ Search.fs_forward_model <- function(x, ...) {
 
      search_progress <- rbind(search_progress,
                               data.frame(step = step,
-                                         cumul_markers = new_par,
+                                         cumul_features = new_par,
                                          cost_lower_ci95 = ci95top$lower,
                                          cost_mean = ci95top$mean,
                                          cost_upper_ci95 = ci95top$upper))
@@ -158,12 +158,12 @@ plot.fs_forward_model <- function(x, ...) {
     expand.grid(stringsAsFactors = FALSE, KEEP.OUT.ATTRS = FALSE)
   row_nms <- paste0(row_nms$fold, "_", row_nms$run)
 
-  bxtbl <- liter(restbl$step, restbl$cumul_markers, function(.x, .y) {
+  bxtbl <- liter(restbl$step, restbl$cumul_features, function(.x, .y) {
       as.numeric(csttbl[[.x]][[.y]]) # convert matrix to vector
     }) |>
     data.frame(row.names = row_nms) |>
-    setNames(ifelse(is_seq(restbl$cumul_markers),
-                    get_seq(restbl$cumul_markers), restbl$cumul_markers))
+    setNames(ifelse(is_seq(restbl$cumul_features),
+                    get_seq(restbl$cumul_features), restbl$cumul_features))
 
   box_cols  <- rep("grey", nrow(restbl))
   idx       <- get_peak_wilcox(bxtbl)
@@ -211,8 +211,8 @@ plot.fs_forward_model <- function(x, ...) {
     ) +
     scale_x_continuous(
       breaks = restbl$step,
-      labels = ifelse(is_seq(restbl$cumul_markers),
-                      get_seq(restbl$cumul_markers), restbl$cumul_markers)
+      labels = ifelse(is_seq(restbl$cumul_features),
+                      get_seq(restbl$cumul_features), restbl$cumul_features)
       ) +
     theme(legend.title = element_blank(),
           legend.position = "right",

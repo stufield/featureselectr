@@ -1,39 +1,39 @@
 #' Get Feature Selection Markers
 #'
-#' Function to return the maximum, se1, and se2 markers from either
+#' Function to return the maximum, se1, and se2 features from either
 #'   forward or backward selection from a `feature_select` object.
 #'
 #' @param x A `feature_select` search object.
 #'
 #' @return A list containing:
-#'   \item{max_markers}{Combination of features that gives maximum/minimum
+#'   \item{max_features}{Combination of features that gives maximum/minimum
 #'     mean cost function.}
-#'   \item{markers_1se_from_max}{Combination of features that has a mean
+#'   \item{features_1se_from_max}{Combination of features that has a mean
 #'     cost function that is one standard error (SE) from the
 #'     maximum/minimum mean cost function.}
-#'   \item{markers_2se_from_max}{Combination of features that has a mean
+#'   \item{features_2se_from_max}{Combination of features that has a mean
 #'     cost function that is `1.96*SE` from the maximum/minimum mean
 #'     cost function.}
 #'
 #' @examples
 #' data  <- wranglr::simdata
 #' feats <- attributes(data)$sig_feats$class
-#' fs <- feature_selection(data, candidate_markers = feats,
+#' fs <- feature_selection(data, candidate_features = feats,
 #'                         search_type = search_type_forward_model(),
 #'                         model_type  = model_type_lr("class_response"),
 #'                         stratified  = TRUE, cost = "AUC",
 #'                         runs = 2L, folds = 2L)
 #' fs_obj <- Search(fs)
-#' get_markers(fs_obj)
+#' get_fs_features(fs_obj)
 #' @importFrom stats sd
 #' @importFrom stats setNames
 #' @export
-get_markers <- function(x) UseMethod("get_markers")
+get_fs_features <- function(x) UseMethod("get_fs_features")
 
 
 #' @noRd
 #' @export
-get_markers.default <- function(x) {
+get_fs_features.default <- function(x) {
   stop(
     "Could not determine `search_type` of this search object:",
     value(class(x)), call. = FALSE
@@ -42,25 +42,25 @@ get_markers.default <- function(x) {
 
 #' @noRd
 #' @export
-get_markers.fs_forward_param <- function(x) {
+get_fs_features.fs_forward_param <- function(x) {
   stop("Forward Parameter Searches have been deprecated.",
        call. = FALSE)
 }
 
 #' @noRd
 #' @export
-get_markers.fs_forward_model <- function(x) {
+get_fs_features.fs_forward_model <- function(x) {
 
-  marker_index <- "cumul_markers"
+  ft_index  <- "cumul_features"
   restbl    <- x$cross_val$search_progress  # progress mean/95% CI
   csttbl    <- x$cross_val$cost_tables      # complete cost tables
 
   bxtbl <- lapply(1:x$search_type$max_steps, function(step) {
-                  mrkr <- restbl[[marker_index]][[step]]
+                  mrkr <- restbl[[ft_index]][[step]]
                   c(as.vector(csttbl[[step]][[as.character(mrkr)]]))
             }) |>
     data.frame() |>
-    setNames(restbl[[marker_index]])
+    setNames(restbl[[ft_index]])
 
   max_idx <- which.max(restbl$cost_mean)                      # idx max cost
   box_max_est <- max(restbl$cost_mean)                        # max cost value
@@ -72,28 +72,28 @@ get_markers.fs_forward_model <- function(x) {
   for ( se2 in max_idx:1L ) {
     if ( (box_max_est - restbl$cost_mean[se2]) < se * 1.96 ) next else break
   }
-  max <- x$candidate_markers[x$candidate_markers %in% restbl[[marker_index]][1L:max_idx]]
-  se1 <- x$candidate_markers[x$candidate_markers %in% restbl[[marker_index]][1L:se1]]
-  se2 <- x$candidate_markers[x$candidate_markers %in% restbl[[marker_index]][1L:se2]]
+  max <- x$candidate_features[x$candidate_features %in% restbl[[ft_index]][1L:max_idx]]
+  se1 <- x$candidate_features[x$candidate_features %in% restbl[[ft_index]][1L:se1]]
+  se2 <- x$candidate_features[x$candidate_features %in% restbl[[ft_index]][1L:se2]]
 
-  list(max_markers = max, markers_1se_from_max = se1, markers_2se_from_max = se2)
+  list(max_features = max, features_1se_from_max = se1, features_2se_from_max = se2)
 }
 
 #' @noRd
 #' @export
-get_markers.fs_backward_model <- function(x) {
+get_fs_features.fs_backward_model <- function(x) {
 
-  marker_index <- "elim_markers"
+  ft_index  <- "elim_features"
   max_steps <- x$search_type$max_steps      # steps
   restbl    <- x$cross_val$search_progress  # progress mean/95% CI
   csttbl    <- x$cross_val$cost_tables      # complete cost tables
 
   bxtbl <- lapply(1:x$search_type$max_steps, function(step) {
-                  mrkr <- restbl[[marker_index]][[step]]
+                  mrkr <- restbl[[ft_index]][[step]]
                   c(as.vector(csttbl[[step]][[as.character(mrkr)]]))
             }) |>
     data.frame() |>
-    setNames(restbl[[marker_index]])
+    setNames(restbl[[ft_index]])
 
   max_idx <- which.max(restbl$cost_mean)                      # idx max cost
   box_max_est <- max(restbl$cost_mean)                        # max cost value
@@ -107,12 +107,14 @@ get_markers.fs_backward_model <- function(x) {
     if ( (box_max_est - restbl$cost_mean[se2]) < se * 1.96 ) next else break
   }
 
-  bs_markers <- c(restbl[[marker_index]],
-                  x$candidate_markers[!(x$candidate_markers %in% restbl[[marker_index]])])
+  bs_features <- c(restbl[[ft_index]],
+                  x$candidate_features[!(x$candidate_features %in% restbl[[ft_index]])])
 
-  max <- x$candidate_markers[x$candidate_markers %in% bs_markers[(max_idx + 1L):length(bs_markers)]]
-  se1 <- x$candidate_markers[x$candidate_markers %in% bs_markers[(se1 + 1L):length(bs_markers)]]
-  se2 <- x$candidate_markers[x$candidate_markers %in% bs_markers[(se2 + 1L):length(bs_markers)]]
+  # nolint start
+  max <- x$candidate_features[x$candidate_features %in% bs_features[(max_idx + 1L):length(bs_features)]]
+  se1 <- x$candidate_features[x$candidate_features %in% bs_features[(se1 + 1L):length(bs_features)]]
+  se2 <- x$candidate_features[x$candidate_features %in% bs_features[(se2 + 1L):length(bs_features)]]
+  # nolint end
 
-  list(max_markers = max, markers_1se_from_max = se1, markers_2se_from_max = se2)
+  list(max_features = max, features_1se_from_max = se1, features_2se_from_max = se2)
 }

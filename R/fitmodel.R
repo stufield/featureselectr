@@ -51,7 +51,7 @@ fitmodel.fs_lr <- function(x, ...) {
   mf    <- stats::model.frame(args$frmla, data = x$data[trn_rows, ])
   q_glm <- be_quiet(stats::glm)   # silence warnings
   fit   <- q_glm(args$frmla, data = mf, family = "binomial", model = FALSE)$result
-  tst_p <- stats::predict(fit, x$data[tst_rows, x$candidate_markers, drop = FALSE],
+  tst_p <- stats::predict(fit, x$data[tst_rows, x$candidate_features, drop = FALSE],
                           type = "response") |> unname()
 
   x$cross_val[[run]][[fold]]$model         <- .stripLMC(fit)
@@ -80,7 +80,7 @@ fitmodel.fs_nb <- function(x, ...) {
 
   mf    <- stats::model.frame(args$frmla, data = x$data[trn_rows, ])
   fit   <- .fit_nb(args$frmla, data = mf)
-  tst_p <- predict(fit, x$data[tst_rows, x$candidate_markers, drop = FALSE],
+  tst_p <- predict(fit, x$data[tst_rows, x$candidate_features, drop = FALSE],
                    type = "raw")
 
   x$cross_val[[run]][[fold]]$model         <- fit
@@ -109,7 +109,7 @@ fitmodel.fs_lm <- function(x, ...) {
 
   mf  <- stats::model.frame(args$frmla, data = x$data[trn_rows, ])
   fit <- stats::lm(args$frmla, data = mf, model = FALSE)
-  tst_p <- stats::predict(fit, x$data[tst_rows, x$candidate_markers, drop = FALSE],
+  tst_p <- stats::predict(fit, x$data[tst_rows, x$candidate_features, drop = FALSE],
                           type = "response")
 
   x$cross_val[[run]][[fold]]$model         <- .stripLMC(fit)

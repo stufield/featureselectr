@@ -11,8 +11,8 @@ if ( getRversion() >= "2.15.1" ) {
       "cost_lower_ci95",
       "cost_mean",
       "cost_upper_ci95",
-      "cumul_markers",
-      "elim_markers",
+      "cumul_features",
+      "elim_features",
       "id",
       "fold", "group", "prop", "rn", "run", "xend", "y", "yend",  # plot_cross_strat
       "metric",

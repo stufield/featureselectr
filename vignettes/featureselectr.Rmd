@@ -37,7 +37,7 @@ selection, model building, and/or classifier development.
 
 ### Search Type Helpers
 
-There are _two_ main search types to choose from. See `?search_type`.
+There are *two* main search types to choose from. See `?search_type`.
 
 ```{r search-type}
 search_type_forward_model()   # Forward stepwise
@@ -117,7 +117,7 @@ mt <- model_type_nb(response = "class_response")
 sm <- search_type_forward_model(max_steps = 10L)
 
 # setup feature selection object
-fs_setup <- feature_selection(data, candidate_markers = feats,
+fs_setup <- feature_selection(data, candidate_features = feats,
                               model_type = mt, search_type = sm,
                               runs = 3, folds = 5,
                               cost = "AUC", random_seed = 1)

@@ -8,7 +8,7 @@
 #' @param data A `data.frame` containing features and clinical
 #'   data suitable for modeling.
 #'
-#' @param candidate_markers `character(n)`. List of candidate markers,
+#' @param candidate_features `character(n)`. List of candidate features,
 #'   i.e. columns names, from the data object.
 #'
 #' @param model_type An instantiated `model_type` object, generated via a call
@@ -54,7 +54,7 @@
 #'
 #' @return A `"feature_select"` class object; a list of:
 #'   \item{data}{The original feature data to use.}
-#'   \item{candidate_markers}{The list of candidate features.}
+#'   \item{candidate_features}{The list of candidate features.}
 #'   \item{model_type}{A list containing model type variables of the
 #'     appropriate class for the desired model type.}
 #'   \item{search_type}{A list containing search type variables of the
@@ -90,7 +90,7 @@
 #' cf <- "sens"
 #' sm <- search_type_forward_model(15L, display_name = "FeatureSelection Plot")
 #' ft <- helpr:::get_analytes(data)   # select candidate features
-#' fs <- feature_selection(data, candidate_markers = ft,
+#' fs <- feature_selection(data, candidate_features = ft,
 #'                         model_type = mt, search_type = sm, cost = cf,
 #'                         strat_column = "class_response", runs = 5L, folds = 5L)
 #' # S3 Print method
@@ -108,7 +108,7 @@
 #' fs3
 #'
 #' @export
-feature_selection <- function(data, candidate_markers, model_type,
+feature_selection <- function(data, candidate_features, model_type,
                               search_type, runs = 1L, folds = 1L,
                               cost = c("AUC", "R2", "CCC", "MSE", "sens", "spec"),
                               keep_models = FALSE, bootstrap = FALSE,
@@ -142,7 +142,7 @@ feature_selection <- function(data, candidate_markers, model_type,
 
   # start the list
   fsret <- list(data = data,
-                candidate_markers = candidate_markers,
+                candidate_features = candidate_features,
                 model_type = model_type,
                 search_type = search_type,
                 cost = cost_str,
@@ -159,7 +159,7 @@ feature_selection <- function(data, candidate_markers, model_type,
     fsret$strat_column <- strat_column
   }
 
-  fsret$search_type$max_steps <- min(length(candidate_markers),
+  fsret$search_type$max_steps <- min(length(candidate_features),
                                      search_type$max_steps)
 
   class_hierarchy <- setdiff(unique(c("feature_select",
@@ -208,7 +208,7 @@ print.feature_select <- function(x, ...) {
   value <- c(
     length(row.names(x$data)),
     length(names(x$data)),
-    length(setdiff(x$candidate_markers, x$response))
+    length(setdiff(x$candidate_features, x$response))
   )
 
   liter(key, value, function(.x, .y) {
@@ -233,7 +233,7 @@ print.feature_select <- function(x, ...) {
   ) |> pad(25)
 
   value2 <- c(
-    length(x$candidate_markers),
+    length(x$candidate_features),
     x$model_type$response,
     x$runs,
     x$folds,
@@ -263,7 +263,7 @@ print.feature_select <- function(x, ...) {
 is_feature_select <- function(x) {
   class <- inherits(x, "feature_select")
   nms   <- all(c("data",
-                 "candidate_markers",
+                 "candidate_features",
                  "model_type",
                  "cross_val",
                  "cost",

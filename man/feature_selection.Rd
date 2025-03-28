@@ -9,7 +9,7 @@
 \usage{
 feature_selection(
   data,
-  candidate_markers,
+  candidate_features,
   model_type,
   search_type,
   runs = 1L,
@@ -32,7 +32,7 @@ is_feature_select(x)
 \item{data}{A \code{data.frame} containing features and clinical
 data suitable for modeling.}
 
-\item{candidate_markers}{\code{character(n)}. List of candidate markers,
+\item{candidate_features}{\code{character(n)}. List of candidate features,
 i.e. columns names, from the data object.}
 
 \item{model_type}{An instantiated \code{model_type} object, generated via a call
@@ -82,7 +82,7 @@ Non-declared arguments from the \emph{original} call are preserved.}
 \value{
 A \code{"feature_select"} class object; a list of:
 \item{data}{The original feature data to use.}
-\item{candidate_markers}{The list of candidate features.}
+\item{candidate_features}{The list of candidate features.}
 \item{model_type}{A list containing model type variables of the
 appropriate class for the desired model type.}
 \item{search_type}{A list containing search type variables of the
@@ -122,7 +122,7 @@ mt <- model_type_lr(response = "class_response")
 cf <- "sens"
 sm <- search_type_forward_model(15L, display_name = "FeatureSelection Plot")
 ft <- helpr:::get_analytes(data)   # select candidate features
-fs <- feature_selection(data, candidate_markers = ft,
+fs <- feature_selection(data, candidate_features = ft,
                         model_type = mt, search_type = sm, cost = cf,
                         strat_column = "class_response", runs = 5L, folds = 5L)
 # S3 Print method

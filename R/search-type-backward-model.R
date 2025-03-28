@@ -24,21 +24,21 @@ Search.fs_backward_model <- function(x, ...) {
   #   for model search, the cross-validated folds determine
   #   which feature is chosen at any given step
 
-  search_progress <- data.frame(step         = numeric(0),
-                                elim_markers = character(0),
-                                cost         = numeric(0))
+  search_progress <- data.frame(step          = numeric(0),
+                                elim_features = character(0),
+                                cost          = numeric(0))
   deleted_candidates <- character(0)
   cost_tables        <- list()
 
   # add the full model as the first step
-  mod_candidate_markers <- c("All", x$candidate_markers)
+  mod_candidate_features <- c("All", x$candidate_features)
 
-  for ( step in seq_along(x$candidate_markers) ) {
+  for ( step in seq_along(x$candidate_features) ) {
 
-    sprintf("Step %i of %i", step, length(x$candidate_markers)) |>
+    sprintf("Step %i of %i", step, length(x$candidate_features)) |>
       signal_rule(line_col = "blue")
 
-    rem_candidates <- setdiff(mod_candidate_markers, deleted_candidates)
+    rem_candidates <- setdiff(mod_candidate_features, deleted_candidates)
 
     # reformulated search as a loop to facilitate a full model step
     candidate_models <- list()
@@ -95,7 +95,7 @@ Search.fs_backward_model <- function(x, ...) {
 
     search_progress <- rbind(search_progress,
                              data.frame(step = step,
-                                        elim_markers = new_par,
+                                        elim_features = new_par,
                                         cost_lower_ci95 = ci95top$lower,
                                         cost_mean = ci95top$mean,
                                         cost_upper_ci95 = ci95top$upper))
@@ -128,7 +128,7 @@ plot.fs_backward_model <- function(x, ...) {
 
   # progress mean/95% CI
   restbl     <- x$cross_val$search_progress
-  top_single <- setdiff(x$candidate_markers, restbl$elim_markers)
+  top_single <- setdiff(x$candidate_features, restbl$elim_features)
   signal_info(
     "The top single feature model is:", value(get_seq(top_single))
   )
@@ -140,12 +140,12 @@ plot.fs_backward_model <- function(x, ...) {
     expand.grid(stringsAsFactors = FALSE, KEEP.OUT.ATTRS = FALSE)
   row_nms <- paste0(row_nms$fold, "_", row_nms$run)
 
-  bxtbl <- liter(restbl$step, restbl$elim_markers, function(.x, .y) {
+  bxtbl <- liter(restbl$step, restbl$elim_features, function(.x, .y) {
       as.numeric(csttbl[[.x]][[.y]]) # convert matrix to vector
     }) |>
     data.frame(row.names = row_nms) |>
-    setNames(ifelse(is_seq(restbl$elim_markers),
-                    get_seq(restbl$elim_markers), restbl$elim_markers))
+    setNames(ifelse(is_seq(restbl$elim_features),
+                    get_seq(restbl$elim_features), restbl$elim_features))
 
   box_cols <- rep("grey", nrow(restbl))
   idx      <- get_peak_wilcox(bxtbl, type = "back")
@@ -191,8 +191,8 @@ plot.fs_backward_model <- function(x, ...) {
       ) +
     scale_x_continuous(
       breaks = restbl$step,
-      labels = ifelse(is_seq(restbl$elim_markers),
-                      get_seq(restbl$elim_markers), restbl$elim_markers)
+      labels = ifelse(is_seq(restbl$elim_features),
+                      get_seq(restbl$elim_features), restbl$elim_features)
     ) +
     theme(legend.title = element_blank(),
           legend.position = "right",

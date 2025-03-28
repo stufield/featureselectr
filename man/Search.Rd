@@ -17,7 +17,7 @@ only available in Linux systems.}
 \value{
 A completed \code{feature_select} object; a list of:
 \item{data}{The original feature data to use.}
-\item{candidate_markers}{The list of candidate features.}
+\item{candidate_features}{The list of candidate features.}
 \item{model_type}{A list containing model type variables of the
 appropriate class for the desired model type.}
 \item{search_type}{A list containing search type variables of the
@@ -81,7 +81,7 @@ cst <- "AUC"
 sm  <- search_type_forward_model(10L, display_name = "FeatureSelection Plot")
 ft  <- head(helpr:::get_analytes(data))  # select candidate features
 mcp <- feature_selection(data,
-                         candidate_markers = ft,
+                         candidate_features = ft,
                          model_type = mt,
                          search_type = sm,
                          cost = cst,
