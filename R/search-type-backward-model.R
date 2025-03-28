@@ -156,12 +156,13 @@ plot.fs_backward_model <- function(x, ...) {
     box_cols[idx[i]] <- tmp_col[i]
   }
 
+  x_lab <- paste("features removed", symbl$arrow_right)
+
   p1 <- bxtbl |>
     beeswarm(
       main = sprintf("Median %s\nWilcoxon Signed-Rank Peak Criterion",
                      x$cost_fxn$display_name),
-      y.lab = x$cost_fxn$display_name,
-      x.lab = paste("features removed", symbl$arrow_right),
+      y.lab = x$cost_fxn$display_name, x.lab = x_lab,
       notch = TRUE, cols = box_cols, ...) +
     theme(legend.position = "none",
           axis.text.x = element_text(angle = 45, hjust = 1))
@@ -184,8 +185,7 @@ plot.fs_backward_model <- function(x, ...) {
       size = 0.75, alpha = 0.75) +
     scale_colour_manual(values = ci_cols) +
     labs(
-      y = x$cost_fxn$display_name,
-      x = paste(symbl$arrow_left, "features removed"),
+      y = x$cost_fxn$display_name, x = x_lab,
       title = sprintf("Mean %s %s 95%% CI\nStandard Error Peak Criterion",
                       x$cost_fxn$display_name, symbl$pm)
       ) +

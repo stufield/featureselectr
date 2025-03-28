@@ -175,12 +175,13 @@ plot.fs_forward_model <- function(x, ...) {
     box_cols[idx[i]] <- tmp_col[i]
   }
 
+  x_lab <- paste("features added", symbl$arrow_right)
+
   p1 <- bxtbl |>
     beeswarm(
       main = sprintf("Median %s\nWilcoxon Signed-Rank Peak Criterion",
                      x$cost_fxn$display_name),
-      y.lab = x$cost_fxn$display_name,
-      x.lab = paste("features added", symbl$arrow_right),
+      y.lab = x$cost_fxn$display_name, x.lab = x_lab,
       notch = TRUE, cols = box_cols, ...) +
     scale_x_discrete(labels = names(bxtbl)) +
     theme(legend.position = "none",
@@ -204,8 +205,7 @@ plot.fs_forward_model <- function(x, ...) {
       size = 0.75, alpha = 0.75) +
     scale_colour_manual(values = ci_cols) +
     labs(
-      y = x$cost_fxn$display_name,
-      x = paste("features added", symbl$arrow_right),
+      y = x$cost_fxn$display_name, x = x_lab,
       title = sprintf("Mean %s %s 95%% CI\nStandard Error Peak Criterion",
                       x$cost_fxn$display_name, symbl$pm)
     ) +
