@@ -22,7 +22,7 @@ Search.fs_backward_model <- function(x, ...) {
   #   are cross-validated folds
   #   loop over r, f, and step ( runs, folds, and candidates )
   #   for model search, the cross-validated folds determine
-  #   which parameter is chosen at any given step
+  #   which feature is chosen at any given step
 
   search_progress <- data.frame(step         = numeric(0),
                                 elim_markers = character(0),
@@ -31,7 +31,7 @@ Search.fs_backward_model <- function(x, ...) {
   cost_tables        <- list()
 
   # add the full model as the first step
-  mod_candidate_markers <- c("Full_Model", x$candidate_markers)
+  mod_candidate_markers <- c("All", x$candidate_markers)
 
   for ( step in seq_along(x$candidate_markers) ) {
 
@@ -65,7 +65,7 @@ Search.fs_backward_model <- function(x, ...) {
       setNames(sprintf("Run%s", 1:x$cross_val$runs))
 
       candidate_models[[cnd]] <- run_res
-      if ( cnd == "Full_Model" ) {
+      if ( cnd == "All" ) {
         break
       }
     }
@@ -130,7 +130,7 @@ plot.fs_backward_model <- function(x, ...) {
   restbl     <- x$cross_val$search_progress
   top_single <- setdiff(x$candidate_markers, restbl$elim_markers)
   signal_info(
-    "The top single marker model contains:", value(top_single)
+    "The top single feature model is:", value(get_seq(top_single))
   )
 
   # complete cost tables
@@ -147,8 +147,6 @@ plot.fs_backward_model <- function(x, ...) {
     setNames(ifelse(is_seq(restbl$elim_markers),
                     get_seq(restbl$elim_markers), restbl$elim_markers))
 
-  names(bxtbl)[1L] <- "Full Model"  # rename pos 1 = "Full Model"
-
   box_cols <- rep("grey", nrow(restbl))
   idx      <- get_peak_wilcox(bxtbl, type = "back")
   tmp_col  <- c("red",  # box colors by Wilcox signed rank test
@@ -159,15 +157,14 @@ plot.fs_backward_model <- function(x, ...) {
   }
 
   p1 <- bxtbl |>
-    SomaPlotr::boxplotBeeswarm(
+    beeswarm(
       main = sprintf("Median %s\nWilcoxon Signed-Rank Peak Criterion",
                      x$cost_fxn$display_name),
       y.lab = x$cost_fxn$display_name,
-      x.lab = paste(symbl$arrow_left, "features removed"),
+      x.lab = paste("features removed", symbl$arrow_right),
       notch = TRUE, cols = box_cols, ...) +
-    ggplot2::theme(legend.position = "none",
-                   axis.text.x = ggplot2::element_text(angle = 90, hjust = 1)
-    )
+    theme(legend.position = "none",
+          axis.text.x = element_text(angle = 45, hjust = 1))
 
   idx     <- get_peak_se(bxtbl, type = "back")
   ci_cols <- c(Peak      = "red",   # line dots by mean - 1se; mean - 1.96se
@@ -181,25 +178,25 @@ plot.fs_backward_model <- function(x, ...) {
   restbl$id[restbl$step == idx["p0.001"]] <- "1.96*se"
 
   p2 <- restbl |>
-    ggplot2::ggplot(ggplot2::aes(step, cost_mean, colour = id)) +
-    ggplot2::geom_pointrange(
-      ggplot2::aes(ymin = cost_lower_ci95, ymax = cost_upper_ci95),
+    ggplot(aes(step, cost_mean, colour = id)) +
+    geom_pointrange(
+      aes(ymin = cost_lower_ci95, ymax = cost_upper_ci95),
       size = 0.75, alpha = 0.75) +
-    ggplot2::scale_colour_manual(values = ci_cols) +
-    ggplot2::labs(
+    scale_colour_manual(values = ci_cols) +
+    labs(
       y = x$cost_fxn$display_name,
       x = paste(symbl$arrow_left, "features removed"),
       title = sprintf("Mean %s %s 95%% CI\nStandard Error Peak Criterion",
                       x$cost_fxn$display_name, symbl$pm)
       ) +
-    ggplot2::scale_x_continuous(
+    scale_x_continuous(
       breaks = restbl$step,
       labels = ifelse(is_seq(restbl$elim_markers),
                       get_seq(restbl$elim_markers), restbl$elim_markers)
     ) +
-    ggplot2::theme(legend.title = ggplot2::element_blank(),
-                   legend.position = "right",
-                   axis.text.x  = ggplot2::element_text(angle = 90, hjust = 1))
+    theme(legend.title = element_blank(),
+          legend.position = "right",
+          axis.text.x = element_text(angle = 45, hjust = 1))
 
   withr::with_package("patchwork", p1 + p2)
 }

@@ -140,6 +140,7 @@ Search.fs_forward_model <- function(x, ...) {
 #'
 #' @importFrom ggplot2 ggplot aes theme element_text labs geom_pointrange
 #' @importFrom ggplot2 element_blank scale_color_manual scale_x_continuous
+#' @importFrom ggplot2 scale_x_discrete
 #' @noRd
 #' @export
 plot.fs_forward_model <- function(x, ...) {
@@ -175,15 +176,15 @@ plot.fs_forward_model <- function(x, ...) {
   }
 
   p1 <- bxtbl |>
-    SomaPlotr::boxplotBeeswarm(
+    beeswarm(
       main = sprintf("Median %s\nWilcoxon Signed-Rank Peak Criterion",
                      x$cost_fxn$display_name),
       y.lab = x$cost_fxn$display_name,
       x.lab = paste("features added", symbl$arrow_right),
       notch = TRUE, cols = box_cols, ...) +
-    ggplot2::scale_x_discrete(labels = names(bxtbl)) +
-    ggplot2::theme(legend.position = "none",
-                   axis.text.x = ggplot2::element_text(angle = 90, hjust = 1))
+    scale_x_discrete(labels = names(bxtbl)) +
+    theme(legend.position = "none",
+          axis.text.x = element_text(angle = 45, hjust = 1))
 
   idx     <- get_peak_se(bxtbl)
   ci_cols <- c(Peak      = "red",
@@ -197,25 +198,53 @@ plot.fs_forward_model <- function(x, ...) {
   restbl$id[restbl$step == idx["p0.001"]] <- "1.96*se"
 
   p2 <-  restbl |>
-    ggplot2::ggplot(ggplot2::aes(step, cost_mean, colour = id)) +
-    ggplot2::geom_pointrange(
-      ggplot2::aes(ymin = cost_lower_ci95, ymax = cost_upper_ci95),
+    ggplot(aes(step, cost_mean, colour = id)) +
+    geom_pointrange(
+      aes(ymin = cost_lower_ci95, ymax = cost_upper_ci95),
       size = 0.75, alpha = 0.75) +
-    ggplot2::scale_colour_manual(values = ci_cols) +
-    ggplot2::labs(
+    scale_colour_manual(values = ci_cols) +
+    labs(
       y = x$cost_fxn$display_name,
       x = paste("features added", symbl$arrow_right),
       title = sprintf("Mean %s %s 95%% CI\nStandard Error Peak Criterion",
                       x$cost_fxn$display_name, symbl$pm)
     ) +
-    ggplot2::scale_x_continuous(
+    scale_x_continuous(
       breaks = restbl$step,
       labels = ifelse(is_seq(restbl$cumul_markers),
                       get_seq(restbl$cumul_markers), restbl$cumul_markers)
       ) +
-    ggplot2::theme(legend.title = ggplot2::element_blank(),
-                   legend.position = "right",
-                   axis.text.x = ggplot2::element_text(angle = 90, hjust = 1))
+    theme(legend.title = element_blank(),
+          legend.position = "right",
+          axis.text.x = element_text(angle = 45, hjust = 1))
 
   withr::with_package("patchwork", p1 + p2)
+}
+
+
+#' @importFrom ggplot2 geom_jitter geom_boxplot position_jitter aes ggplot
+#' @importFrom ggplot2 scale_fill_manual
+#' @noRd
+beeswarm <- function(.data, label, main, notch = TRUE,
+                     y.lab, x.lab, cols, pt.size = 2.5, pt.color = "black",
+                     pt.shape = 21, ...) {
+
+  plot_df <- data.frame(lapply(.data, "length<-", max(lengths(.data))),
+                        check.names = FALSE)
+  n <- ncol(plot_df)
+  gg_df <- tidyr::gather(plot_df, key = group, na.rm = TRUE)
+  gg_df$group <- factor(gg_df$group, levels = names(plot_df))
+
+  p <- gg_df |>
+    ggplot(aes(x = group, y = value, fill = group)) +
+    geom_boxplot(notch = notch, alpha = 0.7, ..., outlier.color = NA) +
+    geom_jitter(position = position_jitter(width = 0.05,  seed = 101),
+                alpha = 0.5, shape = pt.shape, fill = pt.color,
+                size = pt.size) +
+    labs(x = x.lab, y = y.lab, title = main)
+  if ( length(cols) == 1L ) {
+    cols <- rep(cols, n)
+  }
+  p <- p + scale_fill_manual(values = head(unname(cols), n))
+  p
 }
