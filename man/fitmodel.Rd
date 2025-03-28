@@ -13,7 +13,7 @@ fitmodel(x, ...)
 method, which performs the appropriate search algorithm depending on the
 object class. This is typically performed internally via the \verb{frmla =}
 argument which is used to create a formula prior to being passed to one of:
-\code{\link[=fit_logistic]{fit_logistic()}}, \code{\link[=fit_nb]{fit_nb()}}, \code{\link[stats:lm]{stats::lm()}}.}
+\code{\link[stats:glm]{stats::glm()}}, \code{\link[stats:lm]{stats::lm()}}, \code{.fit_nb()}.}
 }
 \description{
 Provides linear regression, Naive Bayes, and logistic regression
@@ -31,7 +31,7 @@ with the desired formula. Without this and in the correct form, the method
 will fail. Usually it is fine to leave the defaults in place.
 }
 \seealso{
-\code{\link[=feature_selection]{feature_selection()}}, \code{\link[=fit_logistic]{fit_logistic()}}, \code{\link[=lm]{lm()}}, \code{\link[=fit_nb]{fit_nb()}},
+\code{\link[=feature_selection]{feature_selection()}}, \code{\link[stats:glm]{stats::glm()}}, \code{\link[stats:lm]{stats::lm()}}
 
 \code{\link[=model_type_lr]{model_type_lr()}}, \code{\link[=model_type_lm]{model_type_lm()}}, \code{\link[=model_type_nb]{model_type_nb()}}
 }

@@ -19,11 +19,11 @@
 #'   method, which performs the appropriate search algorithm depending on the
 #'   object class. This is typically performed internally via the `frmla =`
 #'   argument which is used to create a formula prior to being passed to one of:
-#'   [fit_logistic()], [fit_nb()], [stats::lm()].
+#'   [stats::glm()], [stats::lm()], `.fit_nb()`.
 #'
 #' @author Stu Field, Kirk DeLisle
 #'
-#' @seealso [feature_selection()], [fit_logistic()], [lm()], [fit_nb()],
+#' @seealso [feature_selection()], [stats::glm()], [stats::lm()]
 #' @seealso [model_type_lr()], [model_type_lm()], [model_type_nb()]
 #'
 #' @export
@@ -63,7 +63,6 @@ fitmodel.fs_lr <- function(x, ...) {
 
 #' Fit Model Type: Naive Bayes
 #'
-#' @importFrom libml fit_nb
 #' @noRd
 fitmodel.fs_nb <- function(x, ...) {
 
@@ -80,7 +79,7 @@ fitmodel.fs_nb <- function(x, ...) {
   tst_rows <- x$cross_val[[run]][[fold]]$test_rows
 
   mf    <- stats::model.frame(args$frmla, data = x$data[trn_rows, ])
-  fit   <- fit_nb(args$frmla, data = mf)
+  fit   <- .fit_nb(args$frmla, data = mf)
   tst_p <- predict(fit, x$data[tst_rows, x$candidate_markers, drop = FALSE],
                    type = "raw")
 

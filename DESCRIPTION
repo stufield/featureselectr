@@ -22,7 +22,6 @@ Depends:
     helpr
 Imports:
     ggplot2,
-    libml,
     parallel,
     withr
 Suggests:

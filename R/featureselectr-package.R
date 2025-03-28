@@ -16,6 +16,8 @@ NULL
   register_s3_method("featureselectr", ".stripLMC", "default")
   register_s3_method("featureselectr", ".stripLMC", "glm")
   register_s3_method("featureselectr", ".stripLMC", "lm")
+  register_s3_method("featureselectr", ".fit_nb", "default")
+  register_s3_method("featureselectr", ".fit_nb", "formula")
 }
 
 
