@@ -105,5 +105,5 @@ plot(FSresult)
 \code{\link[=feature_selection]{feature_selection()}}
 }
 \author{
-Kirk DeLisle, Stu Field
+Stu Field, Kirk DeLisle
 }

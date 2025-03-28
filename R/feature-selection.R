@@ -75,7 +75,7 @@
 #'   \item{search_complete}{Logical if the object has completed a search}
 #'   \item{call}{The original matched call.}
 #'
-#' @author Kirk DeLisle, Stu Field
+#' @author Stu Field, Kirk DeLisle
 #' @seealso [Search()]
 #'
 #' @references Hastie, Tibshirani, and Friedman.

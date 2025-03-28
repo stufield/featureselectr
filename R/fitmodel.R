@@ -21,7 +21,7 @@
 #'   argument which is used to create a formula prior to being passed to one of:
 #'   [fit_logistic()], [fit_nb()], [stats::lm()].
 #'
-#' @author Kirk DeLisle & Stu Field
+#' @author Stu Field, Kirk DeLisle
 #'
 #' @seealso [feature_selection()], [fit_logistic()], [lm()], [fit_nb()],
 #' @seealso [model_type_lr()], [model_type_lm()], [model_type_nb()]

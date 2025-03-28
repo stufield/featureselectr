@@ -18,7 +18,7 @@
 #' @return An object of the appropriate class according to the
 #'   model type chosen, one of: `fs_lr`, `fs_nb`, or `fs_lm`.
 #'
-#' @author Kirk DeLisle, Stu Field
+#' @author Stu Field, Kirk DeLisle
 NULL
 
 

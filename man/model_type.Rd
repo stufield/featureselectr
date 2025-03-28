@@ -44,5 +44,5 @@ model_type_lm()
 
 }
 \author{
-Kirk DeLisle, Stu Field
+Stu Field, Kirk DeLisle
 }

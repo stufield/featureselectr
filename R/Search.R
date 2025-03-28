@@ -64,7 +64,7 @@
 #'   \item{search.complete}{Logical if the object has completed a search}
 #'   \item{call}{The original matched call.}
 #'
-#' @author Kirk DeLisle, Stu Field
+#' @author Stu Field, Kirk DeLisle
 #' @seealso [feature_selection()]
 #'
 #' @examples

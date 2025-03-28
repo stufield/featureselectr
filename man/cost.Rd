@@ -22,5 +22,5 @@ This functionality is performed internally within the feature selection
 algorithm and is unlikely to require direct user calls.
 }
 \author{
-Kirk DeLisle, Stu Field
+Stu Field, Kirk DeLisle
 }

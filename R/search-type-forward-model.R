@@ -20,7 +20,7 @@
 #'     methods called on the `feature_select` object.}
 #'   \item{max_steps}{Maximum model steps to search. Forward search only!}
 #'
-#' @author Kirk DeLisle & Stu Field
+#' @author Stu Field, Kirk DeLisle
 #'
 #' @examples
 #' search_type_forward_model()                 # the default = 20L

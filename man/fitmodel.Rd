@@ -36,5 +36,5 @@ will fail. Usually it is fine to leave the defaults in place.
 \code{\link[=model_type_lr]{model_type_lr()}}, \code{\link[=model_type_lm]{model_type_lm()}}, \code{\link[=model_type_nb]{model_type_nb()}}
 }
 \author{
-Kirk DeLisle & Stu Field
+Stu Field, Kirk DeLisle
 }

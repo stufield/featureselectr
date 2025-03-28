@@ -12,7 +12,7 @@
 #' @return A metric, a numeric value, to be optimized depending
 #'   on the type, one of AUC, CCC, MSE, R2, Sens + Spec.
 #'
-#' @author Kirk DeLisle, Stu Field
+#' @author Stu Field, Kirk DeLisle
 #'
 #' @export
 cost <- function(x) UseMethod("cost")

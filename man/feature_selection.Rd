@@ -154,5 +154,5 @@ Elements of Statistical Learning: Data Mining, Inference, and Prediction.
 \code{\link[=Search]{Search()}}
 }
 \author{
-Kirk DeLisle, Stu Field
+Stu Field, Kirk DeLisle
 }

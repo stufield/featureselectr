@@ -48,5 +48,5 @@ search_type_forward_model(max_steps = 15L)  # set to 15
 search_type_forward_model("My Forward Search")   # set title
 }
 \author{
-Kirk DeLisle & Stu Field
+Stu Field, Kirk DeLisle
 }
