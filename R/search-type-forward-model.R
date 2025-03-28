@@ -224,6 +224,7 @@ plot.fs_forward_model <- function(x, ...) {
 
 #' @importFrom ggplot2 geom_jitter geom_boxplot position_jitter aes ggplot
 #' @importFrom ggplot2 scale_fill_manual
+#' @importFrom utils head
 #' @noRd
 beeswarm <- function(.data, label, main, notch = TRUE,
                      y.lab, x.lab, cols, pt.size = 2.5, pt.color = "black",
