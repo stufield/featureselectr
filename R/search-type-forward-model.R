@@ -203,7 +203,7 @@ plot.fs_forward_model <- function(x, ...) {
     geom_pointrange(
       aes(ymin = cost_lower_ci95, ymax = cost_upper_ci95),
       size = 0.75, alpha = 0.75) +
-    scale_colour_manual(values = ci_cols) +
+    scale_color_manual(values = ci_cols) +
     labs(
       y = x$cost_fxn$display_name, x = x_lab,
       title = sprintf("Mean %s %s 95%% CI\nStandard Error Peak Criterion",
