@@ -14,6 +14,7 @@ knitr::opts_chunk$set(
   collapse = TRUE, comment = "#>"
 )
 simdata <- wranglr::simdata
+options(rlib_message_verbosity = "quiet")   # silence notch warning boxplots
 ```
 
 
@@ -163,9 +164,9 @@ We can use the `update()` function to modify the existing
 ```{r update-fs-setup}
 fs_update <- update(
   fs_setup,
-  model_type = model_type_lr(response = "class_response"),  # use logistic reg
+  model_type  = model_type_lr(response = "class_response"),  # use logistic reg
   search_type = search_type_forward_model(max_steps = 15L), # increase steps
-  stratified = TRUE    # stratify
+  stratified  = TRUE    # stratify
 )
                     
 fs_update
@@ -179,6 +180,7 @@ fs_lr <- Search(fs_update)
 
 ```{r load-fs-lr, echo = FALSE}
 fs_lr <- readRDS("fs_lr_obj.rds")   # load this secretly
+
 ```
 
 ### Plot the feature selections
