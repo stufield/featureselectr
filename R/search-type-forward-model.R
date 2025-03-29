@@ -140,10 +140,9 @@ Search.fs_forward_model <- function(x, ...) {
 #'
 #' @importFrom ggplot2 ggplot aes theme element_text labs geom_pointrange
 #' @importFrom ggplot2 element_blank scale_color_manual scale_x_continuous
-#' @importFrom ggplot2 scale_x_discrete
 #' @noRd
 #' @export
-plot.fs_forward_model <- function(x, ...) {
+plot.fs_forward_model <- function(x, notch = TRUE, ...) {
 
   check_complete(x)
 
@@ -165,7 +164,7 @@ plot.fs_forward_model <- function(x, ...) {
     setNames(ifelse(is_seq(restbl$cumul_features),
                     get_seq(restbl$cumul_features), restbl$cumul_features))
 
-  box_cols  <- rep("grey", nrow(restbl))
+  box_cols  <- rep(col_palette$lightgrey, nrow(restbl))
   idx       <- get_peak_wilcox(bxtbl)
   tmp_col   <- c("red",   # box colors by Wilcox signed rank test
                  col_palette$purple,
@@ -182,10 +181,8 @@ plot.fs_forward_model <- function(x, ...) {
       main = sprintf("Median %s\nWilcoxon Signed-Rank Peak Criterion",
                      x$cost_fxn$display_name),
       y.lab = x$cost_fxn$display_name, x.lab = x_lab,
-      notch = TRUE, cols = box_cols, ...) +
-    scale_x_discrete(labels = names(bxtbl)) +
-    theme(legend.position = "none",
-          axis.text.x = element_text(angle = 45, hjust = 1))
+      notch = notch, cols = box_cols, ...
+    )
 
   idx     <- get_peak_se(bxtbl)
   ci_cols <- c(Peak      = "red",
@@ -202,7 +199,7 @@ plot.fs_forward_model <- function(x, ...) {
     ggplot(aes(step, cost_mean, colour = id)) +
     geom_pointrange(
       aes(ymin = cost_lower_ci95, ymax = cost_upper_ci95),
-      size = 0.75, alpha = 0.75) +
+      size = 0.75, alpha = 0.7) +
     scale_color_manual(values = ci_cols) +
     labs(
       y = x$cost_fxn$display_name, x = x_lab,
@@ -213,10 +210,10 @@ plot.fs_forward_model <- function(x, ...) {
       breaks = restbl$step,
       labels = ifelse(is_seq(restbl$cumul_features),
                       get_seq(restbl$cumul_features), restbl$cumul_features)
-      ) +
-    theme(legend.title = element_blank(),
+    ) +
+    theme(legend.title    = element_blank(),
           legend.position = "right",
-          axis.text.x = element_text(angle = 45, hjust = 1))
+          axis.text.x     = element_text(angle = 45, hjust = 1))
 
   withr::with_package("patchwork", p1 + p2)
 }
@@ -224,28 +221,23 @@ plot.fs_forward_model <- function(x, ...) {
 
 #' @importFrom ggplot2 geom_jitter geom_boxplot position_jitter aes ggplot
 #' @importFrom ggplot2 scale_fill_manual
-#' @importFrom utils head
 #' @noRd
 beeswarm <- function(.data, label, main, notch = TRUE,
-                     y.lab, x.lab, cols, pt.size = 2.5, pt.color = "black",
-                     pt.shape = 21, ...) {
+                     y.lab, x.lab, cols, ...) {
 
   plot_df <- data.frame(lapply(.data, "length<-", max(lengths(.data))),
                         check.names = FALSE)
-  n <- ncol(plot_df)
   gg_df <- tidyr::gather(plot_df, key = group, na.rm = TRUE)
   gg_df$group <- factor(gg_df$group, levels = names(plot_df))
 
   p <- gg_df |>
     ggplot(aes(x = group, y = value, fill = group)) +
-    geom_boxplot(notch = notch, alpha = 0.7, ..., outlier.color = NA) +
+    geom_boxplot(notch = notch, alpha = 0.65, outlier.color = NA, ...) +
     geom_jitter(position = position_jitter(width = 0.05,  seed = 101),
-                alpha = 0.5, shape = pt.shape, fill = pt.color,
-                size = pt.size) +
-    labs(x = x.lab, y = y.lab, title = main)
-  if ( length(cols) == 1L ) {
-    cols <- rep(cols, n)
-  }
-  p <- p + scale_fill_manual(values = head(unname(cols), n))
+                alpha = 0.5, shape = 21, fill = "black", size = 2.5) +
+    labs(x = x.lab, y = y.lab, title = main) +
+    theme(legend.position = "none",
+          axis.text.x     = element_text(angle = 45, hjust = 1)) +
+    scale_fill_manual(values = cols)
   p
 }

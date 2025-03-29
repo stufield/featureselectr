@@ -122,7 +122,7 @@ Search.fs_backward_model <- function(x, ...) {
 #' @importFrom ggplot2 element_blank scale_color_manual scale_x_continuous
 #' @noRd
 #' @export
-plot.fs_backward_model <- function(x, ...) {
+plot.fs_backward_model <- function(x, notch = TRUE, ...) {
 
   check_complete(x)
 
@@ -147,7 +147,7 @@ plot.fs_backward_model <- function(x, ...) {
     setNames(ifelse(is_seq(restbl$elim_features),
                     get_seq(restbl$elim_features), restbl$elim_features))
 
-  box_cols <- rep("grey", nrow(restbl))
+  box_cols <- rep(col_palette$lightgrey, nrow(restbl))
   idx      <- get_peak_wilcox(bxtbl, type = "back")
   tmp_col  <- c("red",  # box colors by Wilcox signed rank test
                 col_palette$purple, col_palette$lightgreen)
@@ -163,9 +163,7 @@ plot.fs_backward_model <- function(x, ...) {
       main = sprintf("Median %s\nWilcoxon Signed-Rank Peak Criterion",
                      x$cost_fxn$display_name),
       y.lab = x$cost_fxn$display_name, x.lab = x_lab,
-      notch = TRUE, cols = box_cols, ...) +
-    theme(legend.position = "none",
-          axis.text.x = element_text(angle = 45, hjust = 1))
+      notch = notch, cols = box_cols, ...)
 
   idx     <- get_peak_se(bxtbl, type = "back")
   ci_cols <- c(Peak      = "red",   # line dots by mean - 1se; mean - 1.96se
@@ -194,9 +192,9 @@ plot.fs_backward_model <- function(x, ...) {
       labels = ifelse(is_seq(restbl$elim_features),
                       get_seq(restbl$elim_features), restbl$elim_features)
     ) +
-    theme(legend.title = element_blank(),
+    theme(legend.title    = element_blank(),
           legend.position = "right",
-          axis.text.x = element_text(angle = 45, hjust = 1))
+          axis.text.x     = element_text(angle = 45, hjust = 1))
 
   withr::with_package("patchwork", p1 + p2)
 }
