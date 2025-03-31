@@ -8,6 +8,13 @@
 \description{
 The feature selection package contains functionality designed for feature selection, model building, and/or classifier development.
 }
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://stufield.github.io/featureselectr}
+}
+
+}
 \author{
 \strong{Maintainer}: Stu Field \email{stu.g.field@gmail.com} (\href{https://orcid.org/0000-0002-1024-5859}{ORCID}) [copyright holder]
 
