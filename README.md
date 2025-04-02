@@ -6,14 +6,14 @@
 <!-- badges: start -->
 
 ![GitHub
-version](https://img.shields.io/badge/Version-0.0.1.9000-success.svg?style=flat&logo=github)
+version](https://img.shields.io/badge/Version-0.0.1.9001-success.svg?style=flat&logo=github)
 [![CRAN
 status](http://www.r-pkg.org/badges/version/featureselectr)](https://cran.r-project.org/package=featureselectr)
 [![R-CMD-check](https://github.com/stufield/featureselectr/workflows/R-CMD-check/badge.svg)](https://github.com/stufield/featureselectr/actions)
 [![](https://cranlogs.r-pkg.org/badges/grand-total/featureselectr)](https://cran.r-project.org/package=featureselectr)
 [![Codecov test
 coverage](https://codecov.io/gh/stufield/featureselectr/branch/main/graph/badge.svg)](https://app.codecov.io/gh/stufield/featureselectr?branch=main)
-[![Lifecycle:
+[![lifecycle:
 stable](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://lifecycle.r-lib.org/articles/stages.html#stable)
 [![License:
 MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://choosealicense.com/licenses/mit/)
