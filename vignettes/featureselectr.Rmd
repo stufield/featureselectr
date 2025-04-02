@@ -91,10 +91,10 @@ of **5** fold cross-validation.
 
 Higher folds might generate slightly different results, but a **20-25%**
 hold-out is fairly common. Of course, more runs (repeats) will take longer.
-There are `r length(attributes(data)$sig_feats$class)` features that should
+There are `r length(attributes(simdata)$sig_feats$class)` features that should
 be significant in a binary classification context. They are identified in
 the attributes of the object itself. We will restrict the search to the
-top **15** steps (there are
+top **10** steps (there are
 `r length(helpr:::get_analytes(simdata))`
 total features; thus approx. 35 false positives).
 
