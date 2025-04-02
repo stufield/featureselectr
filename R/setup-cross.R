@@ -3,8 +3,7 @@
 #' This S3 method sets up the internal the *non-stratified* cross-validation.
 #'   Since these are mostly internal methods, documentation is minimal.
 #'
-#' @param x A `feature_select` class object, if [plot_cross_strat()],
-#'  an object with stratification.
+#' @param x A `feature_select` class object.
 #'
 #' @author Stu Field
 #'
@@ -153,7 +152,7 @@ setup_cross_strat.feature_select <- function(x) {
 #' @importFrom ggplot2 theme element_blank ggtitle labs
 #'
 #' @export
-plot_cross_strat <- function(x) {
+plot_cross <- function(x) {
   resp <- x$model_type$response
   class_vec <- x$data[[resp]]
   tab  <- table(x$data[[resp]])
@@ -206,8 +205,7 @@ plot_cross_strat <- function(x) {
         legend.title = element_blank(),
         axis.title.x = element_blank()
         ) +
-      ggtitle(sprintf("Prevalence of '%s' in Stratified Cross-Folds",
-                      base_class)) +
+      ggtitle(sprintf("Prevalence of '%s' in Cross-Folds", base_class)) +
       labs(y = sprintf("Prevalence: %s", base_class)) +
       geom_hline(yintercept = class_prev, linetype = "longdash",
                  color = col_palette$magenta, alpha = 0.75) +

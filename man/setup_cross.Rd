@@ -3,18 +3,17 @@
 \name{setup_cross}
 \alias{setup_cross}
 \alias{setup_cross_strat}
-\alias{plot_cross_strat}
+\alias{plot_cross}
 \title{Set up Cross-Validation Folds}
 \usage{
 setup_cross(x)
 
 setup_cross_strat(x)
 
-plot_cross_strat(x)
+plot_cross(x)
 }
 \arguments{
-\item{x}{A \code{feature_select} class object, if \code{\link[=plot_cross_strat]{plot_cross_strat()}},
-an object with stratification.}
+\item{x}{A \code{feature_select} class object.}
 }
 \description{
 This S3 method sets up the internal the \emph{non-stratified} cross-validation.
