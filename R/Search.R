@@ -78,16 +78,15 @@
 #'                          strat_column = "class_response",
 #'                          runs = 4L, folds = 3L, random_seed = 99L)
 #'
-#' FSresult <- Search(mcp)
-#' FSresult
+#' fs <- Search(mcp)
+#' fs
 #'
-#' plot(FSresult)
+#' plot(fs)
 #'
-#' # Using parallel processing
-#' # this should be ~4x faster than above
+#' # Using parallel processing:
+#' #   should be ~4x faster than above
 #' \dontrun{
-#'   FSresult <- Search(mcp, num_cores = 4L)
-#'   FSresult
+#'   fs <- Search(mcp, num_cores = 4L)
 #' }
 #' @export
 Search <- function(x, num_cores) UseMethod("Search")
@@ -120,9 +119,10 @@ Search.feature_select <- function(x, num_cores = 1L) {
     )
   }
 
-  signal_rule(line_col = "green", lty = "double")
-  add_style$red("---Starting the Feature Selection algorithm") |>
-    writeLines()
+  signal_info(
+    add_style$blue("Starting the Feature Selection algorithm ...") |>
+      add_style$bold()
+  )
 
   num_cores <- parallel_setup(num_cores)
 

@@ -87,16 +87,15 @@ mcp <- feature_selection(data,
                          strat_column = "class_response",
                          runs = 4L, folds = 3L, random_seed = 99L)
 
-FSresult <- Search(mcp)
-FSresult
+fs <- Search(mcp)
+fs
 
-plot(FSresult)
+plot(fs)
 
-# Using parallel processing
-# this should be ~4x faster than above
+# Using parallel processing:
+#   should be ~4x faster than above
 \dontrun{
-  FSresult <- Search(mcp, num_cores = 4L)
-  FSresult
+  fs <- Search(mcp, num_cores = 4L)
 }
 }
 \seealso{
