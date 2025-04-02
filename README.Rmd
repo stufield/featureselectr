@@ -12,37 +12,30 @@ knitr::opts_chunk$set(
   comment = "#>",
   fig.path = "man/figures/README-"
 )
-cvr <- covr::percent_coverage(covr::package_coverage())
-coverage <- sprintf(
-  "https://img.shields.io/badge/coverage-%0.1f%%25-%s.svg?style=flat&logo=codecov",
-  cvr, ifelse(cvr > 75, "success", ifelse(cvr > 50, "yellow", "critical"))
-)
-#lints <- length(lintr::lint_dir("R", show_progress = FALSE))
-lints <- 0
-lintage <- sprintf(
-  "https://img.shields.io/badge/lints-%s-%s.svg?style=flat&logo=gitlab",
-  lints, ifelse(lints < 25, "success", ifelse(lints < 50, "yellow", "critical"))
-)
+ver <- desc::desc_get_version(".")
+ver <- paste0("https://img.shields.io/badge/Version-", ver,
+              "-success.svg?style=flat&logo=github")
 ```
 
 
 # The `featureselectr` package
 
 <!-- badges: start -->
-[![build](https://img.shields.io/badge/build-passing-success.svg?logo=travis)](http://bitbucket.sladmin.com/projects/ISV/repos/somafeatureselect/commits)
-![coverage](`r coverage`)
-![lint](`r lintage`)
-[![pkgdown](https://img.shields.io/badge/pkgdown-_-critical.svg?logo=semantic-web&logoColor=red)](https://bitbucket.sladmin.com/pages/ISV/somafeatureselect/bb-pkgdown/browse/index.html)
-[![License: GPL-3](https://img.shields.io/badge/License-GPL3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+![GitHub version](`r ver`)
+[![CRAN status](http://www.r-pkg.org/badges/version/featureselectr)](https://cran.r-project.org/package=featureselectr)
+[![R-CMD-check](https://github.com/stufield/featureselectr/workflows/R-CMD-check/badge.svg)](https://github.com/stufield/featureselectr/actions)
+[![](https://cranlogs.r-pkg.org/badges/grand-total/featureselectr)](https://cran.r-project.org/package=featureselectr)
+[![Codecov test coverage](https://codecov.io/gh/stufield/featureselectr/branch/main/graph/badge.svg)](https://app.codecov.io/gh/stufield/featureselectr?branch=main)
+[![lifecycle: stable](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://lifecycle.r-lib.org/articles/stages.html#stable)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://choosealicense.com/licenses/mit/)
 <!-- badges: end -->
-
 
 
 
 ## Overview
 
-The feature selection package contains functionality designed for 
-feature selection, model building, and/or classifier development.
+The feature selection package contains functionality designed for feature
+selection, model building, and/or classifier development.
 
 
 ------------------
@@ -50,14 +43,12 @@ feature selection, model building, and/or classifier development.
 
 ## Installation
 
-It is possible to install a specific version of `featureselectr` 
-(i.e. one differing from your current installation of 
-[SLIDE](http://bitbucket.sladmin.com/projects/BFX/repos/slide/browse)),
-but it comes with a possible trade-off in the reproducibility of your work! 
+```{r install-github, eval = FALSE}
+# current dev version
+remotes::install_github("stufield/featureselectr")
 
-
-```{r install-git, eval = FALSE}
-remotes::install_github("featureselectr")
+# or a specific version
+remotes::install_github("stufield/featureselectr@v0.0.1")
 ```
 
 
@@ -80,15 +71,7 @@ library(help = featureselectr)
 ```
 
 
-## Notes about the package
+## Examples
 
-* The `featureselectr` package is easy to use.
-* There is some cool stuff we can do.
-
-
-
-
--------------
-
-#### LICENSE
+See the `vignette("featureselectr")` for usage examples.
 

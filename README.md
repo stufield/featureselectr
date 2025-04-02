@@ -5,12 +5,18 @@
 
 <!-- badges: start -->
 
-[![build](https://img.shields.io/badge/build-passing-success.svg?logo=travis)](http://bitbucket.sladmin.com/projects/ISV/repos/somafeatureselect/commits)
-![coverage](https://img.shields.io/badge/coverage-5.2%25-critical.svg?style=flat&logo=codecov)
-![lint](https://img.shields.io/badge/lints-0-success.svg?style=flat&logo=gitlab)
-[![pkgdown](https://img.shields.io/badge/pkgdown-_-critical.svg?logo=semantic-web&logoColor=red)](https://bitbucket.sladmin.com/pages/ISV/somafeatureselect/bb-pkgdown/browse/index.html)
+![GitHub
+version](https://img.shields.io/badge/Version-0.0.1.9000-success.svg?style=flat&logo=github)
+[![CRAN
+status](http://www.r-pkg.org/badges/version/featureselectr)](https://cran.r-project.org/package=featureselectr)
+[![R-CMD-check](https://github.com/stufield/featureselectr/workflows/R-CMD-check/badge.svg)](https://github.com/stufield/featureselectr/actions)
+[![](https://cranlogs.r-pkg.org/badges/grand-total/featureselectr)](https://cran.r-project.org/package=featureselectr)
+[![Codecov test
+coverage](https://codecov.io/gh/stufield/featureselectr/branch/main/graph/badge.svg)](https://app.codecov.io/gh/stufield/featureselectr?branch=main)
+[![Lifecycle:
+stable](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://lifecycle.r-lib.org/articles/stages.html#stable)
 [![License:
-GPL-3](https://img.shields.io/badge/License-GPL3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://choosealicense.com/licenses/mit/)
 <!-- badges: end -->
 
 ## Overview
@@ -18,21 +24,19 @@ GPL-3](https://img.shields.io/badge/License-GPL3-blue.svg)](https://www.gnu.org/
 The feature selection package contains functionality designed for
 feature selection, model building, and/or classifier development.
 
------
+------------------------------------------------------------------------
 
 ## Installation
 
-It is possible to install a specific version of `featureselectr`
-(i.e. one differing from your current installation of
-[SLIDE](http://bitbucket.sladmin.com/projects/BFX/repos/slide/browse)),
-but it comes with a possible trade-off in the reproducibility of your
-work\!
-
 ``` r
-remotes::install_github("featureselectr")
+# current dev version
+remotes::install_github("stufield/featureselectr")
+
+# or a specific version
+remotes::install_github("stufield/featureselectr@v0.0.1")
 ```
 
------
+------------------------------------------------------------------------
 
 ## Usage
 
@@ -48,11 +52,6 @@ library(featureselectr)
 library(help = featureselectr)
 ```
 
-## Notes about the package
+## Examples
 
-  - The `featureselectr` package is easy to use.
-  - There is some cool stuff we can do.
-
------
-
-#### LICENSE
+See the `vignette("featureselectr")` for usage examples.
