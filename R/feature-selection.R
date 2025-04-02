@@ -111,8 +111,22 @@ feature_selection <- function(data, candidate_features, model_type,
                               strat_column = NULL, random_seed = 101L) {
 
   # logic to ensure compatibility among model_type,
-  # search_type, and cost selections should go here;
-  # this could get messy; need to think about how best to accomplish
+  #   search_type, and cost selections should go here;
+  #   this could get messy (need to think about best path fwd)
+  stopifnot(
+    "Use `search_type_*()` to specify the search_type parameter." =
+      inherits(search_type, c("fs_forward_model", "fs_backward_model")),
+    "Use `model_type_*()` to specify the mode_type parameter." =
+      inherits(model_type, c("fs_lr", "fs_nb", "fs_lm"))
+  )
+
+  if ( !model_type$response %in% names(data) ) {
+    stop("The column ",
+         value(model_type$response),
+         " is not in `names(data)`.\n",
+         "Please check the `model_type_*()` specification.",
+         call. = FALSE)
+  }
 
   if ( !inherits(data, "data.frame") ) {
     stop(
@@ -135,7 +149,7 @@ feature_selection <- function(data, candidate_features, model_type,
                      R2   = cost_rsq(),
                      MSE  = cost_mse())
 
-  # start the list
+  # create object
   fsret <- list(data = data,
                 candidate_features = candidate_features,
                 model_type = model_type,

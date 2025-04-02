@@ -37,6 +37,10 @@ NULL
 #' @export
 search_type_forward_model <- function(display_name = "Forward Stepwise Model Search",
                                       max_steps    = 20L) {
+  stopifnot(
+    "`display_name ` must be a character." = is.character(display_name),
+    "`max_steps` must be an integer."      = is.integer(max_steps)
+  )
   as.list(environment()) |> add_class("fs_forward_model")
 }
 

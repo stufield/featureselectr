@@ -4,6 +4,9 @@
 #'
 #' @export
 search_type_backward_model <- function(display_name = "Backward Stepwise Model Search") {
+  stopifnot(
+    "`display_name ` must be a character." = is.character(display_name)
+  )
   as.list(environment()) |> add_class("fs_backward_model")
 }
 
