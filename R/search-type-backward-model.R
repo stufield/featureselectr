@@ -40,64 +40,56 @@ Search.fs_backward_model <- function(x, ...) {
 
     rem_candidates <- setdiff(mod_candidate_features, deleted_candidates)
 
-    # reformulated search as a loop to facilitate a full model step
-    candidate_models <- list()
+    # reformulated search as a loop (compared to forward-lapply
+    #   to facilitate a full model step
+    candidate_costs <- list()
 
     for ( cnd in rem_candidates ) {
       rem_minus_one <- setdiff(rem_candidates, cnd)
       frmla <- create_form(x$model_type$response, paste(rem_minus_one))
       run_res <- parallel::mclapply(seq_len(x$cross_val$runs), function(r) {
-                                    run <- sprintf("Run%d", r)
-                                    x$cross_val$current_run <- r
-                                    lapply(seq_len(x$cross_val$folds), function(f) {
-                                           x$cross_val$current_fold <- f
-                                           fold <- sprintf("Fold%d", f)
-                                           mod  <- fitmodel(x, frmla = frmla)
-                                           cst  <- cost(mod)
-                                           list(cost = cst, model = NULL)
-                        }) |>
-              setNames(sprintf("Fold%s", 1:x$cross_val$folds))
+                   x$cross_val$current_run <- r
+                   lapply(seq_len(x$cross_val$folds), function(f) {
+                          x$cross_val$current_fold <- f
+                          mod <- fitmodel(x, frmla = frmla)
+                          cost(mod)
+                 }) |>
+              setNames(sprintf("Fold%s", seq_len(x$folds)))
       }, mc.cores = cores) |>
-      setNames(sprintf("Run%s", 1:x$cross_val$runs))
+      setNames(sprintf("Run%s", seq_len(x$runs)))
 
-      candidate_models[[cnd]] <- run_res
+      candidate_costs[[cnd]] <- run_res
+
       if ( cnd == "All" ) {
         break
       }
     }
-
     # construct results table for selection of this candidate step
-    cost_table <- lapply(names(candidate_models), function(cnd) {
-                         sapply(names(candidate_models[[cnd]]), function(r) {
-                                sapply(names(candidate_models[[cnd]][[r]]), function(f) {
-                                       candidate_models[[cnd]][[r]][[f]]$cost
-                               })
-                         })
-                   }) |>
-      setNames(names(candidate_models))
+    cost_tbl <- lapply(candidate_costs, function(.cnd) {
+      vapply(.cnd, unlist, use.names = TRUE,   # passed to base::unlist
+             USE.NAMES = TRUE, FUN.VALUE = numeric(x$folds))
+    })
 
-    ci95df <- sapply(cost_table, calc_CI95) |> t() |> data.frame()
+    ci95df <- lapply(cost_tbl, calc_CI95) |> do.call(what = "rbind")
 
     # select the worst
-    if ( x$cost_fxn$maximize ) {
-       top_idx <- which.max(ci95df$mean)
-    } else {
-       top_idx <- which.min(ci95df$mean)
-    }
+    top_idx <- ifelse(x$cost_fxn$maximize,
+                      which.max(ci95df$mean),
+                      which.min(ci95df$mean))
 
-    ci95top <- ci95df[top_idx, ]      # select "top" row; 1 row df with rowname
-    new_par <- rownames(ci95top)
-    deleted_candidates <- c(deleted_candidates, new_par)
+    ci95top <- ci95df[top_idx, ]  # 1 row df with rowname
+    new_feat <- rownames(ci95top)
+    deleted_candidates <- c(deleted_candidates, new_feat)
 
     search_progress <- rbind(search_progress,
                              data.frame(step = step,
-                                        elim_features = new_par,
+                                        elim_features   = new_feat,
                                         cost_lower_ci95 = ci95top$lower,
-                                        cost_mean = ci95top$mean,
+                                        cost_mean       = ci95top$mean,
                                         cost_upper_ci95 = ci95top$upper))
 
     step_name <- sprintf("Step_%d", step)
-    cost_tables[[step_name]] <- cost_table
+    cost_tables[[step_name]] <- cost_tbl
   }
 
   # keep results of search

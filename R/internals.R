@@ -5,10 +5,11 @@ get_run  <- function(x) paste0("Run", x$cross_val$current_run)
 get_fold <- function(x) paste0("Fold", x$cross_val$current_fold)
 
 calc_CI95 <- function(x) {
+  mu <- mean(x)
   se <- sd(x) / sqrt(length(x))
-  c(lower = (mean(x) - (1.96 * se)),
-    mean  = mean(x),
-    upper = (mean(x) + (1.96 * se)))
+  data.frame(lower = (mu - (1.96 * se)),
+             mean  = mu,
+             upper = (mu + (1.96 * se)))
 }
 
 #' Check if Search is Complete

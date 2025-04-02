@@ -61,63 +61,55 @@ Search.fs_forward_model <- function(x, ...) {
   used_candidates <- character(0)
   cost_tables     <- list()
 
-  for ( step in 1:x$search_type$max_steps ) {
+  for ( step in seq_len(x$search_type$max_steps) ) {
 
     sprintf("Step %i of %s", step, x$search_type$max_steps) |>
       signal_rule(line_col = "blue")
 
-     rem_candidates <- setdiff(x$candidate_features, used_candidates)
+     rem_candidates <- setdiff(x$candidate_features, used_candidates) |>
+       set_Names()
 
-     candidate_models <- lapply(rem_candidates, function(cnd) {
+     candidate_costs <- lapply(rem_candidates, function(cnd) {
           frmla <- create_form(x$model_type$response,
                                paste(c(used_candidates, cnd)))
           parallel::mclapply(seq_len(x$cross_val$runs), function(r) {
-                    run <- sprintf("Run%d", r)
                     x$cross_val$current_run <- r
                     lapply(seq_len(x$cross_val$folds), function(f) {
                            x$cross_val$current_fold <- f
-                           fold <- sprintf("Fold%d", f)
-                           mod  <- fitmodel(x, frmla = frmla)
-                           cst  <- cost(mod)
-                           list(cost = cst, model = NULL)
+                           mod <- fitmodel(x, frmla = frmla)
+                           cost(mod)
                          }) |>
-             setNames(sprintf("Fold%s", 1:x$cross_val$folds))
+             setNames(sprintf("Fold%s", seq_len(x$folds)))
           }, mc.cores = cores) |>
-          setNames(sprintf("Run%s", 1:x$cross_val$runs))
-       }) |> setNames(rem_candidates)
+          setNames(sprintf("Run%s", seq_len(x$runs)))
+       })
 
      # construct results table for selection of this candidate step
-     cost_table <- lapply(names(candidate_models), function(cnd) {
-                          sapply(names(candidate_models[[cnd]]), function(r) {
-                                 sapply(names(candidate_models[[cnd]][[r]]), function(f) {
-                                        candidate_models[[cnd]][[r]][[f]]$cost
-                                })
-                          })
-                    }) |>
-       setNames(names(candidate_models))
+     cost_tbl <- lapply(candidate_costs, function(.cnd) {
+       vapply(.cnd, unlist, use.names = TRUE,   # passed to base::unlist
+              USE.NAMES = TRUE, FUN.VALUE = numeric(x$folds))
+     })
 
-     ci95df <- sapply(cost_table, calc_CI95) |> t() |> data.frame()
+     ci95df <- lapply(cost_tbl, calc_CI95) |> do.call(what = "rbind")
 
      # select the best
-     if ( x$cost_fxn$maximize ) {
-       top_idx <- which.max(ci95df$mean)
-     } else {
-       top_idx <- which.min(ci95df$mean)
-     }
+     top_idx <- ifelse(x$cost_fxn$maximize,
+                       which.max(ci95df$mean),
+                       which.min(ci95df$mean))
 
-     ci95top <- ci95df[top_idx, ]      # select "top" row; 1 row df with rowname
-     new_par <- rownames(ci95top)
-     used_candidates <- c(used_candidates, new_par)
+     ci95top <- ci95df[top_idx, ] # 1 row df
+     new_feat <- rownames(ci95top)
+     used_candidates <- c(used_candidates, new_feat)
 
      search_progress <- rbind(search_progress,
                               data.frame(step = step,
-                                         cumul_features = new_par,
+                                         cumul_features  = new_feat,
                                          cost_lower_ci95 = ci95top$lower,
-                                         cost_mean = ci95top$mean,
+                                         cost_mean       = ci95top$mean,
                                          cost_upper_ci95 = ci95top$upper))
 
      step_name <- sprintf("Step_%d", step)
-     cost_tables[[step_name]] <- cost_table
+     cost_tables[[step_name]] <- cost_tbl
   }
 
   # keep results of search
