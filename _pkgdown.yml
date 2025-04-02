@@ -1,29 +1,36 @@
-url: https://confluence.sladmin.com/display/BITOOLS/somaverse
-
-home:
-  strip_header: true
-  links:
-  - text: Bitbucket
-    href: http://bitbucket.sladmin.com/projects/SV/repos/somafeatureselect/browse
-  - text: Report a bug
-    href: bitools@somalogic.com
-  - text: Learn more about us
-    href: http://www.somalogic.com
-
-template:
-  params:
-    docsearch:
-      api_key: fbd8d79ed49f21fc9ca7b2cf601a3f5b
-      index_name: pkgdown
-    ganalytics: UA-115082821-1
-
-authors:
-  "Stu Field":
-    href: https://github.com/stufield
+url: https://stufield.github.io/featureselectr/
 
 development:
   mode: auto
-  version_label: default   # grey
+
+authors:
+  Stu Field:
+    href: https://github.com/stufield
+
+home:
+  links:
+  - text: Learn more about me
+    href: https://github.com/stufield
+
+template:
+  bootstrap: 5
+  package: tidytemplate
+  bslib:
+    bg: "#202123"      # dark theme
+    fg: "#B8BCC2"      # dark theme
+    primary: "#0054AD"
+    border-radius: 0.5rem
+    btn-border-radius: 0.25rem
+    base_font: {google: "Roboto"}
+
+navbar:
+  structure:
+    left: [intro, reference, articles, workflows, news]
+    right: [search, github]
+  components:
+    intro:
+      text: Get Started
+      href: articles/featureselectr.html
 
 articles:
   - title: Getting Started
@@ -33,29 +40,32 @@ articles:
 
 reference:
   - title: Feature Selection
-    desc:  Perform feature selection.
+    desc: >
+      Perform feature selection.
     contents:
-    - featureSelection
     - Search
+    - feature_selection
 
   - title: Search Types
-    desc:  The various search types.
+    desc: >
+      The two primary search types (forward and backward).
     contents:
-    - searchType
+    - search_type
 
   - title: Model Types
-    desc: The various model types.
+    desc: >
+      The three primary model types.
     contents:
-    - starts_with("modelType_")
+    - model_type
 
-  - title: Helper functions
+  - title: Exported Utilities
     desc: >
       Miscellaneous functions typically not called directly by the user.
     contents:
     - cost
     - fitmodel
-    - getFSmarkers
-    - setupCrossVal
+    - contains("cross")
+    - get_fs_features
 
 news:
   - one_page: true
