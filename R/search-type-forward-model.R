@@ -116,10 +116,6 @@ Search.fs_forward_model <- function(x, ...) {
   x$cross_val$search_progress <- search_progress
   x$cross_val$cost_tables     <- cost_tables
 
-  # update iterators
-  x$cross_val$current_run  <- x$runs
-  x$cross_val$current_fold <- x$folds
-
   invisible(x)
 }
 

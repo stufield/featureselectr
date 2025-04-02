@@ -164,9 +164,8 @@ feature_selection <- function(data, candidate_features, model_type,
   fsret <- add_class(fsret, class_hierarchy)
 
   # build the cross-validation folds/bootstrap sets here so
-  # that they are always consistent
-  # there should be n-repeats or runs of k-fold cross validation
-  # runs and fold_cross_val parameters
+  #   that they are always consistent
+  #   there should be n-repeats (runs) of k-fold cross validation
   fsret$cross_val$runs       <- runs
   fsret$cross_val$folds      <- folds
   fsret$cross_val$stratified <- stratified
@@ -177,9 +176,7 @@ feature_selection <- function(data, candidate_features, model_type,
     fsret <- setup_cross(fsret)
   }
 
-  fsret$cross_val$current_run  <- 0L
-  fsret$cross_val$current_fold <- 0L
-  fsret$search_complete        <- FALSE
+  fsret$search_complete <- FALSE
   fsret$call <- match.call(expand.dots = TRUE)
   fsret
 }

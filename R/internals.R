@@ -1,8 +1,20 @@
 # Internal utilities
 
-get_run  <- function(x) paste0("Run", x$cross_val$current_run)
+get_run  <- function(x) {
+  run <- x$cross_val$current_run
+  if ( is.null(run) ) {
+    stop("Invalid current* run* in `feature_select` object.", call. = FALSE)
+  }
+  paste0("Run", run)
+}
 
-get_fold <- function(x) paste0("Fold", x$cross_val$current_fold)
+get_fold <- function(x) {
+  fold <- x$cross_val$current_fold
+  if ( is.null(fold) ) {
+    stop("Invalid current *fold* in `feature_select` object.", call. = FALSE)
+  }
+  paste0("Fold", fold)
+}
 
 calc_CI95 <- function(x) {
   mu <- mean(x)
@@ -24,15 +36,15 @@ check_complete <- function(x) {
     paste0("\033[90m", encodeString(x, quote = "`"), "\033[39m")
   }
 
-  if ( !x$search_complete &&
-      (x$cross_val$current_run + x$cross_val$current_fold) == 0 ) {
-    signal_oops("Feature selection not yet been performed on this object.")
+  if ( !x$search_complete ) {
     obj <- as.character(sys.calls()[[1L]][2L])
-    signal_info(
-      paste0("Nothing to do here. Perhaps run ",
-             .code(sprintf("Search(%s)", obj)), "?")
+    stop(
+      signal_oops("Feature selection not yet been performed on this object."),
+      signal_info(
+        paste0("Nothing to do here. Perhaps run ",
+               .code(sprintf("Search(%s)", obj)), "?")
+      )
     )
-    stop(NULL, call. = FALSE)
   }
 }
 
