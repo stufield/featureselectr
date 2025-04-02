@@ -31,9 +31,6 @@
 #'
 #' @param folds `integer(1)`. How many fold cross-validation to perform.
 #'
-#' @param keep_models `logical(1)`. Should model objects be retained in the
-#'   cross validation sub-list? This eats up memory (`default = FALSE`).
-#'
 #' @param bootstrap `logical(1)`. Should data be bootstrapped rather
 #'   than set up in cross-validation folds? The result is multiple runs
 #'   (defined by runs) with 1 Fold each. The full data set will be sampled
@@ -64,7 +61,6 @@
 #'     appropriate class for the desired object cost function.}
 #'   \item{runs}{The number of runs.}
 #'   \item{folds}{The number of folds.}
-#'   \item{keep_models}{If intermediate cross-validation models are kept?}
 #'   \item{random_seed}{The random seed used}
 #'   \item{cross_val}{A list containing the training and test indices of the
 #'     various cross validation folds.}
@@ -88,7 +84,7 @@
 #'
 #' mt <- model_type_lr(response = "class_response")
 #' cf <- "sens"
-#' sm <- search_type_forward_model(15L, display_name = "FeatureSelection Plot")
+#' sm <- search_type_forward_model(15L, display_name = "Feature Selection Algorithm")
 #' ft <- helpr:::get_analytes(data)   # select candidate features
 #' fs <- feature_selection(data, candidate_features = ft,
 #'                         model_type = mt, search_type = sm, cost = cf,
@@ -111,9 +107,8 @@
 feature_selection <- function(data, candidate_features, model_type,
                               search_type, runs = 1L, folds = 1L,
                               cost = c("AUC", "R2", "CCC", "MSE", "sens", "spec"),
-                              keep_models = FALSE, bootstrap = FALSE,
-                              stratified = FALSE, strat_column = NULL,
-                              random_seed = 101L) {
+                              bootstrap = FALSE, stratified = FALSE,
+                              strat_column = NULL, random_seed = 101L) {
 
   # logic to ensure compatibility among model_type,
   # search_type, and cost selections should go here;
@@ -149,7 +144,6 @@ feature_selection <- function(data, candidate_features, model_type,
                 cost_fxn = cost_fxn,
                 runs = runs,
                 folds = folds,
-                keep_models = keep_models,
                 random_seed = random_seed,
                 cross_val = list())
 
@@ -227,7 +221,6 @@ print.feature_select <- function(x, ...) {
     "Search Type",
     "Cost Function",
     "Random Seed",
-    "Keep Models",
     "Display Name",
     "Search Complete"
   ) |> pad(25)
@@ -242,7 +235,6 @@ print.feature_select <- function(x, ...) {
     class(x$search_type)[1L],
     x$cost,
     x$random_seed,
-    x$keep_models,
     x$search_type$display_name,
     x$search_complete
   )
@@ -268,7 +260,6 @@ is_feature_select <- function(x) {
                  "cross_val",
                  "cost",
                  "call",
-                 "keep_models",
                  "search_type",
                  "cost_fxn",
                  "runs",

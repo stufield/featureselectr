@@ -15,7 +15,6 @@ feature_selection(
   runs = 1L,
   folds = 1L,
   cost = c("AUC", "R2", "CCC", "MSE", "sens", "spec"),
-  keep_models = FALSE,
   bootstrap = FALSE,
   stratified = FALSE,
   strat_column = NULL,
@@ -55,9 +54,6 @@ function. One of:
 \item{\code{sens} or \code{spec}}{Sensitivity + Specificity}
 }}
 
-\item{keep_models}{\code{logical(1)}. Should model objects be retained in the
-cross validation sub-list? This eats up memory (\code{default = FALSE}).}
-
 \item{bootstrap}{\code{logical(1)}. Should data be bootstrapped rather
 than set up in cross-validation folds? The result is multiple runs
 (defined by runs) with 1 Fold each. The full data set will be sampled
@@ -92,7 +88,6 @@ appropriate class for the desired search type.}
 appropriate class for the desired object cost function.}
 \item{runs}{The number of runs.}
 \item{folds}{The number of folds.}
-\item{keep_models}{If intermediate cross-validation models are kept?}
 \item{random_seed}{The random seed used}
 \item{cross_val}{A list containing the training and test indices of the
 various cross validation folds.}
@@ -120,7 +115,7 @@ data$class_response <- factor(data$class_response)
 
 mt <- model_type_lr(response = "class_response")
 cf <- "sens"
-sm <- search_type_forward_model(15L, display_name = "FeatureSelection Plot")
+sm <- search_type_forward_model(15L, display_name = "Feature Selection Algorithm")
 ft <- helpr:::get_analytes(data)   # select candidate features
 fs <- feature_selection(data, candidate_features = ft,
                         model_type = mt, search_type = sm, cost = cf,

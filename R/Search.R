@@ -44,7 +44,6 @@
 #'     appropriate class for the desired object cost function.}
 #'   \item{runs}{The number of runs.}
 #'   \item{folds}{The number of folds.}
-#'   \item{keep_models}{If intermediate cross-validation models are kept?}
 #'   \item{random_seed}{The random seed used}
 #'   \item{cross_val}{A list containing the training and test indices of the
 #'     various cross validation folds.}
@@ -69,7 +68,7 @@
 #' data$class_response <- as.factor(data$class_response)
 #' mt  <- model_type_lr(response = "class_response")
 #' cst <- "AUC"
-#' sm  <- search_type_forward_model(10L, display_name = "FeatureSelection Plot")
+#' sm  <- search_type_forward_model(10L, display_name = "Feature Selection Algorithm")
 #' ft  <- head(helpr:::get_analytes(data))  # select candidate features
 #' mcp <- feature_selection(data,
 #'                          candidate_features = ft,
