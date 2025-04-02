@@ -36,7 +36,7 @@ Search.fs_backward_model <- function(x, ...) {
   for ( step in seq_along(x$candidate_features) ) {
 
     sprintf("Step %i of %i", step, length(x$candidate_features)) |>
-      signal_rule(line_col = "blue")
+      signal_info()
 
     rem_candidates <- setdiff(mod_candidate_features, deleted_candidates)
 
