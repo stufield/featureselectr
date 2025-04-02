@@ -13,7 +13,7 @@ Authors@R: c(
            role = "aut",
            email = "rkdelisle@gmail.com")
     )
-Description: The feature selection package contains
+Description: An object oriented package containing
     functionality designed for feature selection, model building,
     and/or classifier development.
 License: MIT + file LICENSE
@@ -40,5 +40,7 @@ VignetteBuilder:
 Encoding: UTF-8
 Language: en-US
 LazyLoad: true
+Config/testthat/edition: 3
+Config/Needs/website: tidyverse/tidytemplate
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.1

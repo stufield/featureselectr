@@ -6,7 +6,7 @@
 \alias{featureselectr-package}
 \title{featureselectr: Perform Feature Selection/Optimization}
 \description{
-The feature selection package contains functionality designed for feature selection, model building, and/or classifier development.
+An object oriented package containing functionality designed for feature selection, model building, and/or classifier development.
 }
 \seealso{
 Useful links:
