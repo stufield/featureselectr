@@ -73,12 +73,11 @@ Search.fs_forward_model <- function(x, ...) {
           frmla <- create_form(x$model_type$response,
                                paste(c(used_candidates, cnd)))
           parallel::mclapply(seq_len(x$cross_val$runs), function(r) {
-                    x$cross_val$current_run <- r
-                    lapply(seq_len(x$cross_val$folds), function(f) {
-                           x$cross_val$current_fold <- f
-                           mod <- fitmodel(x, frmla = frmla)
-                           .cost(mod)
-                         }) |>
+                      x$cross_val$current_run <- r  # tmp element for: .cost .fitmodel
+                      lapply(seq_len(x$cross_val$folds), function(f) {
+                             x$cross_val$current_fold <- f
+                             .cost(.fitmodel(x, frmla = frmla))
+                      }) |>
              setNames(sprintf("Fold%s", seq_len(x$folds)))
           }, mc.cores = cores) |>
           setNames(sprintf("Run%s", seq_len(x$runs)))

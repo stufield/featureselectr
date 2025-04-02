@@ -62,7 +62,6 @@ reference:
     desc: >
       Miscellaneous functions typically not called directly by the user.
     contents:
-    - fitmodel
     - contains("cross")
     - get_fs_features
 

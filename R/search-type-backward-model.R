@@ -51,8 +51,7 @@ Search.fs_backward_model <- function(x, ...) {
                    x$cross_val$current_run <- r
                    lapply(seq_len(x$cross_val$folds), function(f) {
                           x$cross_val$current_fold <- f
-                          mod <- fitmodel(x, frmla = frmla)
-                          .cost(mod)
+                          .cost(.fitmodel(x, frmla = frmla))
                  }) |>
               setNames(sprintf("Fold%s", seq_len(x$folds)))
       }, mc.cores = cores) |>
