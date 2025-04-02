@@ -44,7 +44,9 @@ attributes (class) to reflect the appropriate search values.
 }}
 \examples{
 search_type_forward_model()                    # the default = 20L
+
 search_type_forward_model(max_steps = 15L)     # set to 15
+
 search_type_forward_model("My Forward Search") # set title
 }
 \author{

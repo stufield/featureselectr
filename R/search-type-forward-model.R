@@ -24,7 +24,9 @@
 #'
 #' @examples
 #' search_type_forward_model()                    # the default = 20L
+#'
 #' search_type_forward_model(max_steps = 15L)     # set to 15
+#'
 #' search_type_forward_model("My Forward Search") # set title
 NULL
 
@@ -38,6 +40,16 @@ search_type_forward_model <- function(display_name = "Forward Stepwise Model Sea
   as.list(environment()) |> add_class("fs_forward_model")
 }
 
+#' @noRd
+#' @export
+print.fs_forward_model <- function(x, ...) {
+  signal_rule("Forward Search")
+  liter(x, .f = function(.x, .y) {
+    signal_todo(paste0(pad(.y, 14L), value(.x)))
+    })
+  signal_rule()
+  invisible(x)
+}
 
 #' S3 Search method for forward searches
 #'

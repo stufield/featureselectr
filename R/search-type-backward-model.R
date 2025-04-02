@@ -7,6 +7,17 @@ search_type_backward_model <- function(display_name = "Backward Stepwise Model S
   as.list(environment()) |> add_class("fs_backward_model")
 }
 
+#' @noRd
+#' @export
+print.fs_backward_model <- function(x, ...) {
+  signal_rule("Backward Search")
+  liter(x, .f = function(.x, .y) {
+    signal_todo(paste0(pad(.y, 14L), value(.x)))
+    })
+  signal_rule()
+  invisible(x)
+}
+
 #' S3 Search method for backward searches
 #'
 #' @importFrom stats as.formula setNames
