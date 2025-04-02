@@ -22,7 +22,6 @@
 NULL
 
 
-
 #' Model Type Logistic Regression
 #'
 #' @rdname model_type
@@ -57,4 +56,37 @@ model_type_nb <- function(response = "Response") {
 #' @export
 model_type_lm <- function(response = "Response") {
   as.list(environment()) |> add_class("fs_lm")
+}
+
+#' @noRd
+#' @export
+print.fs_lr <- function(x, ...) {
+  signal_rule("Model: logistic regression")
+  liter(x, .f = function(.x, .y) {
+    signal_todo(paste0(pad(.y, 12L), value(.x)))
+    })
+  signal_rule()
+  invisible(x)
+}
+
+#' @noRd
+#' @export
+print.fs_lm <- function(x, ...) {
+  signal_rule("Model: linear regression")
+  liter(x, .f = function(.x, .y) {
+    signal_todo(paste0(pad(.y, 12L), value(.x)))
+    })
+  signal_rule()
+  invisible(x)
+}
+
+#' @noRd
+#' @export
+print.fs_nb <- function(x, ...) {
+  signal_rule("Model: naive Bayes")
+  liter(x, .f = function(.x, .y) {
+    signal_todo(paste0(pad(.y, 12L), value(.x)))
+    })
+  signal_rule()
+  invisible(x)
 }
