@@ -64,7 +64,7 @@ Search.fs_forward_model <- function(x, ...) {
   for ( step in seq_len(x$search_type$max_steps) ) {
 
     sprintf("Step %i of %s", step, x$search_type$max_steps) |>
-      signal_rule(line_col = "blue")
+      signal_info()
 
      rem_candidates <- setdiff(x$candidate_features, used_candidates) |>
        set_Names()
