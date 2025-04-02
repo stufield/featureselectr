@@ -1,4 +1,4 @@
-#' Create Model Type Function Definitions
+#' Create Model Type Object Definitions
 #'
 #' Declares a model type the Feature Selection framework. There are
 #'   currently 3 model type options:

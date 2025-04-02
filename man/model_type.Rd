@@ -5,7 +5,7 @@
 \alias{model_type_lr}
 \alias{model_type_nb}
 \alias{model_type_lm}
-\title{Create Model Type Function Definitions}
+\title{Create Model Type Object Definitions}
 \usage{
 model_type_lr(response = "Response")
 

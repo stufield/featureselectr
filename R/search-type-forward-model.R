@@ -1,10 +1,10 @@
-#' Create Model Search Definitions for S3 Methods
+#' Create Model Search Object Definitions
 #'
 #' Functions for creating model type definitions for objects in the Feature
 #'   Selection framework. Current available search types/methods are:
 #'   \itemize{
-#'     \item forward stepwise model
-#'     \item backward stepwise model
+#'     \item forward step-wise model
+#'     \item backward step-wise model
 #'   }
 #'   This information is called within the object creation to modify the its
 #'   attributes (class) to reflect the appropriate search values.
@@ -27,7 +27,7 @@
 #'
 #' search_type_forward_model(max_steps = 15L)     # set to 15
 #'
-#' search_type_forward_model("My Forward Search") # set title
+#' search_type_forward_model("My Forward Search") # set a display title
 NULL
 
 
