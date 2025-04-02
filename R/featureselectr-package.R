@@ -18,6 +18,11 @@ NULL
   register_s3_method("featureselectr", ".stripLMC", "lm")
   register_s3_method("featureselectr", ".fit_nb", "default")
   register_s3_method("featureselectr", ".fit_nb", "formula")
+  register_s3_method("featureselectr", ".cost", "fs_auc")
+  register_s3_method("featureselectr", ".cost", "fs_ccc")
+  register_s3_method("featureselectr", ".cost", "fs_sens_spec")
+  register_s3_method("featureselectr", ".cost", "fs_mse")
+  register_s3_method("featureselectr", ".cost", "fs_r2")
 }
 
 
