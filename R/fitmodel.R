@@ -6,12 +6,12 @@
 #'   This functionality is performed internally within the feature selection
 #'   algorithm and is unlikely to require direct user calls.
 #'
-#' The Feature Selection framework provides for generic model types to be
+#' The feature selection framework provides for generic model types to be
 #'   defined. This S3 method allows for model types to be fit for appropriately
 #'   structured objects. The model input object *must* be structured
 #'   appropriately. Note the inclusion of a `frmla` argument
-#'   with the desired formula. Without this and in the correct form, the method
-#'   will fail. Usually it is fine to leave the defaults in place.
+#'   with the desired formula. Without this, and in the correct form, the
+#'   method will fail. It is typically fine to leave the defaults in place.
 #'
 #' @param x A `feature_select` class object.
 #'
@@ -26,15 +26,12 @@
 #' @seealso [feature_selection()], [stats::glm()], [stats::lm()]
 #' @seealso [model_type_lr()], [model_type_lm()], [model_type_nb()]
 #'
-#' @export
-fitmodel <- function(x, ...) UseMethod("fitmodel")
-
-
-#' Fit Model Type: Logistic Regression
-#'
-#' @importFrom stats predict model.frame glm
+#' @importFrom stats lm predict model.frame glm
 #' @noRd
-fitmodel.fs_lr <- function(x, ...) {
+.fitmodel <- function(x, ...) UseMethod(".fitmodel")
+
+# Fit Model Type: Logistic Regression
+.fitmodel.fs_lr <- function(x, ...) {
 
   # ensure response is a factor
   if ( !is.factor(x$data[[x$model_type$response]]) ) {
@@ -54,17 +51,12 @@ fitmodel.fs_lr <- function(x, ...) {
   tst_p <- stats::predict(fit, x$data[tst_rows, x$candidate_features, drop = FALSE],
                           type = "response") |> unname()
 
-  x$cross_val[[run]][[fold]]$model         <- .stripLMC(fit)
-  x$cross_val[[run]][[fold]]$fitted_values <- fit$fitted.values
   x$cross_val[[run]][[fold]]$test_predicts <- tst_p
   invisible(x)
 }
 
-
-#' Fit Model Type: Naive Bayes
-#'
-#' @noRd
-fitmodel.fs_nb <- function(x, ...) {
+# Fit Model Type: Naive Bayes
+.fitmodel.fs_nb <- function(x, ...) {
 
   # ensure response is a factor
   if ( !is.factor(x$data[[x$model_type$response]]) ) {
@@ -83,17 +75,12 @@ fitmodel.fs_nb <- function(x, ...) {
   tst_p <- predict(fit, x$data[tst_rows, x$candidate_features, drop = FALSE],
                    type = "raw")
 
-  x$cross_val[[run]][[fold]]$model         <- fit
   x$cross_val[[run]][[fold]]$test_predicts <- tst_p[, fit$levels[2L]]
   invisible(x)
 }
 
-
-#' Fit Model Type: Linear Regression
-#'
-#' @importFrom stats lm predict
-#' @noRd
-fitmodel.fs_lm <- function(x, ...) {
+# Fit Model Type: Linear Regression
+.fitmodel.fs_lm <- function(x, ...) {
 
   # ensure response is continuous
   if ( !is.numeric(x$data[[x$model_type$response]]) ) {
@@ -112,8 +99,6 @@ fitmodel.fs_lm <- function(x, ...) {
   tst_p <- stats::predict(fit, x$data[tst_rows, x$candidate_features, drop = FALSE],
                           type = "response")
 
-  x$cross_val[[run]][[fold]]$model         <- .stripLMC(fit)
-  x$cross_val[[run]][[fold]]$fitted_values <- fit$fitted.values
   x$cross_val[[run]][[fold]]$test_predicts <- tst_p
   invisible(x)
 }
