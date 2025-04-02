@@ -123,14 +123,14 @@ fs <- feature_selection(data, candidate_features = ft,
 # S3 Print method
 fs
 
-# Using the S3 Update method to modify existing FS object:
-# change model type, cost function, and random seed
+# Using the S3 Update method to modify existing `feature_select` object:
+#   change model type, cost function, and random seed
 fs2 <- update(fs, model_type = model_type_nb(),
               cost = "AUC", random_seed = 99L)
 fs2
 
 # change number of runs & folds
-# requires re-calculation of cross-validation parameters
+#   requires re-calculation of cross-validation parameters
 fs3 <- update(fs, runs = 20L, folds = 10L)
 fs3
 
