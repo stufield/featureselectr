@@ -162,7 +162,7 @@ plot_cross_strat <- function(x) {
     class_prev <- prop.table(tab)[1L]
     base_class <- names(class_prev)
     cross_list <- x$cross_val[grep("Run[0-9]", names(x$cross_val))]
-    calc_prev  <- function(i) prop.table(table(class_vec[i]))[1L]
+    calc_prev  <- function(i) unname(prop.table(table(class_vec[i]))[1L])
     prevs <- lapply(cross_list, function(.run) {
       unlist(.run, recursive = FALSE, use.names = TRUE) |>
       vapply(calc_prev, NA_real_)
