@@ -10,6 +10,7 @@ vignette: >
 ```{r setup, include = FALSE}
 library(featureselectr)
 library(ggplot2)
+library(patchwork)
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment  = "#>",
@@ -204,3 +205,17 @@ fs_lr <- readRDS("fs_lr_obj.rds")   # secretly load
 plot(fs_lr)
 ```
 
+## Class Stratification Plot
+
+You can also check the class proportions (imbalances) of the cross-validation
+folds based on the proportion of binary classes (for classification
+problems).
+
+This should be most evident when comparing the folds with and
+without forced stratification. Below is a plot of the cross-validation
+folds without stratification (left) and after an update to the
+original `fs_setup` object to include stratification (right):
+
+```{r plot-cross, out.width = "100%"}
+plot_cross(fs_setup) + plot_cross(fs_update)
+```
