@@ -11,15 +11,20 @@ vignette: >
 library(featureselectr)
 library(ggplot2)
 knitr::opts_chunk$set(
-  collapse = TRUE, comment = "#>"
+  collapse = TRUE,
+  comment  = "#>",
+  fig.width  = 10,
+  fig.height = 5
 )
 simdata <- wranglr::simdata
 options(rlib_message_verbosity = "quiet")   # silence notch warning boxplots
+options(width = 70L)
 ```
 
 
-The `featureselectr` package contains functionality designed for feature 
-selection, model building, and/or classifier development.
+The `featureselectr` package is an object oriented package containing
+functionality designed for feature selection, model building,
+and/or classifier development.
 
 
 --------------
@@ -28,9 +33,10 @@ selection, model building, and/or classifier development.
 ## Two primary functions in `featureselectr`
 
 * `feature_selection()`
-  + Set up the feature selection object containing all search information.
+  + Sets up the feature selection object containing all
+    search information.
 * `Search()`
-  + Perform the actual search.
+  + Performs the actual search.
 
 
 ----------------------
@@ -48,22 +54,22 @@ search_type_backward_model()  # Backward stepwise
 
 ### Model Type Helpers
 
-There are _three_ main model types to choose from. See `?model_type`.
+There are *three* main model types to choose from. See `?model_type`.
 
 ```{r model-type}
 model_type_lr()  # Logistic regression
 
-model_type_lm()   # Linear regression
+model_type_lm()  # Linear regression
 
-model_type_nb()   # Naive Bayes
+model_type_nb()  # Naive Bayes
 ```
 
 ### Cost Helpers
 
-There are _five_ available cost functions, that the used typically does not
-need to call directly. Simply pass one of the following as a _string_ to 
-the `cost =` argument to `featureselection()`.
-See `?featureSelection` and perhaps `?cost`.
+There are *five* available cost functions, that the used typically does not
+need to call directly. Simply pass one of the following as a *string* to
+the `cost =` argument to `feature_selection()`.
+See `?feature_selection` and perhaps `?cost`.
 
 * **AUC**: Area under the curve (classification)
 * **CCC**: Concordance Correlation Coefficient (regression)
@@ -76,22 +82,24 @@ See `?featureSelection` and perhaps `?cost`.
 -----------------
 
 
-## Feature Selection for Naive Bayes
+## Feature Selection with Naive Bayes
 
 The analysis below is performed with the simulated data set from
-`wranglr::simdata`. We will fit a naive Bayes model during the
-feature selection. The setup below specifies **5** independent runs 
-of **4** fold cross-validation.
+`wranglr::simdata`. We fit a Naive Bayes model during the
+feature selection. The setup below specifies **3** independent runs
+of **5** fold cross-validation.
+
 Higher folds might generate slightly different results, but a **20-25%**
 hold-out is fairly common. Of course, more runs (repeats) will take longer.
-There are `r length(attributes(data)$sig_feats$class)` features that should 
-be significant in a binary classification context. They are identified in 
-the attributes of the object itself. We will restrict the search to the 
+There are `r length(attributes(data)$sig_feats$class)` features that should
+be significant in a binary classification context. They are identified in
+the attributes of the object itself. We will restrict the search to the
 top **15** steps (there are
 `r length(helpr:::get_analytes(simdata))`
 total features; thus approx. 35 false positives).
 
-### Setup `FS` object
+
+### Setup `feature_select` Object
 
 ```{r fs-setup-nb}
 data <- simdata
@@ -118,15 +126,22 @@ mt <- model_type_nb(response = "class_response")
 sm <- search_type_forward_model(max_steps = 10L)
 
 # setup feature selection object
-fs_setup <- feature_selection(data, candidate_features = feats,
-                              model_type = mt, search_type = sm,
-                              runs = 3, folds = 5,
-                              cost = "AUC", random_seed = 1)
+fs_setup <- feature_selection(
+  data,
+  candidate_features = feats,
+  model_type  = mt,
+  search_type = sm,
+  runs  = 3L,
+  folds = 5L,
+  cost  = "AUC",
+  random_seed = 1
+)
 
 fs_setup
 ```
 
-### Perform the search
+
+### Perform the Search
 
 The S3 method `Search()` performs the actual feature selection,
 and method dispatch occurs depending on the class of `fs_nb`.
@@ -136,19 +151,20 @@ fs_nb <- Search(fs_setup)
 ```
 
 ```{r load-fs-nb, echo = FALSE}
-fs_nb <- readRDS("fs_nb_obj.rds")   # load this secretly
+fs_nb <- readRDS("fs_nb_obj.rds")   # secretly load
 ```
+
 
 ### Plot the Selection Paths
 
-A S3 `plot()` method easily visualizes the steps of the selection,
-and highlights the peak (AUC) and the models at
-1$\sigma$ and 2$\sigma$ from the peak.
-The 2 panels show a distribution-free representation of the data 
-(left; median; Wilcoxon signed-ranks) and a distribution dependent
-representation (right; means; standard errors).
+There is an S3 `plot()` method easily visualizes the steps of
+the selection algorithm, and highlights the peak (AUC) and the
+models at $1\sigma$ and $2\sigma$ from the peak.
+The 2 panels show a distribution-free representation of the data
+(left; Wilcoxon signed-ranks with medians) and a distribution dependent
+representation (right; standard errors with means and CI95%).
 
-```{r plot-fs-nb, warning = FALSE, out.width = "100%", fig.width = 10, fig.height = 5}
+```{r plot-fs-nb, out.width = "100%"}
 plot(fs_nb)
 ```
 
@@ -156,37 +172,35 @@ plot(fs_nb)
 ---------------
 
 
-## Feature Selection with Logistic Regression
+## Logistic Regression
 
-We can use the `update()` function to modify the existing
+We can use the `update()` method to modify the existing
 `feature_select` object.
 
 ```{r update-fs-setup}
 fs_update <- update(
-  fs_setup,
-  model_type  = model_type_lr(response = "class_response"),  # use logistic reg
-  search_type = search_type_forward_model(max_steps = 15L), # increase steps
-  stratified  = TRUE    # stratify
+  fs_setup,   # the `feature_selection` object being modified
+  model_type  = model_type_lr(response = "class_response"), # logistic reg
+  search_type = search_type_forward_model(max_steps = 15L), # increase max steps
+  stratified  = TRUE   # now stratify
 )
-                    
+
 fs_update
 ```
 
-### Perform the search
+### Perform the Search
 
 ```{r search-lr, eval = FALSE}
 fs_lr <- Search(fs_update)
 ```
 
 ```{r load-fs-lr, echo = FALSE}
-fs_lr <- readRDS("fs_lr_obj.rds")   # load this secretly
-
+fs_lr <- readRDS("fs_lr_obj.rds")   # secretly load
 ```
 
-### Plot the feature selections
+### Plot the Selection Algorithm
 
-```{r plot-fs-lr, warning = FALSE, out.width = "100%", fig.width = 10, fig.height = 5}
+```{r plot-fs-lr, out.width = "100%"}
 plot(fs_lr)
 ```
 
----------------
