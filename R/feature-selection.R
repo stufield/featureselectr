@@ -94,7 +94,7 @@
 #'
 #' # Using the S3 Update method to modify existing `feature_select` object:
 #' #   change model type, cost function, and random seed
-#' fs2 <- update(fs, model_type = model_type_nb(),
+#' fs2 <- update(fs, model_type = model_type_nb(response = "class_response"),
 #'               cost = "AUC", random_seed = 99L)
 #' fs2
 #'
@@ -208,7 +208,7 @@ print.feature_select <- function(x, ...) {
     "Rows",
     "Columns",
     "FeatureData"
-  ) |> pad(25)
+  ) |> pad(25L)
 
   value <- c(
     length(row.names(x$data)),
@@ -234,7 +234,7 @@ print.feature_select <- function(x, ...) {
     "Random Seed",
     "Display Name",
     "Search Complete"
-  ) |> pad(25)
+  ) |> pad(25L)
 
   value2 <- c(
     length(x$candidate_features),
@@ -280,7 +280,7 @@ is_feature_select <- function(x) {
 
 
 #' The S3 update method allows for modification of existing
-#' `feature_select` objects on-the-fly.
+#'   `feature_select` objects on-the-fly.
 #'
 #' @rdname feature_selection
 #'
@@ -290,7 +290,7 @@ is_feature_select <- function(x) {
 #' @export
 update.feature_select <- function(object, ...) {
 
-  if ( object$search_complete ) {
+  if ( object$search_complete && interactive() ) {
     over_write <- readline(
       paste("This `feature_select` object has already been completed,",
             "do you wish to over-write? [y/n]: ")

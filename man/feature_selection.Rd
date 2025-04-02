@@ -125,7 +125,7 @@ fs
 
 # Using the S3 Update method to modify existing `feature_select` object:
 #   change model type, cost function, and random seed
-fs2 <- update(fs, model_type = model_type_nb(),
+fs2 <- update(fs, model_type = model_type_nb(response = "class_response"),
               cost = "AUC", random_seed = 99L)
 fs2
 
