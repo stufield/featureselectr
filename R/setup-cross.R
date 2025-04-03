@@ -1,9 +1,10 @@
 #' Set up Cross-Validation Folds
 #'
-#' This S3 method sets up the internal the *non-stratified* cross-validation.
+#' These S3 methods set up the internal cross-validation.
+#'   Methods exist for both *stratified* and *non-stratified* scenarios.
 #'   Since these are mostly internal methods, documentation is minimal.
 #'
-#' @param x A `feature_select` class object.
+#' @inheritParams Search
 #'
 #' @author Stu Field
 #'
@@ -11,13 +12,15 @@
 setup_cross <- function(x) UseMethod("setup_cross")
 
 
+#' @rdname setup_cross
+#'
+#' @description
 #' The *stratified* version is a S3 method that sets up the
 #'   internal cross-validation for stratified folds.
 #'   Stratified implies that the structure (proportions) of the response
 #'   variable is maintained (i.e. the proportion of disease samples in the
 #'   fold is comparable to the disease proportion in the full training set).
 #'
-#' @rdname setup_cross
 #' @export
 setup_cross_strat <- function(x) UseMethod("setup_cross_strat")
 
@@ -143,9 +146,11 @@ setup_cross_strat.feature_select <- function(x) {
 }
 
 
-#' Check the cross-validation stratification visually.
-#'
 #' @rdname setup_cross
+#'
+#' @description
+#'   The plotting routine allows one to visually check
+#'   the cross-validation stratification for bias.
 #'
 #' @importFrom ggplot2 ggplot geom_point aes geom_vline geom_hline
 #' @importFrom ggplot2 geom_segment coord_cartesian scale_color_manual

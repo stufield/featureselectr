@@ -27,7 +27,7 @@
 #'     \item{`sens` or `spec`}{Sensitivity + Specificity}
 #'   }
 #'
-#' @param runs `integer(1)`. How many runs to perform.
+#' @param runs `integer(1)`. How many runs (repeats) to perform.
 #'
 #' @param folds `integer(1)`. How many fold cross-validation to perform.
 #'
@@ -41,8 +41,8 @@
 #'   stratified based upon the column specified in `strat_column`?
 #'
 #' @param strat_column `character(1)`. Which column to use for stratification
-#'   of cross-validation. If `NULL` (default), column name
-#'   `"Response"` will be used (and thus must be present).
+#'   of cross-validation. If `NULL` (default), column name corresponding
+#'   to the `response` parameter from the `?model_type` will be used.
 #'
 #' @param random_seed `integer(1)`. Used to control the random number
 #'   generator for reproducibility.
@@ -83,12 +83,11 @@
 #' data$class_response <- factor(data$class_response)
 #'
 #' mt <- model_type_lr("class_response")
-#' cf <- "sens"
 #' sm <- search_type_forward_model(15L, display_name = "Feature Selection Algorithm")
 #' ft <- helpr:::get_analytes(data)   # select candidate features
 #' fs <- feature_selection(data, candidate_features = ft,
-#'                         model_type = mt, search_type = sm, cost = cf,
-#'                         strat_column = "class_response", runs = 5L, folds = 5L)
+#'                         model_type = mt, search_type = sm, cost = "sens",
+#'                         runs = 5L, folds = 5L)
 #' # S3 Print method
 #' fs
 #'

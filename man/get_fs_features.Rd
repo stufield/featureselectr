@@ -7,7 +7,8 @@
 get_fs_features(x)
 }
 \arguments{
-\item{x}{A \code{feature_select} search object.}
+\item{x}{A \code{feature_select} class object from a call
+call to \code{\link[=feature_selection]{feature_selection()}}.}
 }
 \value{
 A list containing:
@@ -21,16 +22,16 @@ cost function that is \code{1.96*SE} from the maximum/minimum mean
 cost function.}
 }
 \description{
-Function to return the maximum, se1, and se2 features from either
-forward or backward selection from a \code{feature_select} object.
+Returns the \code{maximum}, \code{se1}, and \code{se2} features from
+a completed \code{feature_select} object.
 }
 \examples{
 data  <- wranglr::simdata
-feats <- attributes(data)$sig_feats$class
+feats <- attr(data, "sig_feats")$class
 fs <- feature_selection(data, candidate_features = feats,
                         search_type = search_type_forward_model(),
                         model_type  = model_type_lr("class_response"),
-                        stratify    = TRUE, runs = 2L, folds = 2L)
+                        runs = 2L, folds = 2L)
 fs_obj <- Search(fs)
 get_fs_features(fs_obj)
 }

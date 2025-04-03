@@ -1,9 +1,9 @@
 #' Get Feature Selection Markers
 #'
-#' Function to return the maximum, se1, and se2 features from either
-#'   forward or backward selection from a `feature_select` object.
+#' Returns the `maximum`, `se1`, and `se2` features from
+#'   a completed `feature_select` object.
 #'
-#' @param x A `feature_select` search object.
+#' @inheritParams Search
 #'
 #' @return A list containing:
 #'   \item{max_features}{Combination of features that gives maximum/minimum
@@ -17,11 +17,11 @@
 #'
 #' @examples
 #' data  <- wranglr::simdata
-#' feats <- attributes(data)$sig_feats$class
+#' feats <- attr(data, "sig_feats")$class
 #' fs <- feature_selection(data, candidate_features = feats,
 #'                         search_type = search_type_forward_model(),
 #'                         model_type  = model_type_lr("class_response"),
-#'                         stratify    = TRUE, runs = 2L, folds = 2L)
+#'                         runs = 2L, folds = 2L)
 #' fs_obj <- Search(fs)
 #' get_fs_features(fs_obj)
 #' @importFrom stats sd
@@ -34,7 +34,7 @@ get_fs_features <- function(x) UseMethod("get_fs_features")
 #' @export
 get_fs_features.default <- function(x) {
   stop(
-    "Could not determine `search_type` of this search object:",
+    "There is no `get_fs_features()` S3 method for this class: ",
     value(class(x)), call. = FALSE
   )
 }
@@ -50,6 +50,7 @@ get_fs_features.fs_forward_param <- function(x) {
 #' @export
 get_fs_features.fs_forward_model <- function(x) {
 
+  check_complete(x)
   ft_index  <- "cumul_features"
   restbl    <- x$cross_val$search_progress  # progress mean/95% CI
   csttbl    <- x$cross_val$cost_tables      # complete cost tables
@@ -82,6 +83,7 @@ get_fs_features.fs_forward_model <- function(x) {
 #' @export
 get_fs_features.fs_backward_model <- function(x) {
 
+  check_complete(x)
   ft_index  <- "elim_features"
   max_steps <- x$search_type$max_steps      # steps
   restbl    <- x$cross_val$search_progress  # progress mean/95% CI

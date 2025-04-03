@@ -46,6 +46,7 @@ check_complete <- function(x) {
       )
     )
   }
+  invisible()
 }
 
 
