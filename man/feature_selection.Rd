@@ -113,7 +113,7 @@ data <- wranglr::simdata
 # Setup response variable
 data$class_response <- factor(data$class_response)
 
-mt <- model_type_lr(response = "class_response")
+mt <- model_type_lr("class_response")
 cf <- "sens"
 sm <- search_type_forward_model(15L, display_name = "Feature Selection Algorithm")
 ft <- helpr:::get_analytes(data)   # select candidate features
@@ -125,7 +125,7 @@ fs
 
 # Using the S3 Update method to modify existing `feature_select` object:
 #   change model type, cost function, and random seed
-fs2 <- update(fs, model_type = model_type_nb(response = "class_response"),
+fs2 <- update(fs, model_type = model_type_nb("class_response"),
               cost = "AUC", random_seed = 99L)
 fs2
 

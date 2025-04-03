@@ -75,17 +75,16 @@ data <- wranglr::simdata
 
 # Setup response variable
 data$class_response <- as.factor(data$class_response)
-mt  <- model_type_lr(response = "class_response")
-cst <- "AUC"
-sm  <- search_type_forward_model(10L, display_name = "Feature Selection Algorithm")
+mt  <- model_type_lr("class_response")
+sm  <- search_type_forward_model("Feature Selection Algorithm", 10L)
 ft  <- head(helpr:::get_analytes(data))  # select candidate features
 mcp <- feature_selection(data,
                          candidate_features = ft,
                          model_type = mt,
                          search_type = sm,
-                         cost = cst,
-                         strat_column = "class_response",
-                         runs = 4L, folds = 3L, random_seed = 99L)
+                         cost = "AUC",
+                         runs = 4L, folds = 3L,
+                         random_seed = 101L)
 
 fs <- Search(mcp)
 fs
