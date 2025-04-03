@@ -37,7 +37,7 @@
 #'   with replacement to generate a training set of equivalent size.
 #'   The samples not chosen during sampling make up the test set.
 #'
-#' @param stratified `logical(1)`. Should cross-validation folds be
+#' @param stratify `logical(1)`. Should cross-validation folds be
 #'   stratified based upon the column specified in `strat_column`?
 #'
 #' @param strat_column `character(1)`. Which column to use for stratification
@@ -107,7 +107,7 @@
 feature_selection <- function(data, candidate_features, model_type,
                               search_type, runs = 1L, folds = 1L,
                               cost = c("AUC", "R2", "CCC", "MSE", "sens", "spec"),
-                              bootstrap = FALSE, stratified = FALSE,
+                              bootstrap = FALSE, stratify = FALSE,
                               strat_column = NULL, random_seed = 101L) {
 
   # logic to ensure compatibility among model_type,
@@ -180,11 +180,11 @@ feature_selection <- function(data, candidate_features, model_type,
   # build the cross-validation folds/bootstrap sets here so
   #   that they are always consistent
   #   there should be n-repeats (runs) of k-fold cross validation
-  fsret$cross_val$runs       <- runs
-  fsret$cross_val$folds      <- folds
-  fsret$cross_val$stratified <- stratified
+  fsret$cross_val$runs     <- runs
+  fsret$cross_val$folds    <- folds
+  fsret$cross_val$stratify <- stratify
 
-  if ( stratified ) {
+  if ( stratify ) {
     fsret <- setup_cross_strat(fsret)
   } else {
     fsret <- setup_cross(fsret)
@@ -241,7 +241,7 @@ print.feature_select <- function(x, ...) {
     x$model_type$response,
     x$runs,
     x$folds,
-    x$cross_val$stratified,
+    x$cross_val$stratify,
     class(x$model_type)[1L],
     class(x$search_type)[1L],
     x$cost,
