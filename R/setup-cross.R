@@ -32,8 +32,8 @@ setup_cross.feature_select <- function(x) {
   # allow control of random generator
   local_seed(x$random_seed)
 
-  for ( r in 1:x$cross_val$runs ) {
-    run              <- sprintf("Run%i", r)
+  for ( r in seq_len(x$cross_val$runs) ) {
+    run              <- paste0("Run", r)
     x$cross_val[[run]] <- list()
     avail_rows       <- seq_along(rownames(x$data)) # remaining rows to choose from
     rem_rows         <- avail_rows
@@ -47,8 +47,8 @@ setup_cross.feature_select <- function(x) {
       next
     }
 
-    for ( f in 1:x$cross_val$folds ) {
-      fold <- sprintf("Fold%s", f)
+    for ( f in seq_len(x$cross_val$folds) ) {
+      fold <- paste0("Fold", f)
       x$cross_val[[run]][[fold]] <- list()
       test_rows <- sample(rem_rows, samples_per_fold)
       rem_rows  <- setdiff(rem_rows, test_rows)
@@ -92,10 +92,10 @@ setup_cross_strat.feature_select <- function(x) {
   local_seed(x$random_seed)
 
   # setup Run/Fold data structures
-  for ( r in 1:x$cross_val$runs ) {
-    for ( f in 1:x$cross_val$folds ) {
-      run  <- sprintf("Run%d", r)
-      fold <- sprintf("Fold%d", f)
+  for ( r in seq_len(x$cross_val$runs) ) {
+    for ( f in seq_len(x$cross_val$folds) ) {
+      run  <- paste0("Run", r)
+      fold <- paste0("Fold", f)
       x$cross_val[[run]]         <- list()
       x$cross_val[[run]][[fold]] <- list()
       x$cross_val[[run]][[fold]]$test_rows     <- numeric(0)
@@ -104,15 +104,15 @@ setup_cross_strat.feature_select <- function(x) {
   }
 
   for ( n in names(tbl) ) {
-    for ( r in 1:x$cross_val$runs ) {
-      run        <- sprintf("Run%d", r)
-      avail_rows <- which(x$data[, x$strat_column] == n) # remaining rows to choose from
+    for ( r in seq_len(x$cross_val$runs) ) {
+      run        <- paste0("Run", r)
+      avail_rows <- which(x$data[, x$strat_column] == n) # remaining rows to choose
       rem_rows         <- avail_rows
       samples_per_fold <- floor(length(avail_rows) / x$cross_val$folds)
       extra_samples    <- length(avail_rows) - samples_per_fold * x$cross_val$folds
 
-      for ( f in 1:x$cross_val$folds ) {
-        fold <- sprintf("Fold%d", f)
+      for ( f in seq_len(x$cross_val$folds) ) {
+        fold <- paste0("Fold", f)
 
         if ( x$cross_val$folds == 1L ) {
           test_rows     <- rem_rows
@@ -206,7 +206,7 @@ plot_cross <- function(x) {
         axis.title.x = element_blank()
         ) +
       ggtitle(sprintf("Prevalence of '%s' in Cross-Folds", base_class)) +
-      labs(y = sprintf("Prevalence: %s", base_class)) +
+      labs(y = paste("Prevalence:", base_class)) +
       geom_hline(yintercept = class_prev, linetype = "longdash",
                  color = col_palette$magenta, alpha = 0.75) +
       geom_vline(xintercept = seg_df$xend + 0.5, linetype = "longdash",
