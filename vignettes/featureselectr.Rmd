@@ -181,9 +181,9 @@ We can use the `update()` method to modify the existing
 ```{r update-fs-setup}
 fs_update <- update(
   fs_setup,   # the `feature_selection` object being modified
-  model_type  = model_type_lr(response = "class_response"), # logistic reg
+  model_type  = model_type_lr("class_response"), # logistic reg
   search_type = search_type_forward_model(max_steps = 15L), # increase max steps
-  stratified  = TRUE   # now stratify
+  stratify    = TRUE   # now stratify
 )
 
 fs_update
@@ -212,10 +212,16 @@ folds based on the proportion of binary classes (for classification
 problems).
 
 This should be most evident when comparing the folds with and
-without forced stratification. Below is a plot of the cross-validation
-folds without stratification (left) and after an update to the
-original `fs_setup` object to include stratification (right):
+without forced stratification. Below is a sample plot of the cross-validation
+folds *without* stratification (left) and after an update to the
+object to *include* stratification (right):
 
 ```{r plot-cross, out.width = "100%"}
-plot_cross(fs_setup) + plot_cross(fs_update)
+no_strat <- feature_selection(
+  data, candidate_features = feats,
+  model_type = mt, search_type = sm,
+  runs  = 2L, folds = 3L
+)
+with_strat <- update(no_strat, stratify = TRUE)
+plot_cross(no_strat) + plot_cross(with_strat)
 ```
