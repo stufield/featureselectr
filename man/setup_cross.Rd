@@ -13,11 +13,22 @@ setup_cross_strat(x)
 plot_cross(x)
 }
 \arguments{
-\item{x}{A \code{feature_select} class object.}
+\item{x}{A \code{feature_select} class object from a call
+call to \code{\link[=feature_selection]{feature_selection()}}.}
 }
 \description{
-This S3 method sets up the internal the \emph{non-stratified} cross-validation.
+These S3 methods set up the internal cross-validation.
+Methods exist for both \emph{stratified} and \emph{non-stratified} scenarios.
 Since these are mostly internal methods, documentation is minimal.
+
+The \emph{stratified} version is a S3 method that sets up the
+internal cross-validation for stratified folds.
+Stratified implies that the structure (proportions) of the response
+variable is maintained (i.e. the proportion of disease samples in the
+fold is comparable to the disease proportion in the full training set).
+
+The plotting routine allows one to visually check
+the cross-validation stratification for bias.
 }
 \author{
 Stu Field

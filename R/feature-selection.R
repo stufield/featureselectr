@@ -27,7 +27,7 @@
 #'     \item{`sens` or `spec`}{Sensitivity + Specificity}
 #'   }
 #'
-#' @param runs `integer(1)`. How many runs to perform.
+#' @param runs `integer(1)`. How many runs (repeats) to perform.
 #'
 #' @param folds `integer(1)`. How many fold cross-validation to perform.
 #'
@@ -41,8 +41,8 @@
 #'   stratified based upon the column specified in `strat_column`?
 #'
 #' @param strat_column `character(1)`. Which column to use for stratification
-#'   of cross-validation. If `NULL` (default), column name
-#'   `"Response"` will be used (and thus must be present).
+#'   of cross-validation. If `NULL` (default), column name corresponding
+#'   to the `response` parameter from the `?model_type` will be used.
 #'
 #' @param random_seed `integer(1)`. Used to control the random number
 #'   generator for reproducibility.

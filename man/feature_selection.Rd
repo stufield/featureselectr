@@ -40,7 +40,7 @@ to one of the \code{\link[=model_type]{model_type()}} functions.}
 \item{search_type}{An instantiated \code{search_type} object, generated via a
 call to one of the \code{\link[=search_type]{search_type()}} functions.}
 
-\item{runs}{\code{integer(1)}. How many runs to perform.}
+\item{runs}{\code{integer(1)}. How many runs (repeats) to perform.}
 
 \item{folds}{\code{integer(1)}. How many fold cross-validation to perform.}
 
@@ -64,8 +64,8 @@ The samples not chosen during sampling make up the test set.}
 stratified based upon the column specified in \code{strat_column}?}
 
 \item{strat_column}{\code{character(1)}. Which column to use for stratification
-of cross-validation. If \code{NULL} (default), column name
-\code{"Response"} will be used (and thus must be present).}
+of cross-validation. If \code{NULL} (default), column name corresponding
+to the \code{response} parameter from the \code{?model_type} will be used.}
 
 \item{random_seed}{\code{integer(1)}. Used to control the random number
 generator for reproducibility.}
