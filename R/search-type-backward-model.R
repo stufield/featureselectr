@@ -67,9 +67,9 @@ Search.fs_backward_model <- function(x, ...) {
                           x$cross_val$current_fold <- f
                           .cost(.fitmodel(x, frmla = frmla))
                  }) |>
-              setNames(sprintf("Fold%s", seq_len(x$folds)))
+              setNames(paste0("Fold", seq_len(x$folds)))
       }, mc.cores = cores) |>
-      setNames(sprintf("Run%s", seq_len(x$runs)))
+      setNames(paste0("Run", seq_len(x$runs)))
 
       candidate_costs[[cnd]] <- run_res
 
@@ -101,7 +101,7 @@ Search.fs_backward_model <- function(x, ...) {
                                         cost_mean       = ci95top$mean,
                                         cost_upper_ci95 = ci95top$upper))
 
-    step_name <- sprintf("Step_%d", step)
+    step_name <- paste0("Step_", step)
     cost_tables[[step_name]] <- cost_tbl
   }
 
