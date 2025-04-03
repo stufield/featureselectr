@@ -15,7 +15,8 @@ model_type_lm(response = "Response")
 }
 \arguments{
 \item{response}{\code{character(1)}. The string of the column name to use as the
-response variable. Assumed to be a binary factor type.}
+response variable. Assumed to be a binary factor type unless
+linear regression is desired.}
 }
 \value{
 An object of the appropriate class according to the

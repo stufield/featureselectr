@@ -13,7 +13,8 @@
 #' @name model_type
 #'
 #' @param response `character(1)`. The string of the column name to use as the
-#'   response variable. Assumed to be a binary factor type.
+#'   response variable. Assumed to be a binary factor type unless
+#'   linear regression is desired.
 #'
 #' @return An object of the appropriate class according to the
 #'   model type chosen, one of: `fs_lr`, `fs_nb`, or `fs_lm`.
