@@ -1,6 +1,6 @@
 
 # ignore anything doc (i.e. vignettes)
-inst/doc/*
+inst/doc/
 
 # except the 1 file
 !inst/doc/gitkeep
@@ -24,4 +24,3 @@ filter_smudge
 # ignore all packrat related files
 .project
 packrat/lib*/
-.Rproj.user
