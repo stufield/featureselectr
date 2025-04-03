@@ -77,7 +77,7 @@ setup_cross.feature_select <- function(x) {
 #' @export
 setup_cross_strat.feature_select <- function(x) {
 
-  tbl <- table(x$data[, x$strat_column])
+  tbl <- table(x$data[, x$cross_val$strat_column])
 
   # 1st check if stratification is even possible given class counts
   if ( min(tbl) < x$cross_val$folds ) {
@@ -109,7 +109,7 @@ setup_cross_strat.feature_select <- function(x) {
   for ( n in names(tbl) ) {
     for ( r in seq_len(x$cross_val$runs) ) {
       run        <- paste0("Run", r)
-      avail_rows <- which(x$data[, x$strat_column] == n) # remaining rows to choose
+      avail_rows <- which(x$data[, x$cross_val$strat_column] == n)
       rem_rows         <- avail_rows
       samples_per_fold <- floor(length(avail_rows) / x$cross_val$folds)
       extra_samples    <- length(avail_rows) - samples_per_fold * x$cross_val$folds

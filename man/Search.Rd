@@ -15,7 +15,7 @@ Defaults to \code{1L}, which does not use parallel processing. Values \verb{> 1}
 only available in Linux systems.}
 }
 \value{
-A completed \code{feature_select} object; a list of:
+A \code{"feature_select"} class object; a list of:
 \item{data}{The original feature data to use.}
 \item{candidate_features}{The list of candidate features.}
 \item{model_type}{A list containing model type variables of the
@@ -30,7 +30,6 @@ appropriate class for the desired object cost function.}
 \item{random_seed}{The random seed used}
 \item{cross_val}{A list containing the training and test indices of the
 various cross validation folds.}
-\item{strat_column}{Which field string is used in stratification.}
 \item{search_complete}{Logical if the object has completed a search}
 \item{call}{The original matched call.}
 }

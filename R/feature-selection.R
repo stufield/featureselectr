@@ -64,7 +64,6 @@
 #'   \item{random_seed}{The random seed used}
 #'   \item{cross_val}{A list containing the training and test indices of the
 #'     various cross validation folds.}
-#'   \item{strat_column}{Which field string is used in stratification.}
 #'   \item{search_complete}{Logical if the object has completed a search}
 #'   \item{call}{The original matched call.}
 #'
@@ -160,12 +159,6 @@ feature_selection <- function(data, candidate_features, model_type,
                 random_seed = random_seed,
                 cross_val = list())
 
-  if ( is.null(strat_column) ) {
-    fsret$strat_column <- model_type$response
-  } else {
-    fsret$strat_column <- strat_column
-  }
-
   fsret$search_type$max_steps <- min(length(candidate_features),
                                      search_type$max_steps)
 
@@ -182,6 +175,12 @@ feature_selection <- function(data, candidate_features, model_type,
   fsret$cross_val$runs     <- runs
   fsret$cross_val$folds    <- folds
   fsret$cross_val$stratify <- stratify
+
+  if ( is.null(strat_column) ) {
+    fsret$cross_val$strat_column <- model_type$response
+  } else {
+    fsret$cross_val$strat_column <- strat_column
+  }
 
   if ( stratify ) {
     fsret <- setup_cross_strat(fsret)

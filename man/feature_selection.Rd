@@ -91,7 +91,6 @@ appropriate class for the desired object cost function.}
 \item{random_seed}{The random seed used}
 \item{cross_val}{A list containing the training and test indices of the
 various cross validation folds.}
-\item{strat_column}{Which field string is used in stratification.}
 \item{search_complete}{Logical if the object has completed a search}
 \item{call}{The original matched call.}
 }

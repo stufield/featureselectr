@@ -32,24 +32,7 @@
 #'   Defaults to `1L`, which does not use parallel processing. Values `> 1`
 #'   only available in Linux systems.
 #'
-#' @return A completed `feature_select` object; a list of:
-#'   \item{data}{The original feature data to use.}
-#'   \item{candidate_features}{The list of candidate features.}
-#'   \item{model_type}{A list containing model type variables of the
-#'     appropriate class for the desired model type.}
-#'   \item{search_type}{A list containing search type variables of the
-#'     appropriate class for the desired search type.}
-#'   \item{cost}{A string of the type of cost function.}
-#'   \item{cost_fxn}{A list containing cost variables of the
-#'     appropriate class for the desired object cost function.}
-#'   \item{runs}{The number of runs.}
-#'   \item{folds}{The number of folds.}
-#'   \item{random_seed}{The random seed used}
-#'   \item{cross_val}{A list containing the training and test indices of the
-#'     various cross validation folds.}
-#'   \item{strat_column}{Which field string is used in stratification.}
-#'   \item{search_complete}{Logical if the object has completed a search}
-#'   \item{call}{The original matched call.}
+#' @inherit feature_selection return
 #'
 #' @author Stu Field, Kirk DeLisle
 #' @seealso [feature_selection()]
