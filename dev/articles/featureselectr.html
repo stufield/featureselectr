@@ -259,9 +259,9 @@ CI95%).</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">fs_update</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/update.html" class="external-link">update</a></span><span class="op">(</span></span>
 <span>  <span class="va">fs_setup</span>,   <span class="co"># the `feature_selection` object being modified</span></span>
-<span>  model_type  <span class="op">=</span> <span class="fu"><a href="../reference/model_type.html">model_type_lr</a></span><span class="op">(</span>response <span class="op">=</span> <span class="st">"class_response"</span><span class="op">)</span>, <span class="co"># logistic reg</span></span>
+<span>  model_type  <span class="op">=</span> <span class="fu"><a href="../reference/model_type.html">model_type_lr</a></span><span class="op">(</span><span class="st">"class_response"</span><span class="op">)</span>, <span class="co"># logistic reg</span></span>
 <span>  search_type <span class="op">=</span> <span class="fu"><a href="../reference/search_type.html">search_type_forward_model</a></span><span class="op">(</span>max_steps <span class="op">=</span> <span class="fl">15L</span><span class="op">)</span>, <span class="co"># increase max steps</span></span>
-<span>  stratified  <span class="op">=</span> <span class="cn">TRUE</span>   <span class="co"># now stratify</span></span>
+<span>  stratify    <span class="op">=</span> <span class="cn">TRUE</span>   <span class="co"># now stratify</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">fs_update</span></span>
@@ -304,11 +304,17 @@ CI95%).</p>
 cross-validation folds based on the proportion of binary classes (for
 classification problems).</p>
 <p>This should be most evident when comparing the folds with and without
-forced stratification. Below is a plot of the cross-validation folds
-without stratification (left) and after an update to the original
-<code>fs_setup</code> object to include stratification (right):</p>
+forced stratification. Below is a sample plot of the cross-validation
+folds <em>without</em> stratification (left) and after an update to the
+object to <em>include</em> stratification (right):</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/setup_cross.html">plot_cross</a></span><span class="op">(</span><span class="va">fs_setup</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="../reference/setup_cross.html">plot_cross</a></span><span class="op">(</span><span class="va">fs_update</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">no_strat</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/feature_selection.html">feature_selection</a></span><span class="op">(</span></span>
+<span>  <span class="va">data</span>, candidate_features <span class="op">=</span> <span class="va">feats</span>,</span>
+<span>  model_type <span class="op">=</span> <span class="va">mt</span>, search_type <span class="op">=</span> <span class="va">sm</span>,</span>
+<span>  runs  <span class="op">=</span> <span class="fl">2L</span>, folds <span class="op">=</span> <span class="fl">3L</span></span>
+<span><span class="op">)</span></span>
+<span><span class="va">with_strat</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/update.html" class="external-link">update</a></span><span class="op">(</span><span class="va">no_strat</span>, stratify <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/setup_cross.html">plot_cross</a></span><span class="op">(</span><span class="va">no_strat</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="../reference/setup_cross.html">plot_cross</a></span><span class="op">(</span><span class="va">with_strat</span><span class="op">)</span></span></code></pre></div>
 <p><img src="featureselectr_files/figure-html/plot-cross-1.png" width="100%"></p>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
