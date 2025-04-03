@@ -28,6 +28,7 @@ Imports:
 Suggests:
     dplyr,
     knitr,
+    lintr,
     rmarkdown,
     patchwork,
     spelling,
