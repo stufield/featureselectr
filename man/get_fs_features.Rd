@@ -30,8 +30,7 @@ feats <- attributes(data)$sig_feats$class
 fs <- feature_selection(data, candidate_features = feats,
                         search_type = search_type_forward_model(),
                         model_type  = model_type_lr("class_response"),
-                        stratified  = TRUE, cost = "AUC",
-                        runs = 2L, folds = 2L)
+                        stratify    = TRUE, runs = 2L, folds = 2L)
 fs_obj <- Search(fs)
 get_fs_features(fs_obj)
 }

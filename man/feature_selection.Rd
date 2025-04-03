@@ -16,7 +16,7 @@ feature_selection(
   folds = 1L,
   cost = c("AUC", "R2", "CCC", "MSE", "sens", "spec"),
   bootstrap = FALSE,
-  stratified = FALSE,
+  stratify = FALSE,
   strat_column = NULL,
   random_seed = 101L
 )
@@ -60,7 +60,7 @@ than set up in cross-validation folds? The result is multiple runs
 with replacement to generate a training set of equivalent size.
 The samples not chosen during sampling make up the test set.}
 
-\item{stratified}{\code{logical(1)}. Should cross-validation folds be
+\item{stratify}{\code{logical(1)}. Should cross-validation folds be
 stratified based upon the column specified in \code{strat_column}?}
 
 \item{strat_column}{\code{character(1)}. Which column to use for stratification
