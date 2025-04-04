@@ -30,7 +30,8 @@
 #'
 #' @param num_cores `integer(1)`. How many cores to use during the search.
 #'   Defaults to `1L`, which does not use parallel processing. Values `> 1`
-#'   only available in Linux systems.
+#'   only available in Linux systems. Note that parallel processing
+#'   is implemented on the *runs*(!), so choose the cores appropriately.
 #'
 #' @inherit feature_selection return
 #'
@@ -50,7 +51,7 @@
 #' # Setup response variable
 #' data$class_response <- as.factor(data$class_response)
 #' mt  <- model_type_lr("class_response")
-#' sm  <- search_type_forward_model("Feature Selection Algorithm", 10L)
+#' sm  <- search_type_forward_model("Forward Selection Algorithm", 10L)
 #' ft  <- head(helpr:::get_analytes(data))  # select candidate features
 #' mcp <- feature_selection(data,
 #'                          candidate_features = ft,
@@ -109,8 +110,14 @@ Search.feature_select <- function(x, num_cores = 1L) {
   num_cores <- parallel_setup(num_cores)
 
   if ( num_cores > x$runs ) {
-    signal_oops(
-      "You have set more cores than runs ... this is likely unintended."
+    signal_oops("You have set more cores (", value(num_cores),
+      ") than runs (", value(x$runs), ")."
+    )
+    signal_info(
+      "Parallel processing is on the", add_style$red("*RUNS*")
+    )
+    signal_todo(
+      "Please ensure you set the number of cores appropriately."
     )
   }
 

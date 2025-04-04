@@ -12,7 +12,8 @@ call to \code{\link[=feature_selection]{feature_selection()}}.}
 
 \item{num_cores}{\code{integer(1)}. How many cores to use during the search.
 Defaults to \code{1L}, which does not use parallel processing. Values \verb{> 1}
-only available in Linux systems.}
+only available in Linux systems. Note that parallel processing
+is implemented on the \emph{runs}(!), so choose the cores appropriately.}
 }
 \value{
 A \code{"feature_select"} class object; a list of:
@@ -75,7 +76,7 @@ data <- wranglr::simdata
 # Setup response variable
 data$class_response <- as.factor(data$class_response)
 mt  <- model_type_lr("class_response")
-sm  <- search_type_forward_model("Feature Selection Algorithm", 10L)
+sm  <- search_type_forward_model("Forward Selection Algorithm", 10L)
 ft  <- head(helpr:::get_analytes(data))  # select candidate features
 mcp <- feature_selection(data,
                          candidate_features = ft,

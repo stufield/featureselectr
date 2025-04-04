@@ -11,7 +11,6 @@ test_that("the featureselectr is in style compliance", {
     ifelse(is_testing(), ".", "tests/testthat"),
     lintr::lint_dir(pattern = "^test-")
   )
-  print(t_lints)
   r_lints <- withr::with_dir(
     ifelse(is_testing(), "../../R", "R"),
     lintr::lint_dir(pattern = "[.][Rr]$")

@@ -113,7 +113,7 @@ data <- wranglr::simdata
 data$class_response <- factor(data$class_response)
 
 mt <- model_type_lr("class_response")
-sm <- search_type_forward_model(15L, display_name = "Feature Selection Algorithm")
+sm <- search_type_forward_model(15L, display_name = "Forward Algorithm")
 ft <- helpr:::get_analytes(data)   # select candidate features
 fs <- feature_selection(data, candidate_features = ft,
                         model_type = mt, search_type = sm, cost = "sens",

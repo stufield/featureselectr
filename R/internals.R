@@ -95,32 +95,28 @@ check_feature_select <- function(x) {
 #' @noRd
 parallel_setup <- function(num_cores) {
 
+  stopifnot("`num_cores` must be an integer value." = is_int(num_cores))
+
   if ( num_cores > 1L ) {                 # Checks for parallel processing
     sys <- R.Version()$system
-    if ( grepl("linux|darwin", sys) ) {   # Linux system
+    if ( grepl("linux|darwin", sys) ) {   # Linux or MacOS systems
       if ( requireNamespace("parallel", quietly = TRUE) ) {
-        signal_todo(
-          "<<< Using", value(num_cores), "CPUs parallel processing >>>\n",
-          "Please ensure you set the number of cores appropriately:\n",
-          "  If running MODEL selection algorithm:\n",
-          "    parallel processing is on the", add_style$red("*RUNS*"), "\n",
-          "  If running PARAMETER search algorithm:\n",
-          "    parallel processing is on the cross-validation",
-          add_style$red("*FOLDS*")
+        signal_info(
+          "Using", value(num_cores), "CPU cores for parallel processing."
         )
       } else {
         signal_oops(
-          "Did not find the `parallel` pkg installed on your Linux system ..."
+          "Did not find the `parallel` pkg installed on your Linux system!"
         )
-        signal_done("Setting `num_cores = 1` and continuing in serial.")
+        signal_info("Setting `num_cores = 1` and continuing in serial.")
         num_cores <- 1L
       }
     } else if ( grepl("ming", sys) ) {   # Windows system
-      signal_oops("Windows OS detected ... parallel processing is not supported.")
-      signal_done("Setting `num_cores = 1L` and continuing in serial.")
+      signal_oops("Parallel processing is not supported on Windows systems.")
+      signal_info("Setting `num_cores = 1L` and continuing in serial.")
       num_cores <- 1L
     } else {
-      stop("Unknown operating system type: ", value(sys), call. = FALSE)
+      stop("Unknown operating system: ", value(sys), call. = FALSE)
     }
   }
   num_cores
