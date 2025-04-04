@@ -56,11 +56,11 @@ Search.fs_backward_model <- function(x, ...) {
 
     # reformulated search as a loop (compared to forward-lapply
     #   to facilitate a full model step
-    candidate_costs <- list()
+    cost_tbl <- list()
 
     for ( cnd in rem_candidates ) {
       rem_minus_one <- setdiff(rem_candidates, cnd)
-      frmla <- create_form(x$model_type$response, paste(rem_minus_one))
+      frmla <- create_form(x$model_type$response, rem_minus_one)
       run_res <- parallel::mclapply(seq_len(x$cross_val$runs), function(r) {
                    x$cross_val$current_run <- r
                    lapply(seq_len(x$cross_val$folds), function(f) {
@@ -71,19 +71,16 @@ Search.fs_backward_model <- function(x, ...) {
       }, mc.cores = cores) |>
       setNames(paste0("Run", seq_len(x$runs)))
 
-      candidate_costs[[cnd]] <- run_res
+      cost_tbl[[cnd]] <- lapply(run_res, unlist) |>
+        data.frame() |> data.matrix()   # convert to combine all folds/runs
 
       if ( cnd == "All" ) {
         break
       }
     }
-    # construct results table for selection of this candidate step
-    cost_tbl <- lapply(candidate_costs, function(.cnd) {
-      vapply(.cnd, unlist, use.names = TRUE,   # passed to base::unlist
-             USE.NAMES = TRUE, FUN.VALUE = numeric(x$folds))
-    })
 
-    ci95df <- lapply(cost_tbl, calc_CI95) |> do.call(what = "rbind")
+    ci95df <- lapply(cost_tbl, calc_CI95) |>
+      do.call(what = "rbind")
 
     # select the worst
     top_idx <- ifelse(x$cost_fxn$maximize,

@@ -85,9 +85,8 @@ Search.fs_forward_model <- function(x, ...) {
      rem_candidates <- setdiff(x$candidate_features, used_candidates) |>
        set_Names()
 
-     candidate_costs <- lapply(rem_candidates, function(cnd) {
-          frmla <- create_form(x$model_type$response,
-                               paste(c(used_candidates, cnd)))
+     cost_tbl <- lapply(rem_candidates, function(cnd) {
+          frmla <- create_form(x$model_type$response, c(used_candidates, cnd))
           parallel::mclapply(seq_len(x$cross_val$runs), function(r) {
                       x$cross_val$current_run <- r  # tmp element for: .cost .fitmodel
                       lapply(seq_len(x$cross_val$folds), function(f) {
@@ -97,15 +96,12 @@ Search.fs_forward_model <- function(x, ...) {
              setNames(paste0("Fold", seq_len(x$folds)))
           }, mc.cores = cores) |>
           setNames(paste0("Run", seq_len(x$runs)))
-       })
+       }) |>
+       lapply(base::unlist, use.names = TRUE) |>
+       data.frame()
 
-     # construct results table for selection of this candidate step
-     cost_tbl <- lapply(candidate_costs, function(.cnd) {
-       vapply(.cnd, unlist, use.names = TRUE,   # passed to base::unlist
-              USE.NAMES = TRUE, FUN.VALUE = numeric(x$folds))
-     })
-
-     ci95df <- lapply(cost_tbl, calc_CI95) |> do.call(what = "rbind")
+     ci95df <- lapply(cost_tbl, calc_CI95) |>
+       do.call(what = "rbind")
 
      # select the best
      top_idx <- ifelse(x$cost_fxn$maximize,
