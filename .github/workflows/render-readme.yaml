@@ -29,6 +29,7 @@ jobs:
             any::desc
             any::rmarkdown
             github::stufield/helpr
+            github::stufield/wranglr
             local::.
  
       - name: Render README

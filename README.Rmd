@@ -48,7 +48,7 @@ selection, model building, and/or classifier development.
 remotes::install_github("stufield/featureselectr")
 
 # or a specific version
-remotes::install_github("stufield/featureselectr@v0.0.1")
+remotes::install_github("stufield/featureselectr@v0.0.2")
 ```
 
 
