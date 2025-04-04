@@ -13,7 +13,7 @@ cost function, and an underlying data structure for use by other functions."><me
 
     <a class="navbar-brand me-2" href="../index.html">featureselectr</a>
 
-    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">0.0.1.9001</small>
+    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">0.0.2.9000</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -230,7 +230,7 @@ Elements of Statistical Learning: Data Mining, Inference, and Prediction.
 <span class="r-in"><span><span class="va">data</span><span class="op">$</span><span class="va">class_response</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">data</span><span class="op">$</span><span class="va">class_response</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">mt</span> <span class="op">&lt;-</span> <span class="fu"><a href="model_type.html">model_type_lr</a></span><span class="op">(</span><span class="st">"class_response"</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">sm</span> <span class="op">&lt;-</span> <span class="fu"><a href="search_type.html">search_type_forward_model</a></span><span class="op">(</span><span class="fl">15L</span>, display_name <span class="op">=</span> <span class="st">"Feature Selection Algorithm"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">sm</span> <span class="op">&lt;-</span> <span class="fu"><a href="search_type.html">search_type_forward_model</a></span><span class="op">(</span><span class="fl">15L</span>, display_name <span class="op">=</span> <span class="st">"Forward Algorithm"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">ft</span> <span class="op">&lt;-</span> <span class="fu">helpr</span><span class="fu">:::</span><span class="fu">get_analytes</span><span class="op">(</span><span class="va">data</span><span class="op">)</span>   <span class="co"># select candidate features</span></span></span>
 <span class="r-in"><span><span class="va">fs</span> <span class="op">&lt;-</span> <span class="fu">feature_selection</span><span class="op">(</span><span class="va">data</span>, candidate_features <span class="op">=</span> <span class="va">ft</span>,</span></span>
 <span class="r-in"><span>                        model_type <span class="op">=</span> <span class="va">mt</span>, search_type <span class="op">=</span> <span class="va">sm</span>, cost <span class="op">=</span> <span class="st">"sens"</span>,</span></span>
@@ -252,7 +252,7 @@ Elements of Statistical Learning: Data Mining, Inference, and Prediction.
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BB0000;">•</span> Search Type               <span style="color: #0000BB;">'fs_forward_model'</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BB0000;">•</span> Cost Function             <span style="color: #0000BB;">'sens'</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BB0000;">•</span> Random Seed               <span style="color: #0000BB;">'101'</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BB0000;">•</span> Display Name              <span style="color: #0000BB;">'Feature Selection Algorithm'</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BB0000;">•</span> Display Name              <span style="color: #0000BB;">'Forward Algorithm'</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BB0000;">•</span> Search Complete           <span style="color: #0000BB;">'FALSE'</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">═══════════════════════════════════════════════════════════════════════</span></span>
 <span class="r-in"><span></span></span>
@@ -276,7 +276,7 @@ Elements of Statistical Learning: Data Mining, Inference, and Prediction.
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BB0000;">•</span> Search Type               <span style="color: #0000BB;">'fs_forward_model'</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BB0000;">•</span> Cost Function             <span style="color: #0000BB;">'AUC'</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BB0000;">•</span> Random Seed               <span style="color: #0000BB;">'99'</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BB0000;">•</span> Display Name              <span style="color: #0000BB;">'Feature Selection Algorithm'</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BB0000;">•</span> Display Name              <span style="color: #0000BB;">'Forward Algorithm'</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BB0000;">•</span> Search Complete           <span style="color: #0000BB;">'FALSE'</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">═══════════════════════════════════════════════════════════════════════</span></span>
 <span class="r-in"><span></span></span>
@@ -299,7 +299,7 @@ Elements of Statistical Learning: Data Mining, Inference, and Prediction.
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BB0000;">•</span> Search Type               <span style="color: #0000BB;">'fs_forward_model'</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BB0000;">•</span> Cost Function             <span style="color: #0000BB;">'sens'</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BB0000;">•</span> Random Seed               <span style="color: #0000BB;">'101'</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BB0000;">•</span> Display Name              <span style="color: #0000BB;">'Feature Selection Algorithm'</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BB0000;">•</span> Display Name              <span style="color: #0000BB;">'Forward Algorithm'</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BB0000;">•</span> Search Complete           <span style="color: #0000BB;">'FALSE'</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">═══════════════════════════════════════════════════════════════════════</span></span>
 <span class="r-in"><span></span></span>
