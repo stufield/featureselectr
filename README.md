@@ -6,7 +6,7 @@
 <!-- badges: start -->
 
 ![GitHub
-version](https://img.shields.io/badge/Version-0.0.1.9001-success.svg?style=flat&logo=github)
+version](https://img.shields.io/badge/Version-0.0.2.9000-success.svg?style=flat&logo=github)
 [![CRAN
 status](http://www.r-pkg.org/badges/version/featureselectr)](https://cran.r-project.org/package=featureselectr)
 [![R-CMD-check](https://github.com/stufield/featureselectr/workflows/R-CMD-check/badge.svg)](https://github.com/stufield/featureselectr/actions)
@@ -33,7 +33,7 @@ feature selection, model building, and/or classifier development.
 remotes::install_github("stufield/featureselectr")
 
 # or a specific version
-remotes::install_github("stufield/featureselectr@v0.0.1")
+remotes::install_github("stufield/featureselectr@v0.0.2")
 ```
 
 ------------------------------------------------------------------------
