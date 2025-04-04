@@ -97,24 +97,23 @@ Search.fs_forward_model <- function(x, ...) {
           }, mc.cores = cores) |>
           setNames(paste0("Run", seq_len(x$runs)))
        }) |>
-       lapply(base::unlist, use.names = TRUE) |>
-       data.frame()
+       lapply(function(.x) lapply(.x, base::unlist) |> do.call(what = "rbind"))
 
      ci95df <- lapply(cost_tbl, calc_CI95) |>
        do.call(what = "rbind")
 
-     # select the best
+     # select the best performing model adding 1 feature
      top_idx <- ifelse(x$cost_fxn$maximize,
                        which.max(ci95df$mean),
                        which.min(ci95df$mean))
 
      ci95top <- ci95df[top_idx, ] # 1 row df
-     new_feat <- rownames(ci95top)
-     used_candidates <- c(used_candidates, new_feat)
+     added_feat <- rownames(ci95top)
+     used_candidates <- c(used_candidates, added_feat)
 
      search_progress <- rbind(search_progress,
                               data.frame(step = step,
-                                         cumul_features  = new_feat,
+                                         cumul_features  = added_feat,
                                          cost_lower_ci95 = ci95top$lower,
                                          cost_mean       = ci95top$mean,
                                          cost_upper_ci95 = ci95top$upper))

@@ -47,9 +47,9 @@ Search.fs_backward_model <- function(x, ...) {
   # add the full model as the first step
   mod_candidate_features <- c("All", x$candidate_features)
 
-  for ( step in seq_along(x$candidate_features) ) {
+  for ( step in seq_along(mod_candidate_features) ) {
 
-    sprintf("Step %i of %i", step, length(x$candidate_features)) |>
+    sprintf("Step %i of %i", step, length(x$candidate_features) + 1L) |>
       signal_info()
 
     rem_candidates <- setdiff(mod_candidate_features, deleted_candidates)
@@ -59,7 +59,7 @@ Search.fs_backward_model <- function(x, ...) {
     cost_tbl <- list()
 
     for ( cnd in rem_candidates ) {
-      rem_minus_one <- setdiff(rem_candidates, cnd)
+      rem_minus_one <- setdiff(rem_candidates, cnd) %||-% cnd
       frmla <- create_form(x$model_type$response, rem_minus_one)
       run_res <- parallel::mclapply(seq_len(x$cross_val$runs), function(r) {
                    x$cross_val$current_run <- r
@@ -71,8 +71,8 @@ Search.fs_backward_model <- function(x, ...) {
       }, mc.cores = cores) |>
       setNames(paste0("Run", seq_len(x$runs)))
 
-      cost_tbl[[cnd]] <- lapply(run_res, unlist) |>
-        data.frame() |> data.matrix()   # convert to combine all folds/runs
+      cost_tbl[[cnd]] <- lapply(run_res, base::unlist) |>
+        do.call(what = "rbind")   # must be a matrix(!)
 
       if ( cnd == "All" ) {
         break
@@ -82,18 +82,18 @@ Search.fs_backward_model <- function(x, ...) {
     ci95df <- lapply(cost_tbl, calc_CI95) |>
       do.call(what = "rbind")
 
-    # select the worst
+    # select the best performing model missing 1 feature
     top_idx <- ifelse(x$cost_fxn$maximize,
                       which.max(ci95df$mean),
                       which.min(ci95df$mean))
 
     ci95top <- ci95df[top_idx, ]  # 1 row df with rowname
-    new_feat <- rownames(ci95top)
-    deleted_candidates <- c(deleted_candidates, new_feat)
+    dropped_feat <- rownames(ci95top)
+    deleted_candidates <- c(deleted_candidates, dropped_feat)
 
     search_progress <- rbind(search_progress,
                              data.frame(step = step,
-                                        elim_features   = new_feat,
+                                        elim_features   = dropped_feat,
                                         cost_lower_ci95 = ci95top$lower,
                                         cost_mean       = ci95top$mean,
                                         cost_upper_ci95 = ci95top$upper))
@@ -121,11 +121,7 @@ plot.fs_backward_model <- function(x, notch = TRUE, ...) {
   check_complete(x)
 
   # progress mean/95% CI
-  restbl     <- x$cross_val$search_progress
-  top_single <- setdiff(x$candidate_features, restbl$elim_features)
-  signal_info(
-    "The top single feature model is:", value(get_seq(top_single))
-  )
+  restbl <- x$cross_val$search_progress
 
   # complete cost tables
   csttbl     <- x$cross_val$cost_tables
