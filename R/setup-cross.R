@@ -34,23 +34,25 @@ setup_cross.feature_select <- function(x) {
 
   # allow control of random generator
   local_seed(x$random_seed)
+  runs  <- x$runs
+  folds <- x$folds
 
-  for ( r in seq_len(x$cross_val$runs) ) {
+  for ( r in seq_len(runs) ) {
     run              <- paste0("Run", r)
     x$cross_val[[run]] <- list()
     avail_rows       <- seq_along(rownames(x$data)) # remaining rows to choose from
     rem_rows         <- avail_rows
-    samples_per_fold <- as.integer(nrow(x$data) / x$cross_val$folds)
-    extra_samples    <- nrow(x$data) - samples_per_fold * x$cross_val$folds
+    samples_per_fold <- as.integer(nrow(x$data) / folds)
+    extra_samples    <- nrow(x$data) - samples_per_fold * folds
 
-    if ( x$cross_val$folds == 1L ) {
+    if ( folds == 1L ) {
       x$cross_val[[run]][["Fold1"]] <- list()
       x$cross_val[[run]][["Fold1"]]$test_rows     <- avail_rows
       x$cross_val[[run]][["Fold1"]]$training_rows <- avail_rows
       next
     }
 
-    for ( f in seq_len(x$cross_val$folds) ) {
+    for ( f in seq_len(folds) ) {
       fold <- paste0("Fold", f)
       x$cross_val[[run]][[fold]] <- list()
       test_rows <- sample(rem_rows, samples_per_fold)
@@ -77,17 +79,16 @@ setup_cross.feature_select <- function(x) {
 #' @export
 setup_cross_strat.feature_select <- function(x) {
 
-  tbl <- table(x$data[, x$cross_val$strat_column])
+  strat_col <- x$cross_val$strat_column
+  tbl <- table(x$data[, strat_col])
 
-  # 1st check if stratification is even possible given class counts
-  if ( min(tbl) < x$cross_val$folds ) {
-    min <- which.min(tbl)
-    err <- sprintf("Class: %s Count: %d Folds: %d",
-                   names(tbl)[min], tbl[min],
-                   x$cross_val$folds)
+  # check if stratification is even possible given class counts
+  if ( min(tbl) < x$cross_val$folds || length(tbl) < 2L ) {
+    err <- tibble::enframe(c(tbl), name = strat_col, "n")
+    print(err)
     stop(
       "Not enough representative samples per class to stratify: ",
-      value(err), call. = FALSE
+       value(strat_col), call. = FALSE
     )
   }
 
@@ -109,7 +110,7 @@ setup_cross_strat.feature_select <- function(x) {
   for ( n in names(tbl) ) {
     for ( r in seq_len(x$cross_val$runs) ) {
       run        <- paste0("Run", r)
-      avail_rows <- which(x$data[, x$cross_val$strat_column] == n)
+      avail_rows <- which(x$data[, strat_col] == n)
       rem_rows         <- avail_rows
       samples_per_fold <- floor(length(avail_rows) / x$cross_val$folds)
       extra_samples    <- length(avail_rows) - samples_per_fold * x$cross_val$folds
