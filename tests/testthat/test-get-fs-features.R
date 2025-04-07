@@ -36,16 +36,22 @@ test_that("`get_fs_features()` error catch for incomplete search objects", {
 test_that("`get_fs_features()` returns the correct features", {
   x <- get_fs_features(fs_obj_complete)
   y <- list(
-    max_features = c("seq.2802.68", "seq.9251.29", "seq.1942.70",
+    features_max = c("seq.2802.68", "seq.9251.29", "seq.1942.70",
                      "seq.5751.80", "seq.9608.12", "seq.5994.84",
                      "seq.8441.53", "seq.4461.56", "seq.9297.97",
                      "seq.8797.98"),
-    features_1se_from_max = c("seq.2802.68", "seq.9251.29",
-                               "seq.1942.70", "seq.9608.12",
-                               "seq.5994.84", "seq.8797.98"),
-    features_2se_from_max = c("seq.2802.68", "seq.9251.29",
-                              "seq.1942.70", "seq.9608.12",
-                              "seq.5994.84")
-    )
+    features_1se = c("seq.2802.68", "seq.9251.29",
+                     "seq.1942.70", "seq.9608.12",
+                     "seq.5994.84", "seq.8797.98"),
+    features_2se = c("seq.2802.68", "seq.9251.29",
+                     "seq.1942.70", "seq.9608.12",
+                     "seq.5994.84")
+    ) |> add_class("fs_features")
   expect_equal(x, y)
+})
+
+test_that("`get_fs_features()` S3 print method", {
+  x <- get_fs_features(fs_obj_complete)
+  expect_s3_class(x, "fs_features")
+  expect_snapshot(x)
 })

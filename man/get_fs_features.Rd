@@ -12,12 +12,12 @@ call to \code{\link[=feature_selection]{feature_selection()}}.}
 }
 \value{
 A list containing:
-\item{max_features}{Combination of features that gives maximum/minimum
+\item{features_max}{Combination of features that gives maximum/minimum
 mean cost function.}
-\item{features_1se_from_max}{Combination of features that has a mean
+\item{features_1se}{Combination of features that has a mean
 cost function that is one standard error (SE) from the
 maximum/minimum mean cost function.}
-\item{features_2se_from_max}{Combination of features that has a mean
+\item{features_2se}{Combination of features that has a mean
 cost function that is \code{1.96*SE} from the maximum/minimum mean
 cost function.}
 }

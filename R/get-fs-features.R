@@ -6,12 +6,12 @@
 #' @inheritParams Search
 #'
 #' @return A list containing:
-#'   \item{max_features}{Combination of features that gives maximum/minimum
+#'   \item{features_max}{Combination of features that gives maximum/minimum
 #'     mean cost function.}
-#'   \item{features_1se_from_max}{Combination of features that has a mean
+#'   \item{features_1se}{Combination of features that has a mean
 #'     cost function that is one standard error (SE) from the
 #'     maximum/minimum mean cost function.}
-#'   \item{features_2se_from_max}{Combination of features that has a mean
+#'   \item{features_2se}{Combination of features that has a mean
 #'     cost function that is `1.96*SE` from the maximum/minimum mean
 #'     cost function.}
 #'
@@ -25,10 +25,22 @@
 #' fs_obj <- Search(fs)
 #' get_fs_features(fs_obj)
 #' @importFrom stats sd
-#' @importFrom stats setNames
 #' @export
 get_fs_features <- function(x) UseMethod("get_fs_features")
 
+#' @noRd
+#' @export
+print.fs_features <- function(x, ...) {
+  L <- lengths(x)
+  signal_rule("Features", line_col = "green", lty = "double")
+  liter(L, .f = function(.x, .y) signal_todo(pad(.y, 13L), value(.x)))
+  cat("\n")
+  liter(x, .f = function(.x, .y) {
+    signal_rule(.y, line_col = "blue")
+    writeLines(value(.x))
+  })
+  invisible(x)
+}
 
 #' @noRd
 #' @export
@@ -47,75 +59,70 @@ get_fs_features.fs_forward_param <- function(x) {
 }
 
 #' @noRd
+#' @importFrom utils head
 #' @export
 get_fs_features.fs_forward_model <- function(x) {
 
   check_complete(x)
-  ft_index  <- "cumul_features"
-  restbl    <- x$cross_val$search_progress  # progress mean/95% CI
-  csttbl    <- x$cross_val$cost_tables      # complete cost tables
+  restbl <- x$cross_val$search_progress  # progress mean/95% CI
+  csttbl <- x$cross_val$cost_tables      # complete cost tables
 
-  bxtbl <- lapply(1:x$search_type$max_steps, function(step) {
-                  mrkr <- restbl[[ft_index]][[step]]
-                  c(as.vector(csttbl[[step]][[as.character(mrkr)]]))
-            }) |>
-    data.frame() |>
-    setNames(restbl[[ft_index]])
+  bxtbl <- liter(restbl$cumul_features, csttbl, function(ft, step) {
+                 as.vector(step[[ft]])
+           }) |> data.frame()
 
-  max_idx <- which.max(restbl$cost_mean)                      # idx max cost
-  box_max_est <- max(restbl$cost_mean)                        # max cost value
-  se <- sd(bxtbl[[max_idx]]) / sqrt(length(bxtbl[[max_idx]])) # std. error max cost model
+  max_idx <- which.max(restbl$cost_mean)         # idx max cost
+  box_max_est <- max(restbl$cost_mean)           # max cost value
+  se <- sd(bxtbl[[max_idx]]) / sqrt(nrow(bxtbl)) # std. error max cost model
 
-  for ( se1 in max_idx:1L ) {
-    if ( (box_max_est - restbl$cost_mean[se1]) < se ) next else break
-  }
-  for ( se2 in max_idx:1L ) {
-    if ( (box_max_est - restbl$cost_mean[se2]) < se * 1.96 ) next else break
-  }
-  max <- x$candidate_features[x$candidate_features %in% restbl[[ft_index]][1L:max_idx]]
-  se1 <- x$candidate_features[x$candidate_features %in% restbl[[ft_index]][1L:se1]]
-  se2 <- x$candidate_features[x$candidate_features %in% restbl[[ft_index]][1L:se2]]
+  restbl$se1 <- box_max_est - restbl$cost_mean < se
+  restbl$se2 <- box_max_est - restbl$cost_mean < (se * 1.96)
 
-  list(max_features = max, features_1se_from_max = se1, features_2se_from_max = se2)
+  max  <- head(restbl$cumul_features, max_idx)
+  idx1 <- which(restbl$se1)[1L] - 1L
+  idx2 <- which(restbl$se2)[1L] - 1L
+
+  se1  <- head(restbl$cumul_features, idx1)
+  se2  <- head(restbl$cumul_features, idx2)
+
+  structure(
+    list(features_max = intersect(x$candidate_features, max),  # reorders
+         features_1se = intersect(x$candidate_features, se1),
+         features_2se = intersect(x$candidate_features, se2)),
+    class = c("fs_features", "list")
+  )
 }
 
 #' @noRd
+#' @importFrom utils tail
 #' @export
 get_fs_features.fs_backward_model <- function(x) {
 
   check_complete(x)
-  ft_index  <- "elim_features"
-  max_steps <- x$search_type$max_steps      # steps
-  restbl    <- x$cross_val$search_progress  # progress mean/95% CI
-  csttbl    <- x$cross_val$cost_tables      # complete cost tables
+  restbl <- x$cross_val$search_progress  # progress mean/95% CI
+  csttbl <- x$cross_val$cost_tables      # complete cost tables
 
-  bxtbl <- lapply(1:x$search_type$max_steps, function(step) {
-                  mrkr <- restbl[[ft_index]][[step]]
-                  c(as.vector(csttbl[[step]][[as.character(mrkr)]]))
-            }) |>
-    data.frame() |>
-    setNames(restbl[[ft_index]])
+  bxtbl <- liter(restbl$elim_features, csttbl, function(ft, step) {
+                 as.vector(step[[ft]])
+           }) |> data.frame()
 
-  max_idx <- which.max(restbl$cost_mean)                      # idx max cost
-  box_max_est <- max(restbl$cost_mean)                        # max cost value
-  se <- sd(bxtbl[[max_idx]]) / sqrt(length(bxtbl[[max_idx]])) # std. error max cost model
+  max_idx <- which.max(restbl$cost_mean)         # idx max cost
+  box_max_est <- max(restbl$cost_mean)           # max cost value
+  se <- sd(bxtbl[[max_idx]]) / sqrt(nrow(bxtbl)) # std. error max cost model
 
-  for ( se1 in max_idx:max_steps ) {
-    if ( (box_max_est - restbl$cost_mean[se1]) < se ) next else break
-  }
+  restbl$se1 <- box_max_est - restbl$cost_mean < se
+  restbl$se2 <- box_max_est - restbl$cost_mean < (se * 1.96)
 
-  for ( se2 in max_idx:max_steps ) {
-    if ( (box_max_est - restbl$cost_mean[se2]) < se * 1.96 ) next else break
-  }
+  max  <- tail(restbl$elim_features, -max_idx)
+  idx1 <- which(!restbl$se1)[1L]
+  idx2 <- which(!restbl$se2)[1L]
+  se1  <- tail(restbl$elim_features, -idx1)
+  se2  <- tail(restbl$elim_features, -idx2)
 
-  bs_features <- c(restbl[[ft_index]],
-                  x$candidate_features[!(x$candidate_features %in% restbl[[ft_index]])])
-
-  # nolint start
-  max <- x$candidate_features[x$candidate_features %in% bs_features[(max_idx + 1L):length(bs_features)]]
-  se1 <- x$candidate_features[x$candidate_features %in% bs_features[(se1 + 1L):length(bs_features)]]
-  se2 <- x$candidate_features[x$candidate_features %in% bs_features[(se2 + 1L):length(bs_features)]]
-  # nolint end
-
-  list(max_features = max, features_1se_from_max = se1, features_2se_from_max = se2)
+  structure(
+    list(features_max = intersect(x$candidate_features, max),  # reorders
+         features_1se = intersect(x$candidate_features, se1),
+         features_2se = intersect(x$candidate_features, se2)),
+    class = c("fs_features", "list")
+  )
 }
