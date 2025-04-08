@@ -205,6 +205,17 @@ fs_lr <- readRDS("fs_lr_obj.rds")   # secretly load
 plot(fs_lr)
 ```
 
+
+### Return the Plot Features
+
+```{r fs-plot-features}
+get_fs_features(fs_lr)
+```
+
+
+----------------
+
+
 ## Class Stratification Plot
 
 You can also check the class proportions (imbalances) of the cross-validation
