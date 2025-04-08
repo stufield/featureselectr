@@ -296,6 +296,23 @@ CI95%).</p>
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">fs_lr</span><span class="op">)</span></span></code></pre></div>
 <p><img src="featureselectr_files/figure-html/plot-fs-lr-1.png" width="100%"></p>
 </div>
+<div class="section level3">
+<h3 id="return-the-plot-features">Return the Plot Features<a class="anchor" aria-label="anchor" href="#return-the-plot-features"></a>
+</h3>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/get_fs_features.html">get_fs_features</a></span><span class="op">(</span><span class="va">fs_lr</span><span class="op">)</span></span>
+<span><span class="co">#&gt; ══ Features ══════════════════════════════════════════════════════════</span></span>
+<span><span class="co">#&gt; • features_max  12</span></span>
+<span><span class="co">#&gt; • features_1se  8</span></span>
+<span><span class="co">#&gt; • features_2se  6</span></span>
+<span><span class="co">#&gt; ── features_max ──────────────────────────────────────────────────────</span></span>
+<span><span class="co">#&gt; 'seq.1942.70', 'seq.9297.97', 'seq.9608.12', 'seq.4914.10', 'seq.9360.55', 'seq.8142.63', 'seq.1130.49', 'seq.9373.82', 'seq.9251.29', 'seq.2802.68', 'seq.3459.49', 'seq.6356.60'</span></span>
+<span><span class="co">#&gt; ── features_1se ──────────────────────────────────────────────────────</span></span>
+<span><span class="co">#&gt; 'seq.1942.70', 'seq.9608.12', 'seq.9360.55', 'seq.8142.63', 'seq.9373.82', 'seq.9251.29', 'seq.2802.68', 'seq.3459.49'</span></span>
+<span><span class="co">#&gt; ── features_2se ──────────────────────────────────────────────────────</span></span>
+<span><span class="co">#&gt; 'seq.1942.70', 'seq.9608.12', 'seq.8142.63', 'seq.9251.29', 'seq.2802.68', 'seq.3459.49'</span></span></code></pre></div>
+<hr>
+</div>
 </div>
 <div class="section level2">
 <h2 id="class-stratification-plot">Class Stratification Plot<a class="anchor" aria-label="anchor" href="#class-stratification-plot"></a>
@@ -307,7 +324,7 @@ classification problems).</p>
 forced stratification. Below is a sample plot of the cross-validation
 folds <em>without</em> stratification (left) and after an update to the
 object to <em>include</em> stratification (right):</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">no_strat</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/feature_selection.html">feature_selection</a></span><span class="op">(</span></span>
 <span>  <span class="va">data</span>, candidate_features <span class="op">=</span> <span class="va">feats</span>,</span>
 <span>  model_type <span class="op">=</span> <span class="va">mt</span>, search_type <span class="op">=</span> <span class="va">sm</span>,</span>

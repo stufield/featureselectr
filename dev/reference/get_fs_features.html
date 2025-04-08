@@ -57,16 +57,16 @@ call to <code><a href="feature_selection.html">feature_selection()</a></code>.</
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     <p>A list containing:</p>
-<dl><dt>max_features</dt>
+<dl><dt>features_max</dt>
 <dd><p>Combination of features that gives maximum/minimum
 mean cost function.</p></dd>
 
-<dt>features_1se_from_max</dt>
+<dt>features_1se</dt>
 <dd><p>Combination of features that has a mean
 cost function that is one standard error (SE) from the
 maximum/minimum mean cost function.</p></dd>
 
-<dt>features_2se_from_max</dt>
+<dt>features_2se</dt>
 <dd><p>Combination of features that has a mean
 cost function that is <code>1.96*SE</code> from the maximum/minimum mean
 cost function.</p></dd>
@@ -90,16 +90,17 @@ cost function.</p></dd>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Step 4 of 5</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Step 5 of 5</span>
 <span class="r-in"><span><span class="fu">get_fs_features</span><span class="op">(</span><span class="va">fs_obj</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $max_features</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "seq.2802.68" "seq.9251.29" "seq.1942.70" "seq.5751.80"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [5] "seq.9608.12"</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">══</span> Features <span style="color: #00BB00;">═══════════════════════════════════════════════════════════</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #BB0000;">•</span> features_max  <span style="color: #0000BB;">5</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #BB0000;">•</span> features_1se  <span style="color: #0000BB;">3</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #BB0000;">•</span> features_2se  <span style="color: #0000BB;">2</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $features_1se_from_max</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "seq.2802.68" "seq.9251.29" "seq.1942.70"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $features_2se_from_max</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "seq.9251.29" "seq.1942.70"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB;">──</span> features_max <span style="color: #0000BB;">───────────────────────────────────────────────────────</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB;">'seq.2802.68'</span>, <span style="color: #0000BB;">'seq.9251.29'</span>, <span style="color: #0000BB;">'seq.1942.70'</span>, <span style="color: #0000BB;">'seq.5751.80'</span>, <span style="color: #0000BB;">'seq.9608.12'</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB;">──</span> features_1se <span style="color: #0000BB;">───────────────────────────────────────────────────────</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB;">'seq.2802.68'</span>, <span style="color: #0000BB;">'seq.9251.29'</span>, <span style="color: #0000BB;">'seq.1942.70'</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB;">──</span> features_2se <span style="color: #0000BB;">───────────────────────────────────────────────────────</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB;">'seq.9251.29'</span>, <span style="color: #0000BB;">'seq.1942.70'</span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
