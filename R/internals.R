@@ -3,7 +3,7 @@
 get_run  <- function(x) {
   run <- x$cross_val$current_run
   if ( is.null(run) ) {
-    stop("Invalid current* run* in `feature_select` object.", call. = FALSE)
+    stop("Invalid current *run* in `feature_select` object.", call. = FALSE)
   }
   paste0("Run", run)
 }

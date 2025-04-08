@@ -32,7 +32,7 @@ calc_auc <- function(truth, predicted) {
     r <- rank(c(predicted[idx[[c1]]], predicted[idx[[c2]]]))
     auc <- (sum(r[1:n1]) - n1 * (n1 + 1) / 2) / (n1 * n2)
   }
-  max(auc, 1 - auc)
+  as.double(max(auc, 1 - auc))
 }
 
 .stripLMC <- function(x) UseMethod(".stripLMC")

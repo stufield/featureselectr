@@ -10,7 +10,7 @@
 #'
 #' @param x A `feature_select` class object.
 #'
-#' @return A metric, a scalar value, to be optimized depending
+#' @return A metric, a scalar double, to be optimized depending
 #'   on the type, one of: AUC, CCC, MSE, R2, or Sens + Spec.
 #'
 #' @importFrom stats cor.test
@@ -23,9 +23,8 @@
   run      <- get_run(x)
   fold     <- get_fold(x)
   tst_rows <- x$cross_val[[run]][[fold]]$test_rows
-  auc      <- calc_auc(x$data[tst_rows, x$model_type$response],
-                       x$cross_val[[run]][[fold]]$test_predicts)
-  invisible(auc)
+  calc_auc(x$data[tst_rows, x$model_type$response],
+           x$cross_val[[run]][[fold]]$test_predicts) |> invisible()
 }
 
 # S3 CCC
@@ -36,7 +35,7 @@
   cv_obj   <- x$cross_val[[run]][[fold]]
   ccc      <- calc_ccc(cv_obj$test_predicts,
                        x$data[tst_rows, x$model_type$response])
-  invisible(ccc$rho.c)
+  invisible(ccc)
 }
 
 # S3 MSE
@@ -45,8 +44,8 @@
   fold     <- get_fold(x)
   tst_rows <- x$cross_val[[run]][[fold]]$test_rows
   cv_obj   <- x$cross_val[[run]][[fold]]
-  mse      <- mean((cv_obj$test_predicts - x$data[tst_rows, x$model_type$response])^2)
-  invisible(as.numeric(mse))
+  mean((cv_obj$test_predicts - x$data[tst_rows, x$model_type$response])^2) |>
+    invisible()
 }
 
 # S3 R2
@@ -57,7 +56,7 @@
   cv_obj   <- x$cross_val[[run]][[fold]]
   r2       <- stats::cor.test(cv_obj$test_predicts,
                               x$data[tst_rows, x$model_type$response])$estimate^2
-  invisible(as.numeric(r2))
+  invisible(r2)
 }
 
 # S3 Sensitivity + Specificity
@@ -80,7 +79,7 @@
   fp <- cm[1L, 2L]
   sens <- tp / (tp + fn)
   spec <- tn / (tn + fp)
-  sens + spec
+  invisible(as.double(sens + spec))
 }
 
 
