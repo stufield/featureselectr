@@ -15,11 +15,14 @@
 #'
 #' @param x A `feature_select` class object.
 #'
-#' @param ... Additional arguments passed to the `fitmodel` generic S3
-#'   method, which performs the appropriate search algorithm depending on the
-#'   object class. This is typically performed internally via the `frmla =`
-#'   argument which is used to create a formula prior to being passed to one of:
-#'   [stats::glm()], [stats::lm()], `.fit_nb()`.
+#' @param frmla the `fitmodel` generic S3 method performs the appropriate
+#'   search algorithm depending on the object class.
+#'   The `frmla =` param is the statistical model formula consistent with
+#'   one of: [stats::glm()], [stats::lm()], `.fit_nb()`. Future
+#'   model types should consider this structure when adding to the framework.
+#'
+#' @param A slightly modified version of `x`, with `run*fold` elements added
+#'   containing the performance metrics or each `run*fold` combination.
 #'
 #' @author Stu Field, Kirk DeLisle
 #'
@@ -28,26 +31,25 @@
 #'
 #' @importFrom stats lm predict model.frame glm
 #' @noRd
-.fitmodel <- function(x, ...) UseMethod(".fitmodel")
+.fitmodel <- function(x, frmla) UseMethod(".fitmodel")
 
 # Fit Model Type: Logistic Regression
-.fitmodel.fs_lr <- function(x, ...) {
+.fitmodel.fs_lr <- function(x, frmla) {
 
   # ensure response is a factor
   if ( !is.factor(x$data[[x$model_type$response]]) ) {
     x$data[[x$model_type$response]] <- factor(x$data[[x$model_type$response]])
   }
 
-  args <- list(...)
   run  <- get_run(x)
   fold <- get_fold(x)
 
   trn_rows <- x$cross_val[[run]][[fold]]$training_rows
   tst_rows <- x$cross_val[[run]][[fold]]$test_rows
 
-  mf    <- stats::model.frame(args$frmla, data = x$data[trn_rows, ])
+  mf    <- stats::model.frame(frmla, data = x$data[trn_rows, ])
   q_glm <- be_quiet(stats::glm)   # silence warnings
-  fit   <- q_glm(args$frmla, data = mf, family = "binomial", model = FALSE)$result
+  fit   <- q_glm(frmla, data = mf, family = "binomial", model = FALSE)$result
   tst_p <- stats::predict(fit, x$data[tst_rows, x$candidate_features, drop = FALSE],
                           type = "response") |> unname()
 
@@ -56,22 +58,21 @@
 }
 
 # Fit Model Type: Naive Bayes
-.fitmodel.fs_nb <- function(x, ...) {
+.fitmodel.fs_nb <- function(x, frmla) {
 
   # ensure response is a factor
   if ( !is.factor(x$data[[x$model_type$response]]) ) {
     x$data[[x$model_type$response]] <- factor(x$data[[x$model_type$response]])
   }
 
-  args <- list(...)
   run  <- get_run(x)
   fold <- get_fold(x)
 
   trn_rows <- x$cross_val[[run]][[fold]]$training_rows
   tst_rows <- x$cross_val[[run]][[fold]]$test_rows
 
-  mf    <- stats::model.frame(args$frmla, data = x$data[trn_rows, ])
-  fit   <- .fit_nb(args$frmla, data = mf)
+  mf    <- stats::model.frame(frmla, data = x$data[trn_rows, ])
+  fit   <- .fit_nb(frmla, data = mf)
   tst_p <- predict(fit, x$data[tst_rows, x$candidate_features, drop = FALSE],
                    type = "raw")
 
@@ -80,22 +81,21 @@
 }
 
 # Fit Model Type: Linear Regression
-.fitmodel.fs_lm <- function(x, ...) {
+.fitmodel.fs_lm <- function(x, frmla) {
 
   # ensure response is continuous
   if ( !is.numeric(x$data[[x$model_type$response]]) ) {
     x$data[[x$model_type$response]] <- numeric(x$data[[x$model_type$response]])
   }
 
-  args <- list(...)
   run  <- get_run(x)
   fold <- get_fold(x)
 
   trn_rows <- x$cross_val[[run]][[fold]]$training_rows
   tst_rows <- x$cross_val[[run]][[fold]]$test_rows
 
-  mf  <- stats::model.frame(args$frmla, data = x$data[trn_rows, ])
-  fit <- stats::lm(args$frmla, data = mf, model = FALSE)
+  mf  <- stats::model.frame(frmla, data = x$data[trn_rows, ])
+  fit <- stats::lm(frmla, data = mf, model = FALSE)
   tst_p <- stats::predict(fit, x$data[tst_rows, x$candidate_features, drop = FALSE],
                           type = "response")
 
