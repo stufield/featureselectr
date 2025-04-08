@@ -87,17 +87,18 @@ Search.fs_forward_model <- function(x, ...) {
 
      cost_tbl <- lapply(rem_candidates, function(cnd) {
           frmla <- create_form(x$model_type$response, c(used_candidates, cnd))
-          parallel::mclapply(seq_len(x$cross_val$runs), function(r) {
+          parallel::mclapply(seq_len(x$runs), function(r) {
                       x$cross_val$current_run <- r  # tmp element for: .cost .fitmodel
-                      lapply(seq_len(x$cross_val$folds), function(f) {
+                      fvec <- seq_len(x$folds)
+                      iter <- setNames(fvec, paste0("Fold", fvec))
+                      vapply(iter, function(f) {
                              x$cross_val$current_fold <- f
                              .cost(.fitmodel(x, frmla = frmla))
-                      }) |>
-             setNames(paste0("Fold", seq_len(x$folds)))
+                      }, double(1))
           }, mc.cores = cores) |>
           setNames(paste0("Run", seq_len(x$runs)))
        }) |>
-       lapply(function(.x) lapply(.x, base::unlist) |> do.call(what = "rbind"))
+       lapply(do.call, what = "rbind")
 
      ci95df <- lapply(cost_tbl, calc_CI95) |>
        do.call(what = "rbind")

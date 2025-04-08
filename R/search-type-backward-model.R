@@ -61,18 +61,19 @@ Search.fs_backward_model <- function(x, ...) {
     for ( cnd in rem_candidates ) {
       rem_minus_one <- setdiff(rem_candidates, cnd) %||-% cnd
       frmla <- create_form(x$model_type$response, rem_minus_one)
-      run_res <- parallel::mclapply(seq_len(x$cross_val$runs), function(r) {
+      run_res <- parallel::mclapply(seq_len(x$runs), function(r) {
                    x$cross_val$current_run <- r
-                   lapply(seq_len(x$cross_val$folds), function(f) {
+                   fvec <- seq_len(x$folds)
+                   iter <- setNames(fvec, paste0("Fold", fvec))
+                   vapply(iter, function(f) {
                           x$cross_val$current_fold <- f
                           .cost(.fitmodel(x, frmla = frmla))
-                 }) |>
-              setNames(paste0("Fold", seq_len(x$folds)))
-      }, mc.cores = cores) |>
-      setNames(paste0("Run", seq_len(x$runs)))
+                 }, double(1))
+        }, mc.cores = cores) |>
+        setNames(paste0("Run", seq_len(x$runs))) |>
+          do.call(what = "rbind")   # must be a matrix(!)
 
-      cost_tbl[[cnd]] <- lapply(run_res, base::unlist) |>
-        do.call(what = "rbind")   # must be a matrix(!)
+      cost_tbl[[cnd]] <- run_res
 
       if ( cnd == "All" ) {
         break
